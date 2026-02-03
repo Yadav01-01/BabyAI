@@ -14,8 +14,10 @@ import com.compose.babyai.ui.screens.main.MainScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileReadyScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileSetupScreen
 import com.compose.babyai.ui.screens.cart.CartScreen
+import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
 import com.compose.babyai.ui.screens.profile.BabyProfileScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
+import okhttp3.Route
 
 @Composable
 fun NavGraph(
@@ -91,6 +93,13 @@ fun NavGraph(
             FilterScreen(navController)
         }
 
+        composable( Routes.AllCategory.route){
+            CategoryScreen(navController)
+        }
+
+        composable(Routes.Payment.route) {
+            PaymentScreen(navController)
+        }
 
     }
 }

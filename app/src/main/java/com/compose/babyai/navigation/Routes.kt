@@ -18,5 +18,7 @@ sealed class Routes(val route: String) {
     object Cart : Routes("cart")
     object AiTry : Routes("aiTry")
     object Filter : Routes("filter")
+    object AllCategory : Routes("allCategory")
+    object Payment : Routes("payment")
 
 }

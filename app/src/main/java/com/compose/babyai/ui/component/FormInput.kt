@@ -211,8 +211,10 @@ fun SearchBar(
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = Color.White,
             unfocusedContainerColor = Color.White,
+            disabledContainerColor = Color.White,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent,
             cursorColor = Color.Black
         )
     )

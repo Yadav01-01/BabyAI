@@ -194,7 +194,7 @@ fun LoginScreen(navController: NavHostController) {
 
             // Continue as Guest
             Row(
-                modifier = Modifier.clickable { navController.navigate(Routes.Home.route) },
+                modifier = Modifier.clickable { navController.navigate(Routes.Main.route) },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
