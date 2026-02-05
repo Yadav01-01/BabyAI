@@ -5,10 +5,11 @@
     <string name="My_Closet">My Closet</string>
     <string name="suggested_outfit">Suggested Outfits</string>
     <string name="Select_Outfits">Select Outfits</string>
-    <string name="Select_Outfits_Desc">Pick one or multiple looks to try on your baby</string>
+    <string name="Select_Outfits_Desc">Share the cuteness with family!</string>
     <string name="Payments">Payments</string>
     <string name="Order_Summary">Order Summary</string>
     <string name="Total">Total</string>
     <string name="Shipping_Address">Shipping Address</string>
     <string name="No_shipping_address_found">No shipping address found</string>
+    <string name="Selected_Outfits">Your Baby in Selected Outfits</string>
 </resources>

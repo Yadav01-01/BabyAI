@@ -19,10 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,11 +32,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.SearchBar
+import com.compose.babyai.ui.component.OutfitTryCard
+import com.compose.babyai.ui.screens.aiTry.OutfitData
+import kotlin.collections.chunked
 
 @Composable
 fun WishlistScreen(navController: NavHostController) {
-
+    val outfits = remember {
+        listOf(
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, true),
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false),
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false),
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, true),
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false),
+            OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false)
+        )
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -91,29 +99,28 @@ fun WishlistScreen(navController: NavHostController) {
             ) {
 
                 // Trending Grid
-                val trendingItems = listOf(
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img),
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img),
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img),
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img),
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img),
-                    TrendingItem("BabyGoy Blue Stripes", "$249.99", R.drawable.dummy_img)
-                )
-
-                items(trendingItems.chunked(2)) { pair ->
+                items(outfits.chunked(2)) { pair ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        TrendingCard(modifier = Modifier.weight(1f), item = pair[0])
+                        OutfitTryCard(
+                            modifier = Modifier.weight(1f),
+                            outfit = pair[0]
+                        )
+
                         if (pair.size > 1) {
-                            TrendingCard(modifier = Modifier.weight(1f), item = pair[1])
+                            OutfitTryCard(
+                                modifier = Modifier.weight(1f),
+                                outfit = pair[1]
+                            )
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
                     }
+
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }

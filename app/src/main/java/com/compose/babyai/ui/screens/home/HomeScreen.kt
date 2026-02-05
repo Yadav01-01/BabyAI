@@ -76,8 +76,8 @@ fun HomeScreen(navController: NavHostController) {
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
             // Header
             HomeHeader(
-                onFavIconClick = { /* Handle favorite icon click */ },
-                onClickProfile = { /* Handle profile click */},
+                onFavIconClick = { navController.navigate(Routes.Wishlist.route) },
+                onClickProfile = { navController.navigate(Routes.BabyProfile.route) },
                 onClickScan = { /* Handle scan click */ }
             )
 

@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.compose.babyai.ui.screens.aiTry.AIBufferingScreen
 import com.compose.babyai.ui.screens.aiTry.AiTryScreen
+import com.compose.babyai.ui.screens.aiTry.FullScreenAITryScreen
 import com.compose.babyai.ui.screens.auth.LoginScreen
 import com.compose.babyai.ui.screens.auth.VerificationScreen
 import com.compose.babyai.ui.screens.home.*
@@ -111,18 +112,23 @@ fun NavGraph(
         composable(Routes.EditBabyProfile.route){
             EditBabyProfile(navController)
         }
+
         composable(Routes.MyOrdersScreen.route){
             MyOrdersScreen(navController)
         }
+
         composable(Routes.SettingsScreen.route){
             SettingsScreen(navController)
         }
+
         composable(Routes.FrequentlyAskQuestionsScreen.route){
             FrequentlyAskQuestionsScreen(navController)
         }
+
         composable(Routes.HelpSupportScreen.route){
             HelpSupportScreen(navController)
         }
+
         composable(Routes.TermsAndConditionsScreen.route){
             TermsAndConditionsScreen(navController)
         }
@@ -130,9 +136,11 @@ fun NavGraph(
         composable(Routes.PrivacyPolicyScreen.route){
             PrivacyPolicyScreen(navController)
         }
+
         composable(Routes.AboutBabyfyScreen.route){
             AboutBabyfyScreen(navController)
         }
+
         composable(Routes.PaymentMethodsScreen.route){
             PaymentMethodsScreen(navController)
         }
@@ -165,6 +173,10 @@ fun NavGraph(
 
         composable(Routes.AiBufferingScreen.route){
             AIBufferingScreen(navController)
+        }
+
+        composable(Routes.AiFullScreenTry.route){
+            FullScreenAITryScreen(navController)
         }
 
 

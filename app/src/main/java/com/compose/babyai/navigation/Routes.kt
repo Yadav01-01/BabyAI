@@ -35,6 +35,7 @@ sealed class Routes(val route: String) {
         fun createRoute(type: String) = "addNewAddress/$type"
     }
     object AiBufferingScreen : Routes("aiBuffering")
+    object AiFullScreenTry : Routes("aiFullScreenTry")
 
 
 }
