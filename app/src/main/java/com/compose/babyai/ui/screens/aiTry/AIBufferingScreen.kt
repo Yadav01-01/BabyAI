@@ -1,20 +1,25 @@
-package com.compose.babyai.ui.screens.authProfile
+package com.compose.babyai.ui.screens.aiTry
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -22,6 +27,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -30,12 +36,10 @@ import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.AppButton
-import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
-fun ProfileReadyScreen(navController: NavHostController) {
-
+fun AIBufferingScreen(navController: NavHostController) {
     Box(modifier = Modifier.fillMaxSize()) {
 
         // Background
@@ -67,7 +71,7 @@ fun ProfileReadyScreen(navController: NavHostController) {
 
             item {
                 Image(
-                    painter = painterResource(R.drawable.ready_ic),
+                    painter = painterResource(R.drawable.buffer_ic),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -88,7 +92,7 @@ fun ProfileReadyScreen(navController: NavHostController) {
                                 fontSize = 24.sp
                             )
                         ) {
-                            append("All Done!\n")
+                            append("Creating adorable looks...\n")
                         }
 
                         withStyle(
@@ -109,7 +113,7 @@ fun ProfileReadyScreen(navController: NavHostController) {
 
             item {
                 Text(
-                    text = "Babify is now ready with smart AI recommendations tailored to your little one.",
+                    text = "AI is generating images based on selected\n outfits.\u2028This takes a few seconds..",
                     fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.nunito_regular)),
                     color = Color(0XFFB0B0B0),
@@ -122,11 +126,21 @@ fun ProfileReadyScreen(navController: NavHostController) {
             item { Spacer(modifier = Modifier.height(20.dp)) }
 
             item {
-                AppButton(
-                    text = "Start Exploring",
-                    onClick = { navController.navigate(Routes.Home.route) },
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                )
+                OutlinedButton(
+                    onClick = {},
+                    modifier = Modifier
+                        .height(56.dp),
+                    shape = RoundedCornerShape(40.dp),
+                    border = BorderStroke(1.dp, Color(0xFFB0B0B0))
+                ) {
+                    Text(
+                        text = "Cancel",
+                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+                        color = Color(0xFFB0B0B0),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 18.sp
+                    )
+                }
             }
         }
     }

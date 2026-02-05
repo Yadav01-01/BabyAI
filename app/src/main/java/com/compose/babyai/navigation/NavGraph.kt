@@ -2,8 +2,11 @@ package com.compose.babyai.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.compose.babyai.ui.screens.aiTry.AIBufferingScreen
 import com.compose.babyai.ui.screens.aiTry.AiTryScreen
 import com.compose.babyai.ui.screens.auth.LoginScreen
 import com.compose.babyai.ui.screens.auth.VerificationScreen
@@ -14,10 +17,12 @@ import com.compose.babyai.ui.screens.main.MainScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileReadyScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileSetupScreen
 import com.compose.babyai.ui.screens.cart.CartScreen
+import com.compose.babyai.ui.screens.cart.paymentAndShipping.AddNewAddressScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
+import com.compose.babyai.ui.screens.cart.paymentAndShipping.SavedAddressScreen
+import com.compose.babyai.ui.screens.cart.paymentAndShipping.ShippingAddressScreen
 import com.compose.babyai.ui.screens.profile.BabyProfileScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
-import okhttp3.Route
 
 @Composable
 fun NavGraph(
@@ -100,6 +105,29 @@ fun NavGraph(
         composable(Routes.Payment.route) {
             PaymentScreen(navController)
         }
+
+        composable(Routes.AddShippingAddress.route) {
+            ShippingAddressScreen(navController)
+        }
+
+        composable(Routes.SavedAddress.route) {
+            SavedAddressScreen(navController)
+        }
+
+        composable(
+            route = Routes.AddNewAddress.route,
+            arguments = listOf(navArgument("type") {
+                    type = NavType.StringType
+                    nullable = true })
+        ) { backStackEntry ->
+            val type = backStackEntry.arguments?.getString("type") ?: ""
+            AddNewAddressScreen(navController = navController, type = type)
+        }
+
+        composable(Routes.AiBufferingScreen.route){
+            AIBufferingScreen(navController)
+        }
+
 
     }
 }

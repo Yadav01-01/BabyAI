@@ -10,4 +10,5 @@
     <string name="Order_Summary">Order Summary</string>
     <string name="Total">Total</string>
     <string name="Shipping_Address">Shipping Address</string>
+    <string name="No_shipping_address_found">No shipping address found</string>
 </resources>

@@ -155,6 +155,10 @@ fun CartScreen(navController: NavHostController) {
                         )
                     }
                 }
+
+                item{
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
             }
         }
     }
@@ -221,11 +225,11 @@ fun CartItemCard(item: CartItem) {
                 painter = painterResource(id = item.imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .height(125.dp).width(150.dp)
+                    .height(125.dp).width(135.dp)
                     .clip(RoundedCornerShape(20.dp)),
                 contentScale = ContentScale.Crop
             )
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(6.dp))
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = item.title,
@@ -276,6 +280,7 @@ fun CartItemCard(item: CartItem) {
                         )
                     }
 
+                    Spacer(Modifier.width(6.dp))
                     // 🔹 Quantity Stepper (Right)
                     Row(
                         verticalAlignment = Alignment.CenterVertically

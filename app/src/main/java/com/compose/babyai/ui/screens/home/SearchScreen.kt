@@ -59,7 +59,7 @@ import com.compose.babyai.R
 import com.compose.babyai.data.model.FilterChipItem
 import com.compose.babyai.data.model.SearchFilterType
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.FilterDialog
+import com.compose.babyai.ui.component.dialog.FilterDialog
 import com.compose.babyai.ui.component.OutfitTryCard
 import com.compose.babyai.ui.component.SearchBar
 import com.compose.babyai.ui.screens.aiTry.OutfitData

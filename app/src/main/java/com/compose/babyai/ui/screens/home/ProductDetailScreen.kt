@@ -7,8 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.AgeBottomSheet
+import com.compose.babyai.ui.component.dialog.AgeBottomSheet
 import com.compose.babyai.ui.component.DetailHeading
-import com.compose.babyai.ui.component.ShareBottomSheet
+import com.compose.babyai.ui.component.dialog.ShareBottomSheet
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable

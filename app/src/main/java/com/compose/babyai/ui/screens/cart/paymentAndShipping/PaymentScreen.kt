@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.screens.cart.CartItem
 import com.compose.babyai.ui.screens.cart.CartItemCard
 import com.compose.babyai.ui.screens.cart.getDummyCartItems
@@ -97,13 +98,16 @@ fun PaymentScreen(navController: NavHostController) {
 
                 // Shipping Address
                 item {
-                    PaymentShippingAddressSection(address = "26, Duong So 2, Thao Dien Wa...", onEditClick = {})
+                    PaymentShippingAddressSection(address = "26, Duong So 2, Thao Dien Wa...",
+                        onAddClick = { navController.navigate(Routes.AddShippingAddress.route)},
+                        onEditClick = { navController.navigate(Routes.SavedAddress.route)},
+                        empty = false)
                 }
 
                 // Payment Option - Credit
                 item {
                     PaymentMethodItem(
-                        icon = R.drawable.edit_ic,
+                        icon = R.drawable.card_ic,
                         title = "Credit",
                         subtitle = "Add and secure cards as per Bank Guidelines",
                         showArrow = true
@@ -113,7 +117,7 @@ fun PaymentScreen(navController: NavHostController) {
                 // Payment Option - COD
                 item {
                     PaymentMethodItem(
-                        icon = R.drawable.edit_ic,
+                        icon = R.drawable.pod_ic,
                         title = "Pay on Delivery",
                         showArrow = false
                     )
@@ -172,108 +176,6 @@ fun PaymentHeader(onBackClick: () -> Unit) {
             fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
             color = Color.Black
         )
-    }
-}
-
-@Composable
-fun PaymentItemCard(item: CartItem) {
-    Card(
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(30.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
-        Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = item.imageRes),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(width = 100.dp, height = 100.dp)
-                    .clip(RoundedCornerShape(20.dp)),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = item.title,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF1C1C1C),
-                    fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
-                    maxLines = 1
-                )
-                Text(
-                    text = "Color: ${item.color}",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.outfit_regular))
-                )
-                Text(
-                    text = "Size: ${item.size}",
-                    fontSize = 12.sp,
-                    color = Color.Gray,
-                    fontFamily = FontFamily(Font(R.font.outfit_regular))
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "$${item.price}",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = PrimaryColor,
-                            fontFamily = FontFamily(Font(R.font.quicksand_semibold))
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "$${item.originalPrice}",
-                            fontSize = 10.sp,
-                            color = Color(0xFF828282),
-                            textDecoration = TextDecoration.LineThrough,
-                            fontFamily = FontFamily(Font(R.font.outfit_regular))
-                        )
-                    }
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(PrimaryColor.copy(alpha = 0.2f))
-                                .clickable { },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("-", color = Color.Black, fontWeight = FontWeight.Bold)
-                        }
-                        Text(
-                            text = "${item.quantity}",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily(Font(R.font.quicksand_semibold))
-                        )
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(PrimaryColor)
-                                .clickable { },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text("+", color = Color.White, fontWeight = FontWeight.Bold)
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -351,7 +253,7 @@ fun SummaryRow(label: String, value: String, valueColor: Color = Color.Black) {
 }
 
 @Composable
-fun PaymentShippingAddressSection(address: String , onEditClick: () -> Unit) {
+fun PaymentShippingAddressSection(address: String ,onAddClick:() -> Unit, onEditClick: () -> Unit,empty : Boolean = false) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
@@ -370,7 +272,7 @@ fun PaymentShippingAddressSection(address: String , onEditClick: () -> Unit) {
                     fontFamily = FontFamily(Font(R.font.quicksand_semibold))
                 )
                 Text(
-                    text = address,
+                    text = if (empty) stringResource(R.string.No_shipping_address_found) else address,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Normal,
                     fontFamily = FontFamily(Font(R.font.varela_round)),
@@ -380,9 +282,16 @@ fun PaymentShippingAddressSection(address: String , onEditClick: () -> Unit) {
                 )
             }
 
-            IconButton(onClick = ( onEditClick )) {
+            IconButton(onClick = {
+                if (empty) {
+                    onAddClick()
+                } else {
+                    onEditClick()
+                }
+            }
+            ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.edit_ic),
+                    painter = painterResource(id = if (empty) R.drawable.add_ic else R.drawable.edit_ic),
                     contentDescription = "Edit",
                     tint = Color.Unspecified,
                     modifier = Modifier.size(48.dp)
@@ -436,9 +345,10 @@ fun PaymentMethodItem(
             }
             if (showArrow) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowDown,
+                   painter = painterResource(R.drawable.down_arrow),
                     contentDescription = null,
-                    tint = Color.Black
+                    tint = Color.Black,
+                    modifier = Modifier.width(12.dp).height(6.dp)
                 )
             }
         }

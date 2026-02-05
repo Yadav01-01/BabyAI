@@ -183,6 +183,10 @@ fun WardrobeScreen(navController: NavHostController) {
                 items(getDummyCartItems()) { item ->
                     SuggestedOutfit(item)
                 }
+
+                item {
+                    Spacer(modifier = Modifier.height(100.dp))
+                }
             }
         }
     }

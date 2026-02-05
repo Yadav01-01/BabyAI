@@ -72,7 +72,7 @@ fun MainScreen(rootNavController: NavHostController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    /*.padding(innerPadding)*/
                     .background(Color.Transparent)
             ) {
                 NavGraph(

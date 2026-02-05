@@ -1,4 +1,4 @@
-package com.compose.babyai.ui.component
+package com.compose.babyai.ui.component.dialog
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -18,7 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,8 +35,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.compose.babyai.R
 import com.compose.babyai.data.model.ShareOption
+import com.compose.babyai.ui.component.AppButton
+import com.compose.babyai.ui.component.ProfileCardHeading
 import com.compose.babyai.ui.theme.PrimaryColor
-import kotlin.text.split
 
 @Composable
 fun SuccessDialog(
@@ -106,6 +109,84 @@ fun SuccessDialog(
     }
 }
 
+@Composable
+fun AddressNOrderSuccessDialog(
+    onDismiss: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            // Main Dialog Content
+            Surface(
+                shape = RoundedCornerShape(40.dp),
+                color = Color.White,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp) // Space for the close button overlap
+            ) {
+                Column(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp, vertical = 32.dp)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Success Icon in light teal circle
+                    Icon(
+                        painter = painterResource(id = R.drawable.check_ic),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(100.dp)
+                    )
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Text(
+                        text = "Address updated\nSuccessfully!",
+                        fontSize = 22.sp,
+                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black,
+                        textAlign = TextAlign.Center,
+                        lineHeight = 28.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    AppButton(
+                        text = "Okay!",
+                        onClick = onDismiss,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+
+            // Close Button
+            Surface(
+                shape = CircleShape,
+                color = Color.White,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(43.dp)
+                    .offset(y = (-30).dp)
+                    .clickable { onDismiss() },
+                shadowElevation = 4.dp
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Close",
+                        modifier = Modifier.size(20.dp),
+                        tint = Color.Black
+                    )
+                }
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareBottomSheet(
@@ -147,9 +228,9 @@ fun ShareBottomSheet(
             Canvas(modifier = Modifier.fillMaxWidth().height(1.dp)) {
                 drawLine(
                     color = PrimaryColor,
-                    start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                    end = androidx.compose.ui.geometry.Offset(size.width, 0f),
-                    pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                 )
             }
 
@@ -245,9 +326,9 @@ fun AgeBottomSheet(
             Canvas(modifier = Modifier.fillMaxWidth().height(1.dp)) {
                 drawLine(
                     color = PrimaryColor,
-                    start = androidx.compose.ui.geometry.Offset(0f, 0f),
-                    end = androidx.compose.ui.geometry.Offset(size.width, 0f),
-                    pathEffect = androidx.compose.ui.graphics.PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
+                    start = Offset(0f, 0f),
+                    end = Offset(size.width, 0f),
+                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
                 )
             }
 
@@ -318,5 +399,3 @@ fun AgeBottomSheet(
         }
     }
 }
-
-

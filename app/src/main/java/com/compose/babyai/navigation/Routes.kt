@@ -20,5 +20,12 @@ sealed class Routes(val route: String) {
     object Filter : Routes("filter")
     object AllCategory : Routes("allCategory")
     object Payment : Routes("payment")
+    object AddShippingAddress : Routes("addShippingAddress")
+    object SavedAddress : Routes("savedAddress")
+    object AddNewAddress : Routes("addNewAddress/{type}") {
+        fun createRoute(type: String) = "addNewAddress/$type"
+    }
+    object AiBufferingScreen : Routes("aiBuffering")
+
 
 }

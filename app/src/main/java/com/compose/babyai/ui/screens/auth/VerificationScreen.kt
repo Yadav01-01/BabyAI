@@ -34,7 +34,7 @@ import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.AppButton
 import com.compose.babyai.ui.component.BabyAiTopBar
-import com.compose.babyai.ui.component.SuccessDialog
+import com.compose.babyai.ui.component.dialog.SuccessDialog
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
 import kotlinx.coroutines.delay

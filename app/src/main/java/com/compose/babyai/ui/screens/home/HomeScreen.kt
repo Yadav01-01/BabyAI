@@ -117,7 +117,7 @@ fun HomeScreen(navController: NavHostController) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Categories",
+                            text = "Try-ons",
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily(Font(R.font.quicksand_bold)),
@@ -305,34 +305,25 @@ fun CategoryList(modifier: Modifier) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(
                     modifier = Modifier
-                        .height(116.dp).width(85.dp)
-                        .clip(RoundedCornerShape(30.dp))
-                        .background(Color.White),
+                        .background(
+                            color = Color.White,
+                            shape = RoundedCornerShape(26.dp)
+                        )
+                        .padding(10.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Image(
-                            painter = painterResource(id = category.second),
-                            contentDescription = null,
-                            modifier = Modifier.width(65.dp)
-                                .height(69.dp)
-                                .clip(RoundedCornerShape(20.dp)),
-                            contentScale = ContentScale.Crop
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = category.first,
-                            fontSize = 12.sp,
-                            fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF272727),
-                            textAlign = TextAlign.Center,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
+                    Image(
+                        painter = painterResource(id = category.second),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .width(152.dp)
+                            .height(192.dp)
+                            .clip(RoundedCornerShape(22.dp)),
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
+
         }
     }
 }
