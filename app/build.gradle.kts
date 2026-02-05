@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -60,6 +61,6 @@ dependencies {
     implementation(libs.coil.compose)
     //horizontal Pager
     implementation(libs.androidx.compose.foundation)
-
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
 
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -227,3 +228,51 @@ fun DetailHeading(heading : String){
         fontWeight = FontWeight.Medium,
         color = Color.Black)
 }
+
+@Composable
+fun InputTextFieldWithoutIcon(
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholderText: String,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onValueChange(it) },
+        placeholder = {
+            Text(
+                text = placeholderText,
+                color = Color(0X806A7193),
+                fontFamily = FontFamily(Font(R.font.nunito_regular)),
+            )
+        },
+        textStyle = TextStyle(
+            color = Color(0xFF0B4747),
+            fontSize = 15.sp,
+            fontFamily = FontFamily(Font(R.font.nunito_regular)),
+            fontWeight = FontWeight.Normal
+        ),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        shape = RoundedCornerShape(28.dp),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedBorderColor = Color(0xFFE0E0E0),
+            unfocusedBorderColor = Color(0xFFE0E0E0),
+            cursorColor = Color(0xFFE0E0E0),
+            focusedTextColor = Color(0xFF0B4747),     // 👈 typed text (focused)
+            unfocusedTextColor = Color(0x806A7193)
+        ),
+        singleLine = true
+    )
+}
+
+/*
+InputTextField(
+value = name,
+onValueChange = { name = it },
+placeholderText = "Parent/Guardian Full Name",
+leadingIcon = painterResource(id = R.drawable.person)
+)*/

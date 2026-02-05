@@ -18,11 +18,21 @@ import com.compose.babyai.ui.screens.authProfile.ProfileReadyScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileSetupScreen
 import com.compose.babyai.ui.screens.cart.CartScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.AddNewAddressScreen
+import com.compose.babyai.ui.screens.myOrder.MyOrdersScreen
+import com.compose.babyai.ui.screens.payment.PaymentMethodsScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.SavedAddressScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.ShippingAddressScreen
 import com.compose.babyai.ui.screens.profile.BabyProfileScreen
+import com.compose.babyai.ui.screens.profile.EditBabyProfile
+import com.compose.babyai.ui.screens.settings.AboutBabyfyScreen
+import com.compose.babyai.ui.screens.settings.FrequentlyAskQuestionsScreen
+import com.compose.babyai.ui.screens.settings.HelpSupportScreen
+import com.compose.babyai.ui.screens.settings.PrivacyPolicyScreen
+import com.compose.babyai.ui.screens.settings.SettingsScreen
+import com.compose.babyai.ui.screens.settings.TermsAndConditionsScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
+import okhttp3.Route
 
 @Composable
 fun NavGraph(
@@ -96,6 +106,35 @@ fun NavGraph(
 
         composable(Routes.Filter.route){
             FilterScreen(navController)
+        }
+
+        composable(Routes.EditBabyProfile.route){
+            EditBabyProfile(navController)
+        }
+        composable(Routes.MyOrdersScreen.route){
+            MyOrdersScreen(navController)
+        }
+        composable(Routes.SettingsScreen.route){
+            SettingsScreen(navController)
+        }
+        composable(Routes.FrequentlyAskQuestionsScreen.route){
+            FrequentlyAskQuestionsScreen(navController)
+        }
+        composable(Routes.HelpSupportScreen.route){
+            HelpSupportScreen(navController)
+        }
+        composable(Routes.TermsAndConditionsScreen.route){
+            TermsAndConditionsScreen(navController)
+        }
+
+        composable(Routes.PrivacyPolicyScreen.route){
+            PrivacyPolicyScreen(navController)
+        }
+        composable(Routes.AboutBabyfyScreen.route){
+            AboutBabyfyScreen(navController)
+        }
+        composable(Routes.PaymentMethodsScreen.route){
+            PaymentMethodsScreen(navController)
         }
 
         composable( Routes.AllCategory.route){
