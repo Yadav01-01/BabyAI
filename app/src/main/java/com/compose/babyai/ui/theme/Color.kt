@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.theme
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
 val Purple80 = Color(0xFFD0BCFF)
@@ -15,3 +16,20 @@ val BgColor = Color(0xFFE0F7F7)
 val TextColor = Color(0xFF1A1A1A)
 val SecondaryTextColor = Color(0xFF4A4A4A)
 val ProgressBarBg = Color(0xFFFFFFFF)
+
+val gradientBrush = Brush.verticalGradient(
+    colors = listOf(
+        Color(0xFF1ECBCC),
+        Color(0xFF1ECBCC),
+        Color(0xFF1ECBCC)
+    )
+)
+
+
+val gradientGreyBrush = Brush.verticalGradient(
+    colors = listOf(
+        Color.Gray.copy(alpha = 0.3f),
+        Color.Gray.copy(alpha = 0.3f),
+        Color.Gray.copy(alpha = 0.3f)
+    )
+)

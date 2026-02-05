@@ -18,5 +18,14 @@ sealed class Routes(val route: String) {
     object Cart : Routes("cart")
     object AiTry : Routes("aiTry")
     object Filter : Routes("filter")
+    object EditBabyProfile : Routes("editBabyProfile")
+    object MyOrdersScreen : Routes("myOrdersScreen")
+    object SettingsScreen : Routes("settingsScreen")
+    object FrequentlyAskQuestionsScreen : Routes("frequentlyAskQuestionsScreen")
+    object HelpSupportScreen : Routes("helpSupportScreen")
+    object TermsAndConditionsScreen : Routes("termsAndConditionsScreen")
+    object PrivacyPolicyScreen : Routes("privacyPolicyScreen")
+    object AboutBabyfyScreen : Routes("aboutBabyfyScreen")
+    object PaymentMethodsScreen : Routes("paymentMethodsScreen")
 
 }
