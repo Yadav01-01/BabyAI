@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Baby AI</string>
+    <string name="baby_wardrobe_collection">Your baby\'s wardrobe collection</string>
+    <string name="Previously_Bought">Previously Bought</string>
+    <string name="My_Closet">My Closet</string>
+    <string name="suggested_outfit">Suggested Outfits</string>
+    <string name="Select_Outfits">Select Outfits</string>
+    <string name="Select_Outfits_Desc">Pick one or multiple looks to try on your baby</string>
+    <string name="Payments">Payments</string>
+    <string name="Order_Summary">Order Summary</string>
+    <string name="Total">Total</string>
+    <string name="Shipping_Address">Shipping Address</string>
 </resources>

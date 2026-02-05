@@ -27,5 +27,7 @@ sealed class Routes(val route: String) {
     object PrivacyPolicyScreen : Routes("privacyPolicyScreen")
     object AboutBabyfyScreen : Routes("aboutBabyfyScreen")
     object PaymentMethodsScreen : Routes("paymentMethodsScreen")
+    object AllCategory : Routes("allCategory")
+    object Payment : Routes("payment")
 
 }

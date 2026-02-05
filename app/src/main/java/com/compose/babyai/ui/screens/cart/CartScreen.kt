@@ -12,19 +12,25 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,64 +45,73 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
 fun CartScreen(navController: NavHostController) {
-    val quicksandSemiBold = remember { FontFamily(Font(R.font.quicksand_semibold)) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
+    val quicksandSemiBold = remember {
+        FontFamily(Font(R.font.quicksand_semibold))
+    }
 
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        // Background
         Image(
             painter = painterResource(id = R.drawable.main_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.Crop
         )
 
-        Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .statusBarsPadding()
+        ) {
+
             // Header
             Text(
                 text = "Cart",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.SemiBold,
                 fontFamily = quicksandSemiBold,
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
-                color = Color.Black
+                color = Color.Black,
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
             )
 
             LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 4.dp, vertical = 8.dp),
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(
+                    start = 10.dp,
+                    end = 10.dp,
+                    top = 8.dp,
+                    bottom = 20.dp //  normal padding only
+                ),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Shipping Address
+
                 item {
-                    ShippingAddressSection(onEditClick = {  })
+                    ShippingAddressSection(onEditClick = {})
                 }
 
-                // Cart Items
                 items(getDummyCartItems()) { item ->
                     CartItemCard(item)
                 }
 
-                // Related Outfit Header
                 item {
-                    Column(modifier = Modifier.padding(top = 8.dp, start = 10.dp, end = 10.dp)) {
+                    Column {
                         Text(
                             text = "Related Outfit",
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
-                            fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+                            fontFamily = quicksandSemiBold,
                             color = Color.Black
                         )
                         Text(
@@ -108,51 +123,43 @@ fun CartScreen(navController: NavHostController) {
                     }
                 }
 
-                // Related Outfits Horizontal List
                 item {
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        contentPadding = PaddingValues(bottom = 100.dp) // Space for bottom button
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(getDummyRelatedItems()) { item ->
-                            RelatedOutfitItem(item, quicksandSemiBold)
+                            RelatedOutfitItem(item, onClickFav = {})
                         }
+                    }
+                }
+
+                //  Checkout button as last scroll item
+                item {
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Button(
+                        onClick = { navController.navigate(Routes.Payment.route) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp)
+                            .navigationBarsPadding(),
+                        shape = RoundedCornerShape(40.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
+                    ) {
+                        Text(
+                            text = "Checkout & Pay",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontFamily = FontFamily(Font(R.font.quicksand_medium)),
+                            color = Color.White
+                        )
                     }
                 }
             }
         }
     }
-
-
-
-     /*   // Checkout Button - Fixed at bottom
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .background(Color.White.copy(alpha = 0.9f))
-                .padding(20.dp)
-                .navigationBarsPadding()
-        ) {
-            Button(
-                onClick = { },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(28.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
-            ) {
-                Text(
-                    text = "Checkout & Pay",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = balooBold,
-                    color = Color.White
-                )
-            }
-        }*/
-
 }
+
 
 @Composable
 fun ShippingAddressSection( onEditClick: () -> Unit ) {
@@ -323,13 +330,13 @@ fun CartItemCard(item: CartItem) {
 }
 
 @Composable
-fun RelatedOutfitItem(item: RelatedItem, quicksandBold: FontFamily) {
+fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit) {
     Card(
         modifier = Modifier.width(170.dp),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
+        Column(modifier = Modifier) {
             Box {
                 Image(
                     painter = painterResource(id = item.imageRes),
@@ -344,91 +351,96 @@ fun RelatedOutfitItem(item: RelatedItem, quicksandBold: FontFamily) {
                 Surface(
                     modifier = Modifier
                         .align(Alignment.BottomStart)
-                        .padding(8.dp),
-                    shape = RoundedCornerShape(8.dp),
+                        .padding(start = 8.dp, bottom = 8.dp),
+                    shape = RoundedCornerShape(12.dp),
                     color = Color.White.copy(alpha = 0.9f)
                 ) {
                     Text(
                         text = item.size,
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = quicksandBold,
-                        color = Color(0xFF272727)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+                        color = Color(0xFF8D8D8D)
                     )
                 }
-                
+
+
                 // Favorite overlay
-                Box(
+                IconButton(onClick = { onClickFav() },
                     modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(8.dp)
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(Color.White.copy(alpha = 0.7f))
-                        .clickable { },
-                    contentAlignment = Alignment.Center
-                ) {
-                   Icon(
-                       painter = painterResource(id = R.drawable.fav_item),
-                       contentDescription = null,
-                       tint = Color.Unspecified,
-                       modifier = Modifier.size(18.dp)
-                   )
+                        .align(Alignment.TopEnd)){
+                    Icon(
+                        painter = painterResource(id = R.drawable.fav_item),
+                        contentDescription = null,
+                        tint = Color.Unspecified,
+                        modifier = Modifier.size(52.dp)
+                    )
                 }
             }
             
             Spacer(modifier = Modifier.height(8.dp))
-            
-            Text(
-                text = item.title,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = quicksandBold,
-                color = Color(0xFF272727),
-                maxLines = 1
-            )
-            
+
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 10.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(
+                        text = item.title,
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+                        color = Color(0xFF1C1C1C),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(bottom = 10.dp)
+                    ) {
                         Text(
                             text = "$${item.price}",
                             fontSize = 14.sp,
                             color = PrimaryColor,
                             fontWeight = FontWeight.Bold,
-                            fontFamily = quicksandBold
+                            fontFamily = FontFamily(Font(R.font.quicksand_semibold))
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
+
+                        Spacer(modifier = Modifier.width(6.dp))
+
                         Text(
                             text = "$${item.originalPrice}",
                             fontSize = 10.sp,
-                            color = Color(0xFFBDBDBD),
+                            color = Color(0xFF828282),
                             textDecoration = TextDecoration.LineThrough,
-                            fontFamily = quicksandBold
+                            fontFamily = FontFamily(Font(R.font.outfit_regular))
                         )
                     }
                 }
-                
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .clip(CircleShape)
-                        .background(PrimaryColor)
-                        .clickable { },
-                    contentAlignment = Alignment.Center
+
+                IconButton(
+                    onClick = { /* add to cart */ },
+                    modifier = Modifier.size(35.dp),
+                    colors = IconButtonDefaults.iconButtonColors(
+                        containerColor = Color.Transparent
+                    )
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.cart_ic),
+                        painter = painterResource(id = R.drawable.card_cart),
                         contentDescription = "Add to cart",
-                        tint = Color.White,
-                        modifier = Modifier.size(16.dp)
+                        tint = Color.Unspecified
                     )
                 }
+
             }
         }
     }

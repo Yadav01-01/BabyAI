@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -88,8 +89,14 @@ fun HomeScreen(navController: NavHostController) {
                 item {
                     Box(
                         modifier = Modifier
+                            .clip(RoundedCornerShape(50.dp))
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                navController.navigate(Routes.Search.route)
+                            }
                             .padding(horizontal = 20.dp)
-                            .clickable { navController.navigate(Routes.Search.route) }
                     ){
                         SearchBar(searchQuery = searchQuery,
                             onSearchQueryChange = { searchQuery = it },
@@ -122,7 +129,7 @@ fun HomeScreen(navController: NavHostController) {
                             color = Color(0XFF272727),
                             fontWeight = FontWeight.Normal,
                             fontFamily = FontFamily(Font(R.font.quicksand_regular)),
-                            modifier = Modifier.clickable { }
+                            modifier = Modifier.clickable { navController.navigate(Routes.AllCategory.route) }
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -238,9 +245,9 @@ fun HomeHeader(
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(22.dp))
+                    .clickable { onClickProfile() }
                     .background(Color.White)
-                    .padding(horizontal = 8.dp, vertical = 4.dp)
-                    .clickable { onClickProfile() },
+                    .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
