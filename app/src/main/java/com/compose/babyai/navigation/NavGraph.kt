@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.compose.babyai.ui.screens.aiTry.AIBufferingScreen
 import com.compose.babyai.ui.screens.aiTry.AiTryScreen
 import com.compose.babyai.ui.screens.aiTry.FullScreenAITryScreen
+import com.compose.babyai.ui.screens.aiTry.ScanScreen
 import com.compose.babyai.ui.screens.auth.LoginScreen
 import com.compose.babyai.ui.screens.auth.VerificationScreen
 import com.compose.babyai.ui.screens.home.*
@@ -177,6 +178,10 @@ fun NavGraph(
 
         composable(Routes.AiFullScreenTry.route){
             FullScreenAITryScreen(navController)
+        }
+
+        composable(Routes.AiScan.route) {
+            ScanScreen(navController)
         }
 
 

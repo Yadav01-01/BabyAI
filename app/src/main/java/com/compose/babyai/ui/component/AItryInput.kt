@@ -1,7 +1,13 @@
 package com.compose.babyai.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +30,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.compose.babyai.R
+import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.ui.screens.aiTry.OutfitData
 import com.compose.babyai.ui.theme.PrimaryColor
 
@@ -129,7 +140,14 @@ fun OutfitTryCard(outfit: OutfitData,modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AiTryHeader(onClickProfile: () -> Unit = {}, onClickScan: () -> Unit = {}) {
+fun AiTryHeader(
+    babyProfiles: List<BabyProfile>,
+    selectedProfile: BabyProfile,
+    onProfileSelected: (BabyProfile) -> Unit,
+    onClickScan: () -> Unit = {}
+) {
+    var expanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -137,6 +155,7 @@ fun AiTryHeader(onClickProfile: () -> Unit = {}, onClickScan: () -> Unit = {}) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+
         Text(
             text = "Fitting room",
             fontSize = 22.sp,
@@ -148,45 +167,80 @@ fun AiTryHeader(onClickProfile: () -> Unit = {}, onClickScan: () -> Unit = {}) {
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(22.dp))
-                .clickable { onClickProfile() }
                 .background(Color.White)
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            // Back Arrow
+            // Arrow
             Icon(
                 painter = painterResource(id = R.drawable.left_arrow),
-                contentDescription = "Back",
-                modifier = Modifier.size(16.dp),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(16.dp)
+                    .clickable { expanded = !expanded },
                 tint = Color.Unspecified
             )
 
             Spacer(modifier = Modifier.width(6.dp))
 
-            // Profile Image
+            // Selected Profile
             Image(
-                painter = painterResource(id = R.drawable.onb1),
+                painter = painterResource(id = selectedProfile.imageRes),
                 contentDescription = "Profile",
                 modifier = Modifier
                     .size(36.dp)
-                    .clip(CircleShape),
+                    .clip(CircleShape)
+                    .clickable { expanded = !expanded },
                 contentScale = ContentScale.Crop
             )
 
+            // 🔥 INLINE EXPANDING LIST
+            AnimatedVisibility(
+                visible = expanded,
+                enter = expandHorizontally() + fadeIn(),
+                exit = shrinkHorizontally() + fadeOut()
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(start = 6.dp)
+                ) {
+                    babyProfiles
+                        .filter { it.id != selectedProfile.id }
+                        .take(3)
+                        .forEach { baby ->
+                            Image(
+                                painter = painterResource(id = baby.imageRes),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .padding(start = 6.dp)
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .border(1.dp, Color.LightGray, CircleShape)
+                                    .clickable {
+                                        onProfileSelected(baby)
+                                        expanded = false
+                                    },
+                                contentScale = ContentScale.Crop
+                            )
+                        }
+                }
+            }
+
             Spacer(modifier = Modifier.width(6.dp))
 
-            // Scan Icon
+            // Scan
             IconButton(
-                onClick = { onClickScan() },
+                onClick = onClickScan,
                 modifier = Modifier.size(46.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.scan_ic),
-                    contentDescription = "Scan",
+                    contentDescription = null,
                     tint = Color.Unspecified
                 )
             }
         }
     }
 }
+

@@ -36,6 +36,7 @@ sealed class Routes(val route: String) {
     }
     object AiBufferingScreen : Routes("aiBuffering")
     object AiFullScreenTry : Routes("aiFullScreenTry")
+    object AiScan : Routes("aiScan")
 
 
 }

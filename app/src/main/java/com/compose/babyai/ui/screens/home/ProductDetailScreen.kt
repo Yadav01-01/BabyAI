@@ -131,13 +131,17 @@ fun ProductDetailScreen(navController: NavHostController) {
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            painterResource(R.drawable.ai_star),
+                            painterResource(R.drawable.green_star),
                             null,
                             tint = PrimaryColor,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text("Try Now (AI Try-On)", color = Color.White, fontWeight = FontWeight.Bold)
+                        Text("Try Now (AI Try-On)",
+                            color = Color.White,
+                            fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 18.sp)
                     }
                 }
             }

@@ -21,8 +21,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -51,15 +49,19 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.compose.babyai.R
 import com.compose.babyai.data.model.AiTryResultItem
+import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.AiTryHeader
-import com.compose.babyai.ui.component.OutfitTryCard
 import com.compose.babyai.ui.theme.BabyAITheme
-import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
 fun AiTryScreen(navController: NavHostController) {
-    var searchQuery by remember { mutableStateOf("") }
+    val babies = listOf(
+        BabyProfile(1, R.drawable.onb1),
+        BabyProfile(2, R.drawable.onb2),
+        BabyProfile(3, R.drawable.onb3)
+    )
+    var selectedBaby by remember { mutableStateOf(babies.first()) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
@@ -75,7 +77,14 @@ fun AiTryScreen(navController: NavHostController) {
                 .statusBarsPadding()
                 .padding(horizontal = 20.dp)
         ) {
-            AiTryHeader()
+
+            AiTryHeader(
+                babyProfiles = babies,
+                selectedProfile = selectedBaby,
+                onProfileSelected = { selectedBaby = it },
+                onClickScan = { /* scan */ }
+            )
+
 
             Spacer(modifier = Modifier.height(5.dp))
 

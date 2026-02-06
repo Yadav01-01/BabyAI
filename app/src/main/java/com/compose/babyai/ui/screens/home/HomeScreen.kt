@@ -1,5 +1,10 @@
 package com.compose.babyai.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -51,9 +56,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
+import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.SearchBar
 import com.compose.babyai.ui.theme.PrimaryColor
+import kotlin.collections.filter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,11 +82,22 @@ fun HomeScreen(navController: NavHostController) {
 
         Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
             // Header
-            HomeHeader(
-                onFavIconClick = { navController.navigate(Routes.Wishlist.route) },
-                onClickProfile = { navController.navigate(Routes.BabyProfile.route) },
-                onClickScan = { /* Handle scan click */ }
+            val babies = listOf(
+                BabyProfile(1, R.drawable.onb1),
+                BabyProfile(2, R.drawable.onb2),
+                BabyProfile(3, R.drawable.onb3)
             )
+
+            var selectedBaby by remember { mutableStateOf(babies.first()) }
+
+            HomeHeader(
+                onFavIconClick = { navController.navigate(Routes.Wishlist.route)},
+                onClickScan = { navController.navigate(Routes.AiScan.route) },
+                babyProfiles = babies,
+                selectedProfile = selectedBaby,
+                onProfileSelected = { selectedBaby = it }
+            )
+
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -206,12 +224,17 @@ fun HomeScreen(navController: NavHostController) {
 
 data class ProductData(val title: String, val imageRes: Int)
 
+
 @Composable
 fun HomeHeader(
     onFavIconClick: () -> Unit,
-    onClickProfile: () -> Unit,
-    onClickScan: () -> Unit
+    onClickScan: () -> Unit,
+    babyProfiles: List<BabyProfile>,
+    selectedProfile: BabyProfile,
+    onProfileSelected: (BabyProfile) -> Unit
 ) {
+    var expanded by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -229,11 +252,11 @@ fun HomeHeader(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
 
-            // Favourite Icon
-            IconButton(onClick = { onFavIconClick() }) {
+            // Favourite
+            IconButton(onClick = onFavIconClick) {
                 Icon(
                     painter = painterResource(id = R.drawable.fav_ic),
-                    contentDescription = "Favorites",
+                    contentDescription = null,
                     tint = Color.Unspecified,
                     modifier = Modifier.size(52.dp)
                 )
@@ -241,46 +264,83 @@ fun HomeHeader(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Profile + Arrow + Scan Container
+            // Profile Container
             Row(
                 modifier = Modifier
                     .clip(RoundedCornerShape(22.dp))
-                    .clickable { onClickProfile() }
                     .background(Color.White)
                     .padding(horizontal = 8.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
-                // Back Arrow
+                // Arrow
                 Icon(
                     painter = painterResource(id = R.drawable.left_arrow),
-                    contentDescription = "Back",
-                    modifier = Modifier.size(16.dp),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp).clickable { expanded = !expanded },
                     tint = Color.Unspecified
                 )
 
                 Spacer(modifier = Modifier.width(6.dp))
 
-                // Profile Image
+                // Selected Profile
                 Image(
-                    painter = painterResource(id = R.drawable.onb1),
+                    painter = painterResource(id = selectedProfile.imageRes),
                     contentDescription = "Profile",
                     modifier = Modifier
                         .size(36.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .clickable { expanded = !expanded },
                     contentScale = ContentScale.Crop
                 )
 
+                //  INLINE EXPANDING LIST
+                AnimatedVisibility(
+                    visible = expanded,
+                    enter = expandHorizontally() + fadeIn(),
+                    exit = shrinkHorizontally() + fadeOut()
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(start = 6.dp)
+                    ) {
+                        babyProfiles
+                            .filter { it.id != selectedProfile.id }
+                            .take(3)
+                            .forEach { baby ->
+
+                                Image(
+                                    painter = painterResource(id = baby.imageRes),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(start = 6.dp)
+                                        .size(32.dp)
+                                        .clip(CircleShape)
+                                        .border(
+                                            1.dp,
+                                            Color.LightGray,
+                                            CircleShape
+                                        )
+                                        .clickable {
+                                            onProfileSelected(baby)
+                                            expanded = false
+                                        },
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+                    }
+                }
+
                 Spacer(modifier = Modifier.width(6.dp))
 
-                // Scan Icon
+                // Scan
                 IconButton(
-                    onClick = { onClickScan() },
+                    onClick = onClickScan,
                     modifier = Modifier.size(46.dp)
                 ) {
                     Icon(
                         painter = painterResource(id = R.drawable.scan_ic),
-                        contentDescription = "Scan",
+                        contentDescription = null,
                         tint = Color.Unspecified
                     )
                 }
@@ -288,6 +348,7 @@ fun HomeHeader(
         }
     }
 }
+
 
 
 @Composable
