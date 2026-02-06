@@ -73,7 +73,6 @@ fun PaymentScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Header
             PaymentHeader(onBackClick = { navController.popBackStack() })
@@ -128,8 +127,7 @@ fun PaymentScreen(navController: NavHostController) {
                         onClick = { /* Handle Payment */ },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp)
-                            .navigationBarsPadding(),
+                            .height(56.dp),
                         shape = RoundedCornerShape(40.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
                     ) {

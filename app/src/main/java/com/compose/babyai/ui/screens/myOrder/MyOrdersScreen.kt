@@ -71,7 +71,6 @@ fun MyOrdersScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Top App Bar
             TopBar(onBackClick = {

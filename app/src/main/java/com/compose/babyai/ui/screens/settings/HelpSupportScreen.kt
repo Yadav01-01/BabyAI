@@ -59,7 +59,7 @@ fun HelpSupportScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize().statusBarsPadding().navigationBarsPadding()
+                .fillMaxSize()
 
         ) {
 

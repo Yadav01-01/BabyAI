@@ -74,7 +74,6 @@ fun AiTryScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
                 .padding(horizontal = 20.dp)
         ) {
 

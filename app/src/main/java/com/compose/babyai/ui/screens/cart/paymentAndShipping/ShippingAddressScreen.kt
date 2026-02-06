@@ -75,7 +75,6 @@ fun ShippingAddressScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Header
             AddressHeader(onBackClick = { navController.popBackStack() })
@@ -187,7 +186,6 @@ fun ShippingAddressScreen(navController: NavHostController) {
                 AppButton(
                     text = "Submit",
                     onClick = { /* Handle Submit */ },
-                    modifier = Modifier.navigationBarsPadding()
                 )
                 
                 Spacer(modifier = Modifier.height(20.dp))

@@ -83,7 +83,6 @@ fun AddNewAddressScreen(navController: NavHostController,type: String?) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Header
             AddNewAddressHeader(type,onBackClick = { navController.popBackStack() })
@@ -198,7 +197,6 @@ fun AddNewAddressScreen(navController: NavHostController,type: String?) {
                 AppButton(
                     text = if (type == "Add") "Save Address" else "Save Address Changes",
                     onClick = { addressSuccessDialog = true },
-                    modifier = Modifier.navigationBarsPadding()
                 )
 
                 Spacer(modifier = Modifier.height(20.dp))

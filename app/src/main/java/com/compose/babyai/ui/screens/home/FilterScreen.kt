@@ -101,7 +101,6 @@ fun FilterScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Header
             FilterHeader(
@@ -297,8 +296,7 @@ fun FilterFooter(modifier: Modifier = Modifier, resultCount: Int, onApply: () ->
         modifier = modifier
             .fillMaxWidth()
             .background(Color.White)
-            .padding(horizontal = 5.dp, vertical = 5.dp)
-            .navigationBarsPadding(),
+            .padding(horizontal = 5.dp, vertical = 5.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {

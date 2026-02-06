@@ -105,7 +105,6 @@ fun SearchScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Search Header
             Row(

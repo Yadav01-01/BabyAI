@@ -11,11 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,16 +24,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.data.model.BabyUiModel
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.LogoutButton
-import com.compose.babyai.ui.component.NotificationItem
 import com.compose.babyai.ui.component.NotificationItemFromVM
 import com.compose.babyai.ui.component.ProfileHeaderCard
 import com.compose.babyai.ui.component.QuickActionItem
@@ -66,7 +58,6 @@ fun BabyProfileScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding().navigationBarsPadding()
                 .padding(horizontal = 26.dp)
                 .verticalScroll(rememberScrollState())
         ) {

@@ -1,5 +1,7 @@
 package com.compose.babyai.ui.screens.home
 
+import android.app.Activity
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -46,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -66,8 +69,12 @@ import kotlin.collections.filter
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(navController: NavHostController) {
+    val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
 
+    BackHandler() {
+        (context as Activity).moveTaskToBack(true)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -80,7 +87,7 @@ fun HomeScreen(navController: NavHostController) {
             contentScale = ContentScale.FillWidth
         )
 
-        Column(modifier = Modifier.fillMaxSize().statusBarsPadding()) {
+        Column(modifier = Modifier.fillMaxSize()) {
             // Header
             val babies = listOf(
                 BabyProfile(1, R.drawable.onb1),

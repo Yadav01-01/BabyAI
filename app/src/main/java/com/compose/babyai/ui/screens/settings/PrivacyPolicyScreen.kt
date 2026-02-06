@@ -47,8 +47,6 @@ fun PrivacyPolicyScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         ) {
 
             CommonTopBar(

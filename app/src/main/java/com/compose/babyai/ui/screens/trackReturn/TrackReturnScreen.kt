@@ -102,8 +102,6 @@ fun TrackReturnScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         ) {
 
             CommonTopBar(

@@ -186,7 +186,11 @@ fun VerificationScreen(navController: NavHostController) {
     if (successDialogVisible){
         SuccessDialog {
             successDialogVisible = false
-            navController.navigate(Routes.Main.route)
+            navController.navigate(Routes.Main.route) {
+                popUpTo(Routes.Login.route) {
+                    inclusive = true
+                }
+            }
         }
     }
 }

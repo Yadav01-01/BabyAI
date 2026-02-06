@@ -280,8 +280,6 @@ fun OrderSummaryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         )
         {
 

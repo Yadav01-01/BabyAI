@@ -1,5 +1,6 @@
 package com.compose.babyai.navigation
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -8,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.compose.babyai.ui.screens.aiTry.AIBufferingScreen
 import com.compose.babyai.ui.screens.aiTry.AiTryScreen
+import com.compose.babyai.ui.screens.aiTry.CamPreviewScreen
 import com.compose.babyai.ui.screens.aiTry.FullScreenAITryScreen
 import com.compose.babyai.ui.screens.aiTry.ScanScreen
 import com.compose.babyai.ui.screens.auth.LoginScreen
@@ -38,7 +40,6 @@ import com.compose.babyai.ui.screens.settings.TermsAndConditionsScreen
 import com.compose.babyai.ui.screens.subscription.SubscriptionScreen
 import com.compose.babyai.ui.screens.trackReturn.TrackReturnScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
-import okhttp3.Route
 
 @Composable
 fun NavGraph(
@@ -188,9 +189,7 @@ fun NavGraph(
         composable(Routes.TrackReturnScreen.route){
             TrackReturnScreen(navController)
         }
-     /*   composable(Routes.OrderSummaryScreen.route){
-            OrderSummaryScreen(navController)
-        }*/
+
         composable(
             route = Routes.OrderSummaryScreen.route,
             arguments = listOf(
@@ -213,6 +212,14 @@ fun NavGraph(
 
         composable(Routes.AiScan.route) {
             ScanScreen(navController)
+        }
+
+        composable(
+            route = Routes.CamPreview.route,
+            arguments = listOf(navArgument("imageUri") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val imageUri = backStackEntry.arguments?.getString("imageUri") ?: ""
+            CamPreviewScreen(navController, Uri.parse(Uri.decode(imageUri)))
         }
 
 

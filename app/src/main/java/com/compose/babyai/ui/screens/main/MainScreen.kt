@@ -54,7 +54,6 @@ fun MainScreen(rootNavController: NavHostController) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .navigationBarsPadding()
                             .clip(RoundedCornerShape(131.dp))
                             .padding(horizontal = 20.dp)
                             .padding(bottom = 20.dp)

@@ -68,7 +68,6 @@ fun SavedAddressScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
             // Header
             SavedAddressHeader(onBackClick = { navController.popBackStack() })

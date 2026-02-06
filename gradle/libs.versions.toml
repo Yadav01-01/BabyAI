@@ -1,6 +1,8 @@
 [versions]
 agp = "9.0.0"
+appcompat = "1.7.1"
 coilCompose = "2.7.0"
+constraintlayoutCompose = "1.1.1"
 coreKtx = "1.17.0"
 junit = "4.13.2"
 junitVersion = "1.3.0"
@@ -14,7 +16,9 @@ constraintlayout = "2.2.1"
 animation = "1.10.2"
 
 [libraries]
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
+androidx-constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayoutCompose" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }

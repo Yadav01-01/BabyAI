@@ -62,6 +62,9 @@ dependencies {
     implementation(libs.coil.compose)
     //horizontal Pager
     implementation(libs.androidx.compose.foundation)
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+    //constraint layout
+    implementation (libs.androidx.constraintlayout.compose)
+
+    implementation(libs.androidx.appcompat)
 
 }

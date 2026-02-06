@@ -55,156 +55,164 @@ fun OnBoardingScreen(navController: NavHostController) {
     val pagerState = rememberPagerState(pageCount = { onBoardingPages.size })
     val scope = rememberCoroutineScope()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(BgColor, Color.White)
-                )
-            )
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = Modifier.fillMaxSize()
     ) {
 
-        Spacer(Modifier.height(8.dp))
-        // 🔹 Header
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.baby_ai),
-                contentDescription = null
-            )
+        Image(
+            painter = painterResource(id = R.drawable.main_bg),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
-            Text(
-                text = "Skip",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily(Font(R.font.outfit_semibold)),
-                modifier = Modifier.clickable {
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Splash.route) { inclusive = true }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Spacer(Modifier.height(8.dp))
+
+            // 🔹 Header
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.baby_ai),
+                    contentDescription = null
+                )
+
+                Text(
+                    text = "Skip",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily(Font(R.font.outfit_semibold)),
+                    modifier = Modifier.clickable {
+                        navController.navigate(Routes.Login.route) {
+                            popUpTo(Routes.Splash.route) { inclusive = true }
+                        }
                     }
+                )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // 🔹 Progress Indicator
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                repeat(onBoardingPages.size) { index ->
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(8.dp)
+                            .clip(RoundedCornerShape(4.dp))
+                            .background(
+                                if (index <= pagerState.currentPage)
+                                    PrimaryColor
+                                else
+                                    ProgressBarBg
+                            )
+                    )
                 }
-            )
-        }
+            }
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.weight(0.4f))
 
-        // 🔹 Progress Indicator
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            repeat(onBoardingPages.size) { index ->
+            // 🔹 Pager
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxWidth()
+            ) { page ->
+
+                val item = onBoardingPages[page]
+
                 Box(
                     modifier = Modifier
-                        .weight(1f)
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp))
-                        .background(
-                            if (index <= pagerState.currentPage)
-                                PrimaryColor
-                            else
-                                ProgressBarBg
-                        )
-                )
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Image(
+                        painter = painterResource(R.drawable.onb_back_img),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Image(
+                        painter = painterResource(id = item.imageMain),
+                        contentDescription = null
+                    )
+                }
             }
-        }
 
+            Spacer(modifier = Modifier.weight(0.4f))
 
-        Spacer(modifier = Modifier.weight(0.4f))
+            // 🔹 Text
+            val page = onBoardingPages[pagerState.currentPage]
 
-        // 🔹 Pager (Main Part)
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxWidth()
-        ) { page ->
+            Text(
+                text = page.title,
+                fontSize = 28.sp,
+                fontFamily = FontFamily(Font(R.font.baloo2_medium)),
+                textAlign = TextAlign.Center
+            )
 
-            val item = onBoardingPages[page]
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Box(
+            Text(
+                text = page.description,
+                fontSize = 18.sp,
+                fontFamily = FontFamily(Font(R.font.nunito_regular)),
+                textAlign = TextAlign.Center,
+                lineHeight = 22.sp
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // 🔹 Next Button
+            Button(
+                onClick = {
+                    if (pagerState.currentPage < onBoardingPages.lastIndex) {
+                        scope.launch {
+                            pagerState.animateScrollToPage(
+                                pagerState.currentPage + 1
+                            )
+                        }
+                    } else {
+                        navController.navigate(Routes.Login.route) {
+                            popUpTo(Routes.Splash.route) { inclusive = true }
+                        }
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentAlignment = Alignment.Center
+                    .height(56.dp),
+                shape = RoundedCornerShape(28.dp),
+                colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
             ) {
-
-                Image(
-                    painter = painterResource(R.drawable.onb_back_img),
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
-                )
-
-                Image(
-                    painter = painterResource(id = item.imageMain),
-                    contentDescription = null,
-                    modifier = Modifier.wrapContentSize()
+                Text(
+                    text = if (pagerState.currentPage == onBoardingPages.lastIndex)
+                        "Get Started"
+                    else "Next",
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily(Font(R.font.museomoderno_medium)),
+                    fontWeight = FontWeight.Medium,
+                    color = Color.White
                 )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
-
-        Spacer(modifier = Modifier.weight(0.4f))
-
-        // 🔹 Text
-        val page = onBoardingPages[pagerState.currentPage]
-
-        Text(
-            text = page.title,
-            fontSize = 28.sp,
-            fontFamily = FontFamily(Font(R.font.baloo2_medium)),
-            textAlign = TextAlign.Center
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Text(
-            text = page.description,
-            fontSize = 18.sp,
-            fontFamily = FontFamily(Font(R.font.nunito_regular)),
-            textAlign = TextAlign.Center,
-            lineHeight = 22.sp
-        )
-
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // 🔹 Next Button
-        Button(
-            onClick = {
-                if (pagerState.currentPage < onBoardingPages.lastIndex) {
-                    scope.launch {
-                        pagerState.animateScrollToPage(
-                            pagerState.currentPage + 1
-                        )
-                    }
-                } else {
-                    navController.navigate(Routes.Login.route) {
-                        popUpTo(Routes.Splash.route) { inclusive = true }
-                    }
-                }
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(28.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
-        ) {
-            Text(
-                text = if (pagerState.currentPage == onBoardingPages.lastIndex)
-                    "Get Started"
-                else "Next",
-                fontSize = 18.sp,
-                fontFamily = FontFamily(Font(R.font.museomoderno_medium)),
-                fontWeight = FontWeight.Medium,
-                color = Color.White
-            )
-        }
-
-        Spacer(modifier = Modifier.height(20.dp))
     }
 }
+
 

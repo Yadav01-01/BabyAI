@@ -73,7 +73,6 @@ fun CartScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
         ) {
 
             // Header
@@ -141,8 +140,7 @@ fun CartScreen(navController: NavHostController) {
                         onClick = { navController.navigate(Routes.Payment.route) },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(56.dp)
-                            .navigationBarsPadding(),
+                            .height(56.dp),
                         shape = RoundedCornerShape(40.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor)
                     ) {

@@ -46,8 +46,6 @@ fun AboutBabyfyScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         ) {
 
             CommonTopBar(

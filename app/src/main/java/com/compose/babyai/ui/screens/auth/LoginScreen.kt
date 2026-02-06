@@ -194,7 +194,13 @@ fun LoginScreen(navController: NavHostController) {
 
             // Continue as Guest
             Row(
-                modifier = Modifier.clickable { navController.navigate(Routes.Main.route) },
+                modifier = Modifier.clickable {
+                    navController.navigate(Routes.Main.route) {
+                        popUpTo(Routes.Login.route) {
+                            inclusive = true
+                        }
+                    }
+                },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

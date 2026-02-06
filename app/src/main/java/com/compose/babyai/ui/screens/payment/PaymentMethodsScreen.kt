@@ -92,8 +92,6 @@ fun PaymentMethodsScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         ) {
             CommonTopBar(
                 title = "Payment Methods",

@@ -47,8 +47,6 @@ fun TermsAndConditionsScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
         ) {
 
             CommonTopBar(

@@ -50,7 +50,7 @@ fun SettingsScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize().statusBarsPadding().navigationBarsPadding()
+                .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
 

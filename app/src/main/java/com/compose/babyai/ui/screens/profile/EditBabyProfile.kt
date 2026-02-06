@@ -226,8 +226,6 @@ fun EditBabyProfile(navController: NavHostController) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding().navigationBarsPadding()
-
         ) {
             Column(
                 modifier = Modifier

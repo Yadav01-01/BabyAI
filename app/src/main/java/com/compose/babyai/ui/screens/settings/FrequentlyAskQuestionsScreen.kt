@@ -64,8 +64,6 @@ fun FrequentlyAskQuestionsScreen(navController: NavHostController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-
-                .statusBarsPadding().navigationBarsPadding()
         ) {
 
             CommonTopBar(

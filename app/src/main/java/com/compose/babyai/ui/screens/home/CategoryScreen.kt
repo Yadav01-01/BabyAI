@@ -63,7 +63,6 @@ fun CategoryScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .statusBarsPadding()
                 .padding(horizontal = 20.dp)
         ) {
             CategoryHeader()

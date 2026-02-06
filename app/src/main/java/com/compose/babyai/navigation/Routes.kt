@@ -44,6 +44,9 @@ sealed class Routes(val route: String) {
     }
     object AiFullScreenTry : Routes("aiFullScreenTry")
     object AiScan : Routes("aiScan")
+    object CamPreview : Routes("camPreview/{imageUri}") {
+        fun createRoute(imageUri: String) = "camPreview/$imageUri"
+    }
 
 
 }
