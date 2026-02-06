@@ -503,7 +503,11 @@ fun NotificationItemFromVM(
             .fillMaxWidth()
             .clip(RoundedCornerShape(55.dp))
             .background(Color(0xFFEFF9F8))
-            .padding(16.dp),
+            .padding(16.dp).clickable(interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ){
+                onToggle
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
 // Icon
@@ -581,7 +585,7 @@ fun BabyPhotoPickerRow(
 
             Box(
                 modifier = Modifier.fillMaxSize()
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(30.dp))
                     .zIndex(0f)
             ) {
                 AsyncImage(
@@ -601,7 +605,7 @@ fun BabyPhotoPickerRow(
                 painter = painterResource(R.drawable.ic_image_edit_icon),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp).zIndex(1f).align(Alignment.TopEnd)
-                    .offset(x = 5.dp, y = (-5).dp).clickable(
+                    .offset(x = 1.dp, y = (-1).dp).clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {onSelect1(3)}

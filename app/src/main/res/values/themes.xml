@@ -2,4 +2,33 @@
 <resources>
 
     <style name="Theme.BabyAI" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="DialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Main background -->
+        <item name="android:windowBackground">@drawable/dialog_background_with_border</item>
+        <item name="android:colorBackground">@color/white</item>
+        <!-- Enable dimming behind the dialog -->
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.0</item> <!-- 50% dim -->
+        <!-- Text colors -->
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+
+        <!-- Accent colors (buttons, highlights) -->
+        <item name="colorAccent">@color/gold_gradient_end2</item>
+        <item name="android:colorAccent">@color/gold_gradient_end2</item>
+
+        <!-- Button styles -->
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyled</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyled</item>
+        <item name="buttonBarNeutralButtonStyle">@style/DialogButtonStyled</item>
+
+        <!-- Disable all caps for buttons -->
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="DialogButtonStyled" parent="android:Theme.Material.Light">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

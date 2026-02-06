@@ -35,6 +35,12 @@ sealed class Routes(val route: String) {
         fun createRoute(type: String) = "addNewAddress/$type"
     }
     object AiBufferingScreen : Routes("aiBuffering")
-
+    object AddNewCardScreen : Routes("addNewCardScreen")
+    object SubscriptionScreen : Routes("subscriptionScreen")
+    object TrackReturnScreen : Routes("trackReturnScreen")
+    /*object OrderSummaryScreen : Routes("orderSummaryScreen")*/
+    object OrderSummaryScreen : Routes("orderSummaryScreen/{orderId}/{status}") {
+        fun createRoute(orderId: String, status: String) = "orderSummaryScreen/$orderId/$status"
+    }
 
 }
