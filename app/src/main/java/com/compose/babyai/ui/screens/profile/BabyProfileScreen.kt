@@ -86,10 +86,14 @@ fun BabyProfileScreen(navController: NavHostController) {
                 state = state,
                 babies = state.babies,
                 onBabyClick = {
+
+                },
+                onEditClick = {
                     navController.navigate(Routes.EditBabyProfile.route)
                 },
-                onEditClick = {},
-                onAddBabyClick = {}
+                onAddBabyClick = {
+
+                }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -100,7 +104,10 @@ fun BabyProfileScreen(navController: NavHostController) {
                 icon = R.drawable.ic_blue_heart_icon,
                 title = "My Wishlist",
                 subtitle = "${state.wishlistCount} Outfits Saved",
-                onNextScreenClick = {}
+                onNextScreenClick = {
+//Wishlist
+                    navController.navigate(Routes.Wishlist.route)
+                }
             )
 
             QuickActionItem(
@@ -116,7 +123,10 @@ fun BabyProfileScreen(navController: NavHostController) {
 
             SectionTitle("Settings")
 
-            SettingItem(R.drawable.ic_subscriptions_icon , "My Subscriptions", {})
+            SettingItem(R.drawable.ic_subscriptions_icon , "My Subscriptions", {
+                //SubscriptionScreen
+                navController.navigate(Routes.SubscriptionScreen.route)
+            })
             SettingItem(R.drawable.ic_payment_card_icon, "Payment Methods", {
                 //PaymentMethodsScreen
                 navController.navigate(Routes.PaymentMethodsScreen.route)
@@ -138,13 +148,14 @@ fun BabyProfileScreen(navController: NavHostController) {
             LogoutButton(onLogOutClick={
                 showLogoutDialog= true
             })
-            Spacer(modifier = Modifier.height(80.dp))
+            Spacer(modifier = Modifier.height(140.dp))
         }
     }
     if (showLogoutDialog) {
-        LogOutDialog(
-            onDismiss = {showLogoutDialog = false},
-            onLogout = {showLogoutDialog = false}
+        LogOutDialog(onDismiss = {showLogoutDialog = false},
+            onLogout = {showLogoutDialog = false
+                navController.navigate(Routes.Login.route)
+            }
         )
     }
 }

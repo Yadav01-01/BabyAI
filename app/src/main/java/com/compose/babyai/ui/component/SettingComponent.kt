@@ -97,6 +97,8 @@ fun InputField1(
     input: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
+    placeholderSize :TextUnit = 15.sp,
+    textSize :TextUnit = 15.sp,
     modifier: Modifier = Modifier,
 ) {
     OutlinedTextField(
@@ -106,13 +108,13 @@ fun InputField1(
             Text(
                 text = placeholder,
                 fontFamily = FontFamily(Font(R.font.varela_round)),
-                fontSize = 15.sp,
+                fontSize = placeholderSize,
                 color = Color(0x99363636)
             )
         },
         textStyle = TextStyle(
             fontFamily = FontFamily(Font(R.font.varela_round)),
-            fontSize = 15.sp,
+            fontSize = textSize,
             color = Color.Black
         ),
         modifier = modifier.fillMaxWidth() .border(1.dp, Color(0xFF808080), RoundedCornerShape(12.dp)),
@@ -190,7 +192,7 @@ fun CommonButton3(
         contentAlignment = Alignment.Center
     ) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) { }
+        Row(verticalAlignment = Alignment.CenterVertically) {
         Image(painter = painterResource(R.drawable.ic_plus_icon), contentDescription = "", modifier = Modifier.size(22.dp))
         Spacer(Modifier.width(10.dp))
         Text(
@@ -199,7 +201,157 @@ fun CommonButton3(
             fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
             color = Color.White
         )
-
+        }
     }
 }
 
+
+@Composable
+fun CommonOutlinedTextFieldCard(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hintText: String,
+    modifier: Modifier = Modifier,
+    leadingIconResId: Int? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    singleLine: Boolean = true
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { input ->
+            if (keyboardType == KeyboardType.Phone || keyboardType == KeyboardType.Number) {
+                val digits = input.filter { it.isDigit() || it == '/' }
+                onValueChange(digits)
+            } else {
+                onValueChange(input)
+            }
+        },
+        modifier = modifier.border(1.dp, Color(0xFF808080), RoundedCornerShape(28.dp)),
+        leadingIcon = {
+            leadingIconResId?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+        },
+        placeholder = {
+            Text(
+                text = hintText,
+                fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.varela_round)),
+                color = Color(0x99363636)
+            )
+        },
+        textStyle = TextStyle(
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.varela_round)),
+            color = Color.Black
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            cursorColor = Color(0xFF1EC9C3),
+            focusedPlaceholderColor = Color(0x99363636),
+            unfocusedPlaceholderColor = Color(0x99363636)
+        ),
+        shape = RoundedCornerShape(28.dp),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        singleLine = singleLine
+    )
+}
+
+@Composable
+fun CommonOutlinedTextFieldCardNumber(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hintText: String,
+    modifier: Modifier = Modifier,
+    leadingIconResId: Int? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    singleLine: Boolean = true
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { input ->
+            if (keyboardType == KeyboardType.Number) {
+                val formatted = formatCardNumber(input)
+                onValueChange(formatted)
+            } else {
+                onValueChange(input)
+            }
+        },
+        modifier = modifier.border(1.dp, Color(0xFF808080), RoundedCornerShape(28.dp)),
+        leadingIcon = {
+            leadingIconResId?.let {
+                Image(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                    modifier = Modifier.size(22.dp)
+                )
+            }
+        },
+        placeholder = {
+            Text(
+                text = hintText,
+                fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.varela_round)),
+                color = Color(0x99363636)
+            )
+        },
+        textStyle = TextStyle(
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.varela_round)),
+            color = Color.Black
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            cursorColor = Color(0xFF1EC9C3),
+            focusedPlaceholderColor = Color(0x99363636),
+            unfocusedPlaceholderColor = Color(0x99363636)
+        ),
+        shape = RoundedCornerShape(28.dp),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        singleLine = singleLine
+    )
+}
+
+
+@Composable
+fun CommonButtonCard(
+    onClick: () -> Unit,
+    title: String,
+    modifier: Modifier = Modifier,
+    fontSize: androidx.compose.ui.unit.TextUnit = 18.sp,
+    radius: androidx.compose.ui.unit.Dp = 14.dp,
+    enabled: Boolean = true
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(52.dp)
+            .clip(RoundedCornerShape(radius))
+            .background(Color(0xFF1ECBCC))
+            .clickable(
+                enabled = enabled,
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null
+            ) { onClick() },
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = title,
+            fontSize = fontSize,
+            fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+            color = Color.White
+        )
+    }
+}
+
+fun formatCardNumber(input: String): String {
+    val digitsOnly = input.filter { it.isDigit() }.take(16)
+
+    return digitsOnly.chunked(4).joinToString(" ")
+}

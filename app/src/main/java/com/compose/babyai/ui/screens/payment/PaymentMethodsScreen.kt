@@ -51,6 +51,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.CommonButton2
 import com.compose.babyai.ui.component.CommonButton3
 import com.compose.babyai.ui.component.CommonTopBar
@@ -64,152 +65,6 @@ data class PaymentCard(
     val expiry: String
 )
 
-/*@Composable
-fun PaymentMethodsScreen(navController: NavHostController) {
-
-    val cards = remember {
-        listOf(
-            PaymentCard(1, "Emily Smith", "1234", "569", "09/27"),
-            PaymentCard(2, "Emily Smith", "5678", "569", "09/27"),
-            PaymentCard(3, "Emily Smith", "9012", "569", "09/27")
-        )
-    }
-
-    var selectedCardId by remember { mutableStateOf<Int?>(1) }
-    Box(modifier = Modifier.fillMaxSize()) {
-
-        Image(
-            painter = painterResource(id = R.drawable.main_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillWidth
-        )
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .statusBarsPadding()
-                .navigationBarsPadding()
-        ) {
-
-            CommonTopBar(
-                title = "Payment Methods",
-                onBackClick = {
-                    navController.navigateUp()
-                },
-                modifier = Modifier.align(Alignment.TopCenter)
-            )
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 16.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
-                contentPadding = PaddingValues(
-                    top = 16.dp,
-                    bottom = 90.dp // ⭐ button height + spacing
-                )
-            ) {
-                items(cards) { card ->
-                    PaymentCardItem(
-                        card = card,
-                        isSelected = card.id == selectedCardId,
-                        onClick = { selectedCardId = card.id }
-                    )
-                }
-            }
-            CommonButton2(
-                title = "+  Add New Card",
-                modifier = Modifier
-                    .fillMaxWidth().align(Alignment.BottomCenter)
-                    .height(52.dp),
-                fontSize = 18.sp,
-                onClick = {
-
-                }
-            )
-        }
-
-    }
-}*/
-/*@Composable
-fun PaymentMethodsScreen(navController: NavHostController) {
-
-    val cards = remember {
-        listOf(
-            PaymentCard(1, "Emily Smith", "1234", "569", "09/27"),
-            PaymentCard(2, "Emily Smith", "5678", "569", "09/27"),
-            PaymentCard(3, "Emily Smith", "9012", "569", "09/27")
-        )
-    }
-
-    var selectedCardId by remember { mutableStateOf<Int?>(1) }
-
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
-    ) {
-        val (topBar, lazyColumn, button) = createRefs()
-
-        Image(
-            painter = painterResource(id = R.drawable.main_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillWidth
-        )
-
-        CommonTopBar(
-            title = "Payment Methods",
-            onBackClick = {
-                navController.navigateUp()
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .constrainAs(topBar) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        )
-
-        LazyColumn(
-            modifier = Modifier
-
-                .constrainAs(lazyColumn) {
-
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            contentPadding = PaddingValues(
-                top = 16.dp,
-                bottom = 16.dp
-            )
-        ) {
-            items(cards) { card ->
-                PaymentCardItem(
-                    card = card,
-                    isSelected = card.id == selectedCardId,
-                    onClick = { selectedCardId = card.id }
-                )
-            }
-        }
-
-        CommonButton2(
-            title = "+  Add New Card",
-            modifier = Modifier.fillMaxWidth().padding(16.dp)
-                .height(52.dp)
-                .constrainAs(button) {
-                    bottom.linkTo(parent.bottom, margin = 16.dp)
-                },
-            fontSize = 18.sp,
-            onClick = {
-
-            }
-        )
-    }
-}*/
 @Composable
 fun PaymentMethodsScreen(navController: NavHostController) {
 
@@ -290,7 +145,7 @@ fun PaymentMethodsScreen(navController: NavHostController) {
             }
             Spacer(Modifier.height(10.dp))
             CommonButton3(
-                title = "+  Add New Card",
+                title = "Add New Card",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
@@ -299,7 +154,7 @@ fun PaymentMethodsScreen(navController: NavHostController) {
                 fontSize = 18.sp,
                 radius = 40.dp,
                 onClick = {
-
+                   navController.navigate(Routes.AddNewCardScreen.route)
                 }
             )
         }

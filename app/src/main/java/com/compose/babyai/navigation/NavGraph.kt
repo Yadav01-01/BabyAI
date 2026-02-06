@@ -25,6 +25,8 @@ import com.compose.babyai.ui.screens.payment.PaymentMethodsScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.SavedAddressScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.ShippingAddressScreen
+import com.compose.babyai.ui.screens.myOrder.OrderSummaryScreen
+import com.compose.babyai.ui.screens.payment.AddNewCardScreen
 import com.compose.babyai.ui.screens.profile.BabyProfileScreen
 import com.compose.babyai.ui.screens.profile.EditBabyProfile
 import com.compose.babyai.ui.screens.settings.AboutBabyfyScreen
@@ -33,6 +35,8 @@ import com.compose.babyai.ui.screens.settings.HelpSupportScreen
 import com.compose.babyai.ui.screens.settings.PrivacyPolicyScreen
 import com.compose.babyai.ui.screens.settings.SettingsScreen
 import com.compose.babyai.ui.screens.settings.TermsAndConditionsScreen
+import com.compose.babyai.ui.screens.subscription.SubscriptionScreen
+import com.compose.babyai.ui.screens.trackReturn.TrackReturnScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
 import okhttp3.Route
 
@@ -174,6 +178,33 @@ fun NavGraph(
 
         composable(Routes.AiBufferingScreen.route){
             AIBufferingScreen(navController)
+        }
+        composable(Routes.AddNewCardScreen.route){
+            AddNewCardScreen(navController)
+        }
+        composable(Routes.SubscriptionScreen.route){
+            SubscriptionScreen(navController)
+        }
+        composable(Routes.TrackReturnScreen.route){
+            TrackReturnScreen(navController)
+        }
+     /*   composable(Routes.OrderSummaryScreen.route){
+            OrderSummaryScreen(navController)
+        }*/
+        composable(
+            route = Routes.OrderSummaryScreen.route,
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType },
+                navArgument("status") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: ""
+            val status = backStackEntry.arguments?.getString("status") ?: ""
+            OrderSummaryScreen(
+                navController = navController,
+                orderId = orderId,
+                orderStatus = status
+            )
         }
 
         composable(Routes.AiFullScreenTry.route){

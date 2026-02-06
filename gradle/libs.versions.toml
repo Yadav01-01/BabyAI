@@ -37,5 +37,6 @@ androidx-compose-animation = { group = "androidx.compose.animation", name = "ani
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 

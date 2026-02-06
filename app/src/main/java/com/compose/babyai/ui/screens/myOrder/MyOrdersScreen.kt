@@ -32,16 +32,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.TopBar
 
 // Data class for Order
 data class Order(
     val orderId: String,
     val date: String,
-    val status: OrderStatus
+    val status: OrderStatus1
 )
 
-enum class OrderStatus(val displayName: String, val color: Color) {
+enum class OrderStatus1(val displayName: String, val color: Color) {
     DELIVERED("Delivered", Color(0xFF127A7A)),
     CANCELLED("Cancelled", Color(0xFF595959)),
     SHIPPED("Shipped", Color(0xFF1ECBCC)),
@@ -52,10 +53,10 @@ enum class OrderStatus(val displayName: String, val color: Color) {
 fun MyOrdersScreen(navController: NavHostController) {
     // Sample orders data
     val orders = listOf(
-        Order("ORD-2025-001", "November 28, 2025", OrderStatus.DELIVERED),
-        Order("ORD-2025-002", "November 15, 2025", OrderStatus.CANCELLED),
-        Order("ORD-2025-003", "December 1, 2025", OrderStatus.SHIPPED),
-        Order("ORD-2025-004", "December 3, 2025", OrderStatus.PROCESSING)
+        Order("ORD-2025-001", "November 28, 2025", OrderStatus1.DELIVERED),
+        Order("ORD-2025-002", "November 15, 2025", OrderStatus1.CANCELLED),
+        Order("ORD-2025-003", "December 1, 2025", OrderStatus1.SHIPPED),
+        Order("ORD-2025-004", "December 3, 2025", OrderStatus1.PROCESSING)
     )
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -76,7 +77,8 @@ fun MyOrdersScreen(navController: NavHostController) {
             TopBar(onBackClick = {
                 navController.navigateUp()
             }, onSearchClick = {
-
+//TrackReturnScreen
+                navController.navigate(Routes.TrackReturnScreen.route)
             }, onWishListClick = {
 
             })
@@ -90,7 +92,10 @@ fun MyOrdersScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 orders.forEach { order ->
-                    OrderCard(order = order)
+                    OrderCard(order = order, orderClick = {orderId, status ->
+                        //OrderSummaryScreen
+                        navController.navigate(Routes.OrderSummaryScreen.createRoute(orderId, status))
+                    })
                 }
             }
         }
@@ -101,13 +106,13 @@ fun MyOrdersScreen(navController: NavHostController) {
 
 
 @Composable
-fun OrderCard(order: Order) {
+fun OrderCard(order: Order,orderClick:(String, String)->Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(27.dp))
             .background(Color(0xFFB9EFEF))
-            .clickable { /* Handle order click */ }
+            .clickable { orderClick(order.orderId, order.status.name) }
     ) {
         Row(
             modifier = Modifier

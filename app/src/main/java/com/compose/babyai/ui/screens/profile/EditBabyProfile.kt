@@ -232,7 +232,7 @@ fun EditBabyProfile(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 10.dp)
+                    .padding(start = 10.dp, end = 8.dp)
             ) {
 
                 CommonTopBar(
@@ -245,7 +245,7 @@ fun EditBabyProfile(navController: NavHostController) {
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize().padding(horizontal = 20.dp)
+                        .fillMaxSize().padding(start = 20.dp, end = 16.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.height(14.dp))
@@ -572,7 +572,6 @@ fun BabyProfileAvatar(
             )
         }
 
-        // ✅ Selected check badge
         if (isSelected) {
 
             Image(
