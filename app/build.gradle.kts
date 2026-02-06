@@ -62,5 +62,6 @@ dependencies {
     //horizontal Pager
     implementation(libs.androidx.compose.foundation)
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
+    implementation("com.github.arpitkatiyar1999:Country-Picker:3.0.0")
 
 }
