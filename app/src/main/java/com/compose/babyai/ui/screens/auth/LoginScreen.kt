@@ -2,7 +2,9 @@ package com.compose.babyai.ui.screens.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -37,21 +43,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Devices
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.arpitkatiyarprojects.countrypicker.CountryPicker
+import com.arpitkatiyarprojects.countrypicker.models.FlagDimensions
+import com.arpitkatiyarprojects.countrypicker.models.SelectedCountryDisplayProperties
+import com.arpitkatiyarprojects.countrypicker.models.SelectedCountryProperties
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.AppButton
 import com.compose.babyai.ui.component.InputTextField
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
+import androidx.compose.foundation.LocalIndication
+import androidx.compose.runtime.CompositionLocalProvider
 
 
 @Composable
 fun LoginScreen(navController: NavHostController) {
     var name by remember { mutableStateOf("") }
     var phoneNumber by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var isPhoneSelected by remember { mutableStateOf(true) }
     Box(
         modifier = Modifier.fillMaxSize()
@@ -114,16 +130,9 @@ fun LoginScreen(navController: NavHostController) {
                 lineHeight = 22.sp
             )
 
+
+
             Spacer(modifier = Modifier.height(32.dp))
-
-            InputTextField(
-                value = name,
-                onValueChange = { name = it },
-                placeholderText = "Parent/Guardian Full Name",
-                leadingIcon = painterResource(id = R.drawable.person)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             // Email / Phone Toggle
             Box(
@@ -171,16 +180,74 @@ fun LoginScreen(navController: NavHostController) {
                     }
                 }
             }
-
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Phone Number Field
             InputTextField(
-                value = phoneNumber,
-                onValueChange = { phoneNumber = it },
-                placeholderText = "Phone Number",
-                leadingIcon = painterResource(id = R.drawable.phone_ic)
+                value = name,
+                onValueChange = { name = it },
+                placeholderText = "Parent/Guardian Full Name",
+                leadingIcon = painterResource(id = R.drawable.person)
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
+            if (isPhoneSelected){
+                // Phone Number Field
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(18.dp)) {
+
+                    Box(
+                        modifier = Modifier.height(55.dp)
+                            .border(1.dp, color = Color(0xFFB1B5BE), shape = RoundedCornerShape(40.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+
+                        CountryPicker(
+                            defaultCountryCode = "us",
+                            selectedCountryDisplayProperties = SelectedCountryDisplayProperties(
+                                properties = SelectedCountryProperties(
+                                    showCountryFlag = true,
+                                    showCountryName = false,
+                                    showCountryPhoneCode = false,
+                                    showCountryCode = false,
+                                    showDropDownIcon = true,
+                                    spaceAfterCountryFlag = 6.dp,
+                                    dropDownIconComposable = {
+                                        Image(
+                                            painterResource(R.drawable.ic_dropdown_icon_download) ,
+                                            contentDescription = "Select Country",
+                                           // tint = Color.Black
+                                            modifier = Modifier.padding(start = 10.dp, end = 5.dp).size(12.dp)
+                                        )
+                                    }
+                                )
+                            ),
+                            onCountrySelected = { country ->
+                                // Handle country selection
+                            },
+                            modifier = Modifier.scale(0.75f).padding(start = 10.dp)
+                        )
+
+                    }
+
+                    InputTextField(
+                        value = phoneNumber,
+                        onValueChange = { phoneNumber = it },
+                        placeholderText = "Phone Number",
+                        leadingIcon = painterResource(id = R.drawable.phone_ic)
+                    )
+                }
+
+            }else{
+                InputTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    placeholderText = "Email Address",
+                    leadingIcon = painterResource(id = R.drawable.ic_email_icon)
+                )
+            }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -243,3 +310,15 @@ fun LoginScreen(navController: NavHostController) {
     }
 
 }
+
+@Preview(
+    showBackground = true,
+    showSystemUi = true,
+    device = Devices.PIXEL_4
+)
+@Composable
+fun LoginScreenPreview() {
+    val navController = rememberNavController()
+    LoginScreen(navController = navController)
+}
+
