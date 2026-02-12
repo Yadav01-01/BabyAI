@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.AppButton
-import com.compose.babyai.ui.component.CardTextField
-import com.compose.babyai.ui.component.ProfileCardHeading
+import com.compose.babyai.ui.component.uiInput.AppButton
+import com.compose.babyai.ui.component.uiInput.CardTextField
+import com.compose.babyai.ui.component.uiInput.ProfileCardHeading
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
 import com.compose.babyai.util.dashedBorder

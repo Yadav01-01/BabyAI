@@ -45,8 +45,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.babyai.R
-import com.compose.babyai.ui.screens.profile.FabricItem
-import com.compose.babyai.ui.screens.profile.PreferredColorItem
+import com.compose.babyai.ui.screens.profile.babyProfile.PreferredColorItem
 
 //PreferredColorSpinner
 

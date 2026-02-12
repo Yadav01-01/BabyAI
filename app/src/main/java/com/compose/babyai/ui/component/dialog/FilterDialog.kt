@@ -5,6 +5,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -44,7 +45,7 @@ fun FilterDialog(
         shape = RoundedCornerShape(30.dp),
         containerColor = Color.White,
         dragHandle = null,
-        modifier = modifier
+        modifier = modifier.navigationBarsPadding()
     ) {
         Column(
             modifier = Modifier
@@ -97,10 +98,17 @@ fun FilterDialog(
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .clickable {
-                                if (isSelected) selectedOptions.remove(option)
-                                else selectedOptions.add(option)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null
+                            ) {
+                                if (isSelected) {
+                                    selectedOptions.remove(option)
+                                } else {
+                                    selectedOptions.add(option)
+                                }
                             }
+
                             .padding(vertical = 4.dp)
                     ) {
                         Box(

@@ -1,4 +1,6 @@
-package com.compose.babyai.ui.screens.settings
+package com.compose.babyai.ui.screens.profile.settings
+
+//TermsAndConditionsScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -6,9 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -24,11 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.CommonTopBar
-
-//AboutBabyfyScreen
+import com.compose.babyai.ui.component.uiInput.CommonTopBar
+//PrivacyPolicyScreen
 @Composable
-fun AboutBabyfyScreen(
+fun TermsAndConditionsScreen(
     navController: NavHostController
 ) {
 
@@ -49,7 +48,7 @@ fun AboutBabyfyScreen(
         ) {
 
             CommonTopBar(
-                title = "About Babyfy",
+                title = "Terms & Conditions",
                 onBackClick = {
                     navController.navigateUp()
                 }
@@ -65,7 +64,11 @@ fun AboutBabyfyScreen(
             ) {
                 // First Paragraph
                 Text(
-                    text = "Babyfy is your smart parenting companion designed to make dressing your newborn easier, cuter, and more organized than ever. From managing your baby’s wardrobe to discovering the perfect outfits, Babyfy brings convenience and joy right to your fingertips. Parents can upload their baby’s clothing, track what they already own, and explore smart AI-powered recommendations that suggest matching items and complete looks.",
+                    text = "Your privacy is our highest priority. Babyfy collects only the information needed to deliver a personalized, seamless, and enjoyable experience as you manage your baby’s wardrobe and explore new outfit recommendations. This may include basic profile details, your baby’s information (such as name or nickname), uploaded wardrobe photos, purchase history, preferences, and app interactions.\n" +
+                            "\n" +
+                            "We do not share or sell your personal data to third parties without your consent. All information is stored securely and handled in accordance with applicable privacy regulations to ensure your safety and trust.\n" +
+                            "\n" +
+                            "You maintain full control over your data. At any time, you can update, export, or delete your information through your profile settings. Babyfy is committed to protecting your family’s privacy while providing a warm, smart, and parent-friendly experience.",
                     fontSize = 15.sp,
                     color = Color.Black,
                     fontFamily = FontFamily(Font(R.font.quicksand_semibold)),

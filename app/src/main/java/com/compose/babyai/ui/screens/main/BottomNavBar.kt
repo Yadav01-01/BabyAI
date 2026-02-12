@@ -83,7 +83,7 @@ fun BottomNavigationBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(88.dp)
-                .padding(horizontal = 16.dp),
+                .padding(horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {

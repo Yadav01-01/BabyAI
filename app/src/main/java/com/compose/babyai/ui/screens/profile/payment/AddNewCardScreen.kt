@@ -1,18 +1,12 @@
-package com.compose.babyai.ui.screens.payment
+package com.compose.babyai.ui.screens.profile.payment
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,7 +16,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -31,10 +24,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.CommonButtonCard
-import com.compose.babyai.ui.component.CommonOutlinedTextFieldCard
-import com.compose.babyai.ui.component.CommonOutlinedTextFieldCardNumber
-import com.compose.babyai.ui.component.CommonTopBar
+import com.compose.babyai.ui.component.uiInput.CommonButtonCard
+import com.compose.babyai.ui.component.uiInput.CommonOutlinedTextFieldCard
+import com.compose.babyai.ui.component.uiInput.CommonOutlinedTextFieldCardNumber
+import com.compose.babyai.ui.component.uiInput.CommonTopBar
 import com.compose.babyai.ui.component.datepicker.DatePickerModal
 
 @Composable

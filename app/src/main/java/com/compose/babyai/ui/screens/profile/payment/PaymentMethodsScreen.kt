@@ -1,4 +1,4 @@
-package com.compose.babyai.ui.screens.payment
+package com.compose.babyai.ui.screens.profile.payment
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -14,14 +14,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -46,15 +42,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
-import androidx.constraintlayout.compose.layoutId
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.CommonButton2
-import com.compose.babyai.ui.component.CommonButton3
-import com.compose.babyai.ui.component.CommonTopBar
+import com.compose.babyai.ui.component.uiInput.CommonButton3
+import com.compose.babyai.ui.component.uiInput.CommonTopBar
 
 //PaymentMethodsScreen
 data class PaymentCard(

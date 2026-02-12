@@ -1,5 +1,6 @@
-package com.compose.babyai.ui.screens.profile
+package com.compose.babyai.ui.screens.profile.babyProfile
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -7,7 +8,6 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.compose.foundation.Image
@@ -16,17 +16,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -47,17 +42,15 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.BabyPhotoPickerRow
-import com.compose.babyai.ui.component.CommonOutlinedButton
-import com.compose.babyai.ui.component.CommonPrimaryButton
-import com.compose.babyai.ui.component.CommonTopBar
-import com.compose.babyai.ui.component.CustomSwitch
-import com.compose.babyai.ui.component.InputTextFieldWithoutIcon
-import com.compose.babyai.ui.component.SectionTitle
-import com.compose.babyai.ui.component.tealColor
+import com.compose.babyai.ui.component.uiInput.BabyPhotoPickerRow
+import com.compose.babyai.ui.component.uiInput.CommonOutlinedButton
+import com.compose.babyai.ui.component.uiInput.CommonPrimaryButton
+import com.compose.babyai.ui.component.uiInput.CommonTopBar
+import com.compose.babyai.ui.component.uiInput.InputTextFieldWithoutIcon
+import com.compose.babyai.ui.component.uiInput.SectionTitle
+import com.compose.babyai.ui.component.uiInput.tealColor
 import com.compose.babyai.ui.dialog.DeleteBabysDetailsDialog
 import com.compose.babyai.ui.dialog.DeleteProfileDialog
-import com.compose.babyai.ui.dialog.LogOutDialog
 import com.compose.babyai.ui.spinner.CustomSpinner
 import com.compose.babyai.ui.spinner.PreferredColorSpinner
 import java.io.File
@@ -201,12 +194,12 @@ fun EditBabyProfile(navController: NavHostController) {
 
     fun launchCameraWithPermissionCheck() {
         when (PackageManager.PERMISSION_GRANTED) {
-            ContextCompat.checkSelfPermission(context, android.Manifest.permission.CAMERA) -> {
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) -> {
                 launcherCamera.launch(null)
             }
 
             else -> {
-                permissionLauncher.launch(android.Manifest.permission.CAMERA)
+                permissionLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }

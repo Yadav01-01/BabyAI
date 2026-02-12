@@ -22,23 +22,23 @@ import com.compose.babyai.ui.screens.authProfile.ProfileReadyScreen
 import com.compose.babyai.ui.screens.authProfile.ProfileSetupScreen
 import com.compose.babyai.ui.screens.cart.CartScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.AddNewAddressScreen
-import com.compose.babyai.ui.screens.myOrder.MyOrdersScreen
-import com.compose.babyai.ui.screens.payment.PaymentMethodsScreen
+import com.compose.babyai.ui.screens.profile.myOrder.MyOrdersScreen
+import com.compose.babyai.ui.screens.profile.payment.PaymentMethodsScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.SavedAddressScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.ShippingAddressScreen
-import com.compose.babyai.ui.screens.myOrder.OrderSummaryScreen
-import com.compose.babyai.ui.screens.payment.AddNewCardScreen
-import com.compose.babyai.ui.screens.profile.BabyProfileScreen
-import com.compose.babyai.ui.screens.profile.EditBabyProfile
-import com.compose.babyai.ui.screens.settings.AboutBabyfyScreen
-import com.compose.babyai.ui.screens.settings.FrequentlyAskQuestionsScreen
-import com.compose.babyai.ui.screens.settings.HelpSupportScreen
-import com.compose.babyai.ui.screens.settings.PrivacyPolicyScreen
-import com.compose.babyai.ui.screens.settings.SettingsScreen
-import com.compose.babyai.ui.screens.settings.TermsAndConditionsScreen
-import com.compose.babyai.ui.screens.subscription.SubscriptionScreen
-import com.compose.babyai.ui.screens.trackReturn.TrackReturnScreen
+import com.compose.babyai.ui.screens.profile.myOrder.OrderSummaryScreen
+import com.compose.babyai.ui.screens.profile.payment.AddNewCardScreen
+import com.compose.babyai.ui.screens.profile.babyProfile.BabyProfileScreen
+import com.compose.babyai.ui.screens.profile.babyProfile.EditBabyProfile
+import com.compose.babyai.ui.screens.profile.settings.AboutBabyfyScreen
+import com.compose.babyai.ui.screens.profile.settings.FrequentlyAskQuestionsScreen
+import com.compose.babyai.ui.screens.profile.settings.HelpSupportScreen
+import com.compose.babyai.ui.screens.profile.settings.PrivacyPolicyScreen
+import com.compose.babyai.ui.screens.profile.settings.SettingsScreen
+import com.compose.babyai.ui.screens.profile.settings.TermsAndConditionsScreen
+import com.compose.babyai.ui.screens.profile.subscription.SubscriptionScreen
+import com.compose.babyai.ui.screens.profile.myOrder.trackReturn.TrackReturnScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
 
 @Composable

@@ -1,4 +1,4 @@
-package com.compose.babyai.ui.component
+package com.compose.babyai.ui.component.uiInput
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -54,6 +55,7 @@ import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
 fun OutfitTryCard(outfit: OutfitData,modifier: Modifier = Modifier) {
+    var isFav by remember { mutableStateOf(outfit.isFavorite) }
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
@@ -81,11 +83,11 @@ fun OutfitTryCard(outfit: OutfitData,modifier: Modifier = Modifier) {
                 )
 
                 IconButton(
-                    onClick = { },
+                    onClick = {isFav = !isFav },
                     modifier = Modifier.align(Alignment.TopEnd)
                 ) {
                     Icon(
-                        painter = painterResource(id = R.drawable.fav_item),
+                        painter = painterResource(id = if (isFav) R.drawable.is_fav else R.drawable.fav_item),
                         contentDescription = "Favorite",
                         tint = Color.Unspecified,
                         modifier = Modifier.size(38.dp)
@@ -244,3 +246,22 @@ fun AiTryHeader(
     }
 }
 
+@Composable
+fun IconCircleButton(
+    icon: Int,
+    onClick: () -> Unit
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = Modifier
+            .size(52.dp)
+            .background(Color.Transparent, CircleShape)
+            .shadow(0.dp, CircleShape)
+    ) {
+        Icon(
+            painter = painterResource(icon),
+            contentDescription = null,
+            tint = Color.Unspecified,
+        )
+    }
+}

@@ -1,4 +1,4 @@
-package com.compose.babyai.ui.screens.profile
+package com.compose.babyai.ui.screens.profile.babyProfile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -30,12 +28,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.LogoutButton
-import com.compose.babyai.ui.component.NotificationItemFromVM
-import com.compose.babyai.ui.component.ProfileHeaderCard
-import com.compose.babyai.ui.component.QuickActionItem
-import com.compose.babyai.ui.component.SectionTitle
-import com.compose.babyai.ui.component.SettingItem
+import com.compose.babyai.ui.component.uiInput.LogoutButton
+import com.compose.babyai.ui.component.uiInput.NotificationItemFromVM
+import com.compose.babyai.ui.component.uiInput.ProfileHeaderCard
+import com.compose.babyai.ui.component.uiInput.QuickActionItem
+import com.compose.babyai.ui.component.uiInput.SectionTitle
+import com.compose.babyai.ui.component.uiInput.SettingItem
 import com.compose.babyai.ui.dialog.LogOutDialog
 import com.compose.babyai.viewModel.BabyProfileViewModel
 

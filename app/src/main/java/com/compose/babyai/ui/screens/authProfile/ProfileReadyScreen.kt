@@ -1,7 +1,6 @@
 package com.compose.babyai.ui.screens.authProfile
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -29,8 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.AppButton
-import com.compose.babyai.ui.theme.BgColor
+import com.compose.babyai.ui.component.uiInput.AppButton
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
@@ -124,7 +121,14 @@ fun ProfileReadyScreen(navController: NavHostController) {
             item {
                 AppButton(
                     text = "Start Exploring",
-                    onClick = { navController.navigate(Routes.Home.route) },
+                    onClick = {
+                        navController.navigate(Routes.Main.route) {
+                            popUpTo(Routes.Login.route) {
+                                inclusive = true
+                            }
+                            launchSingleTop = true
+                        }
+                    },
                     modifier = Modifier.padding(horizontal = 20.dp)
                 )
             }

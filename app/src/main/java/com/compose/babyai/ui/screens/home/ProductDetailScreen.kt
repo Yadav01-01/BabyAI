@@ -12,7 +12,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -28,9 +31,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.ui.component.dialog.AgeBottomSheet
-import com.compose.babyai.ui.component.DetailHeading
+import com.compose.babyai.ui.component.uiInput.DetailHeading
 import com.compose.babyai.ui.component.dialog.ShareBottomSheet
 import com.compose.babyai.ui.theme.PrimaryColor
+import com.compose.babyai.util.BottomCurveShape
 
 @Composable
 fun ProductDetailScreen(navController: NavHostController) {
@@ -39,6 +43,8 @@ fun ProductDetailScreen(navController: NavHostController) {
     var selectedColor by remember { mutableStateOf(Color(0xFF8EBAE5)) }
     var shareDialog by remember { mutableStateOf(false) }
     var ageDialog by remember { mutableStateOf(false) }
+    var isFavorite by remember { mutableStateOf(false) }
+
 
     LazyColumn(
         modifier = Modifier
@@ -52,7 +58,31 @@ fun ProductDetailScreen(navController: NavHostController) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(400.dp)
-            ) {
+                    .clip(BottomCurveShape())
+                    .background(Color(0xFFFFD6C2))
+                    .drawBehind {
+
+                        val strokeWidth = 4.dp.toPx()
+
+                        val path = Path().apply {
+                            moveTo(0f, size.height - 80f)
+
+                            quadraticBezierTo(
+                                size.width / 2,
+                                size.height + 80f,
+                                size.width,
+                                size.height - 80f
+                            )
+                        }
+
+                        drawPath(
+                            path = path,
+                            color = Color.Black,
+                            style = Stroke(width = strokeWidth)
+                        )
+                    }
+            )
+            {
                 Image(
                     painter = painterResource(R.drawable.dummy_img),
                     contentDescription = null,
@@ -79,9 +109,9 @@ fun ProductDetailScreen(navController: NavHostController) {
                     }
 
                     Column(horizontalAlignment = Alignment.End) {
-                        IconButton(onClick = { }) {
+                        IconButton(onClick = { isFavorite = !isFavorite }) {
                             Icon(
-                                painter = painterResource(R.drawable.trans_fac_ic),
+                                painter = painterResource(if (isFavorite) R.drawable.trans_fac_ic else R.drawable.fav_item),
                                 contentDescription = null,
                                 tint = Color.Unspecified,
                                 modifier = Modifier.size(52.dp)

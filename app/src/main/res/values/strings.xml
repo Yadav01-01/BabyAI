@@ -12,4 +12,6 @@
     <string name="Shipping_Address">Shipping Address</string>
     <string name="No_shipping_address_found">No shipping address found</string>
     <string name="Selected_Outfits">Your Baby in Selected Outfits</string>
+    <string name="logheading">Let’s get you started</string>
+    <string name="logsubheading">Enter your number to receive a\\nverification code.</string>
 </resources>

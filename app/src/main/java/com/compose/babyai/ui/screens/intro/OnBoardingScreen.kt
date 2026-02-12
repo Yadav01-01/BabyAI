@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.data.OnBoardingPage
+import com.compose.babyai.data.model.OnBoardingPage
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.theme.*
 import kotlinx.coroutines.launch
@@ -60,7 +60,7 @@ fun OnBoardingScreen(navController: NavHostController) {
     ) {
 
         Image(
-            painter = painterResource(id = R.drawable.main_bg),
+            painter = painterResource(id = R.drawable.plain_bg),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

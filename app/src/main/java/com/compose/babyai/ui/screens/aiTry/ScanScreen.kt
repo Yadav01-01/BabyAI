@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -55,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.theme.BabyAITheme
@@ -68,6 +68,7 @@ import java.util.Locale
 fun ScanScreen(navController: NavHostController) {
     val context = LocalContext.current
     var imageUri by remember { mutableStateOf<Uri?>(null) }
+    var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
 
     // Helper function to create a temporary image file
     fun createImageFile(): File {
@@ -82,8 +83,7 @@ fun ScanScreen(navController: NavHostController) {
     ) { success ->
         if (success) {
             imageUri?.let {
-                val encodedUri = Uri.encode(it.toString())
-                navController.navigate(Routes.CamPreview.createRoute(encodedUri))
+                capturedImageUri = it
             }
         }
     }
@@ -93,8 +93,7 @@ fun ScanScreen(navController: NavHostController) {
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            val encodedUri = Uri.encode(it.toString())
-            navController.navigate(Routes.CamPreview.createRoute(encodedUri))
+            capturedImageUri = it
         }
     }
 
@@ -128,36 +127,36 @@ fun ScanScreen(navController: NavHostController) {
                     Icon(
                         painter = painterResource(id = R.drawable.draw_back_ic),
                         contentDescription = "Back",
-                        tint = Color.Unspecified
+                        tint = Color.Black,
                     )
                 }
                 Spacer(modifier = Modifier.width(12.dp))
                 Text(
                     text = "Scan",
-                    fontSize = 22.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
                     color = Color.Black
                 )
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             Box(
                 modifier = Modifier
-                    .fillMaxSize().padding(0.dp)
+                    .fillMaxWidth()
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.scan_bg),
                     contentDescription = null,
                     contentScale = ContentScale.FillWidth,
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 10.dp, ),
+                        .fillMaxWidth()
+                        .padding(horizontal = 10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
@@ -168,113 +167,223 @@ fun ScanScreen(navController: NavHostController) {
                         textAlign = TextAlign.Center,
                         fontSize = 24.sp,
                         color = PrimaryColor,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily(Font(R.font.baloo2_semibold))
                     )
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = "Scan or upload your baby's picture to\n get perfect matching suggestion for\n clothes and accessories.",
+                        text = "Scan or upload your baby's picture to get\nperfect matching suggestion for clothes\nand accessories.",
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         color = Color(0xFFB0B0B0),
                         fontFamily = FontFamily(Font(R.font.nunito_regular))
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-                    // Action Cards
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp)
-                    ) {
-
-                        // Smart Scan Card (Camera)
+                    if (capturedImageUri != null) {
+                        // Image Preview
                         Card(
                             modifier = Modifier
-                                .weight(1f)
-                                .height(145.dp)
+                                .fillMaxWidth()
+                                .height(225.dp)
+                                .padding(horizontal = 10.dp)
                                 .clickable {
-                                    val file = createImageFile()
-                                    val uri = FileProvider.getUriForFile(
-                                        context,
-                                        "${context.packageName}.provider",
-                                        file
-                                    )
-                                    imageUri = uri
-                                    cameraLauncher.launch(uri)
+                                    val encodedUri = Uri.encode(capturedImageUri.toString())
+                                    navController.navigate(Routes.CamPreview.createRoute(encodedUri))
                                 },
                             shape = RoundedCornerShape(30.dp),
-                            colors = CardDefaults.cardColors(containerColor = Color(0xFFFBD606)),
-                            elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
                         ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
+                            Image(
+                                painter = rememberAsyncImagePainter(capturedImageUri),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Action Buttons (Smaller)
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            // Take a Photo Button
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(54.dp)
+                                    .clip(RoundedCornerShape(30.dp))
+                                    .background(Color(0xFFFBD606))
+                                    .clickable {
+                                        val file = createImageFile()
+                                        val uri = FileProvider.getUriForFile(
+                                            context,
+                                            "${context.packageName}.provider",
+                                            file
+                                        )
+                                        imageUri = uri
+                                        cameraLauncher.launch(uri)
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.cam_ic),
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.size(48.dp)
+                                    modifier = Modifier.size(24.dp)
                                 )
-                                Spacer(modifier = Modifier.height(8.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Take a Photo",
                                     color = Color.White,
-                                    fontSize = 16.sp,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold,
                                     fontFamily = FontFamily(Font(R.font.varela_round))
                                 )
                             }
-                        }
 
-                        // Upload Image Card (Dashed - Gallery)
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(145.dp)
-                                .clip(RoundedCornerShape(30.dp))
-                                .clickable { galleryLauncher.launch("image/*") }
-                                .drawBehind {
-                                    val strokeWidth = 2.dp.toPx()
-                                    val dashWidth = 12.dp.toPx()
-                                    val dashGap = 8.dp.toPx()
+                            // Upload Image Button
+                            Row(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(54.dp)
+                                    .clip(RoundedCornerShape(30.dp))
+                                    .clickable { galleryLauncher.launch("image/*") }
+                                    .drawBehind {
+                                        val strokeWidth = 1.5.dp.toPx()
+                                        val dashWidth = 8.dp.toPx()
+                                        val dashGap = 6.dp.toPx()
 
-                                    drawRoundRect(
-                                        color = PrimaryColor.copy(alpha = 0.5f),
-                                        size = size,
-                                        cornerRadius = CornerRadius(30.dp.toPx()),
-                                        style = Stroke(
-                                            width = strokeWidth,
-                                            pathEffect = PathEffect.dashPathEffect(
-                                                floatArrayOf(dashWidth, dashGap),
-                                                0f
+                                        drawRoundRect(
+                                            color = PrimaryColor.copy(alpha = 0.6f),
+                                            size = size,
+                                            cornerRadius = CornerRadius(30.dp.toPx()),
+                                            style = Stroke(
+                                                width = strokeWidth,
+                                                pathEffect = PathEffect.dashPathEffect(
+                                                    floatArrayOf(dashWidth, dashGap),
+                                                    0f
+                                                )
                                             )
                                         )
-                                    )
-                                }
-                        ) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                verticalArrangement = Arrangement.Center,
-                                horizontalAlignment = Alignment.CenterHorizontally
+                                    },
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
                             ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.uploadic),
                                     contentDescription = null,
-                                    tint = Color.Unspecified,
-                                    modifier = Modifier.size(48.dp)
+                                    tint = PrimaryColor,
+                                    modifier = Modifier.size(24.dp)
                                 )
-                                Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = "Upload Image",
                                     color = PrimaryColor,
-                                    fontSize = 16.sp,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.SemiBold,
                                     fontFamily = FontFamily(Font(R.font.varela_round))
                                 )
+                            }
+                        }
+                    } else {
+                        // Initial Action Cards
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            // Smart Scan Card (Camera)
+                            Card(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(145.dp)
+                                    .clickable {
+                                        val file = createImageFile()
+                                        val uri = FileProvider.getUriForFile(
+                                            context,
+                                            "${context.packageName}.provider",
+                                            file
+                                        )
+                                        imageUri = uri
+                                        cameraLauncher.launch(uri)
+                                    },
+                                shape = RoundedCornerShape(30.dp),
+                                colors = CardDefaults.cardColors(containerColor = Color(0xFFFBD606)),
+                                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.cam_ic),
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(48.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Text(
+                                        text = "Take a Photo",
+                                        color = Color.White,
+                                        fontSize = 16.sp,
+                                        fontFamily = FontFamily(Font(R.font.varela_round))
+                                    )
+                                }
+                            }
+
+                            // Upload Image Card
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .height(145.dp)
+                                    .clip(RoundedCornerShape(30.dp))
+                                    .clickable { galleryLauncher.launch("image/*") }
+                                    .drawBehind {
+                                        val strokeWidth = 2.dp.toPx()
+                                        val dashWidth = 12.dp.toPx()
+                                        val dashGap = 8.dp.toPx()
+
+                                        drawRoundRect(
+                                            color = PrimaryColor.copy(alpha = 0.5f),
+                                            size = size,
+                                            cornerRadius = CornerRadius(30.dp.toPx()),
+                                            style = Stroke(
+                                                width = strokeWidth,
+                                                pathEffect = PathEffect.dashPathEffect(
+                                                    floatArrayOf(dashWidth, dashGap),
+                                                    0f
+                                                )
+                                            )
+                                        )
+                                    }
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.uploadic),
+                                        contentDescription = null,
+                                        tint = Color.Unspecified,
+                                        modifier = Modifier.size(48.dp)
+                                    )
+                                    Spacer(modifier = Modifier.height(6.dp))
+                                    Text(
+                                        text = "Upload Image",
+                                        color = PrimaryColor,
+                                        fontSize = 16.sp,
+                                        fontFamily = FontFamily(Font(R.font.varela_round))
+                                    )
+                                }
                             }
                         }
                     }
@@ -305,7 +414,7 @@ fun ScanScreen(navController: NavHostController) {
                         Text(
                             text = "How it works",
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
                             color = Color.Black
                         )
@@ -330,6 +439,18 @@ fun ScanScreen(navController: NavHostController) {
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Tip Section
+            Text(
+                text = "Tip: For best results, lay the outfit flat on a plain background and ensure good lighting.",
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                textAlign = TextAlign.Center,
+                fontSize = 12.sp,
+                color = Color.Gray,
+                fontFamily = FontFamily(Font(R.font.nunito_regular))
+            )
 
             Spacer(modifier = Modifier.height(40.dp))
         }

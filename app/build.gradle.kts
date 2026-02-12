@@ -1,18 +1,23 @@
+import com.android.build.api.dsl.ApplicationExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+  /*  alias(libs.plugins.kapt)
+    alias(libs.plugins.hilt)*/
 }
 
-android {
+
+configure<ApplicationExtension> {
     namespace = "com.compose.babyai"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.compose.babyai"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -28,12 +33,20 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
     }
 }
 
@@ -56,17 +69,23 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    //Navigation
+    // Navigation
     implementation(libs.androidx.navigation.compose)
-    //Coil
+    // Coil
     implementation(libs.coil.compose)
-    //horizontal Pager
+    // Horizontal Pager
     implementation(libs.androidx.compose.foundation)
-    //constraint layout
-    implementation (libs.androidx.constraintlayout.compose)
-
+    // Constraint layout
+    implementation(libs.androidx.constraintlayout.compose)
+    // AppCompat
     implementation(libs.androidx.appcompat)
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.1.0")
-    implementation("com.github.arpitkatiyar1999:Country-Picker:3.0.0")
+    // Country Code
+    implementation(libs.country.picker)
+    // Material icon
+    implementation(libs.androidx.compose.material.icons.extended)
 
+    // Hilt
+  /*  implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)*/
 }

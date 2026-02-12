@@ -12,13 +12,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,7 +30,10 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -97,7 +96,7 @@ fun CartScreen(navController: NavHostController) {
             ) {
 
                 item {
-                    ShippingAddressSection(onEditClick = {})
+                    ShippingAddressSection(onEditClick = { navController.navigate(Routes.SavedAddress.route)})
                 }
 
                 items(getDummyCartItems()) { item ->
@@ -334,6 +333,7 @@ fun CartItemCard(item: CartItem) {
 
 @Composable
 fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit) {
+    var isFav by remember { mutableStateOf(false) }
     Card(
         modifier = Modifier.width(170.dp),
         shape = RoundedCornerShape(24.dp),
@@ -370,11 +370,11 @@ fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit) {
 
 
                 // Favorite overlay
-                IconButton(onClick = { onClickFav() },
+                IconButton(onClick = { /*onClickFav()*/  isFav = !isFav },
                     modifier = Modifier
                         .align(Alignment.TopEnd)){
                     Icon(
-                        painter = painterResource(id = R.drawable.fav_item),
+                        painter = painterResource(id = if (isFav) R.drawable.is_fav else R.drawable.fav_item),
                         contentDescription = null,
                         tint = Color.Unspecified,
                         modifier = Modifier.size(52.dp)

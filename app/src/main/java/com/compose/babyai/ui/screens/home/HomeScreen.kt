@@ -15,22 +15,18 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -54,16 +50,15 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BabyProfile
+import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.SearchBar
-import com.compose.babyai.ui.theme.PrimaryColor
-import kotlin.collections.filter
+import com.compose.babyai.ui.component.uiInput.BannerCarousel
+import com.compose.babyai.ui.component.uiInput.SearchBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,6 +66,24 @@ import kotlin.collections.filter
 fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
+    val bannerList = listOf(
+        BannerItem(
+            image = R.drawable.banner_dummy,
+            title = "Winter Collection",
+            subtitle = "Special Christmas Deals"
+        ),
+        BannerItem(
+            image = R.drawable.banner_dummy,
+            title = "New Arrivals",
+            subtitle = "Up to 50% Off"
+        ),
+        BannerItem(
+            image = R.drawable.banner_dummy,
+            title = "Baby Essentials",
+            subtitle = "Comfort & Care"
+        )
+    )
+
 
     BackHandler() {
         (context as Activity).moveTaskToBack(true)
@@ -154,7 +167,7 @@ fun HomeScreen(navController: NavHostController) {
                             color = Color(0XFF272727),
                             fontWeight = FontWeight.Normal,
                             fontFamily = FontFamily(Font(R.font.quicksand_regular)),
-                            modifier = Modifier.clickable { navController.navigate(Routes.AllCategory.route) }
+                            modifier = Modifier.clickable { /*navController.navigate(Routes.AllCategory.route)*/ }
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -164,7 +177,12 @@ fun HomeScreen(navController: NavHostController) {
 
                 // Banner
                 item {
-                    HomeBanner()
+                    BannerCarousel(
+                        banners = bannerList,
+                        modifier = Modifier.fillMaxWidth()
+                    ) { banner ->
+                        // Navigate to category search
+                    }
                     Spacer(modifier = Modifier.height(24.dp))
                 }
 
@@ -188,7 +206,7 @@ fun HomeScreen(navController: NavHostController) {
                             color = Color(0XFF272727),
                             fontWeight = FontWeight.Normal,
                             fontFamily = FontFamily(Font(R.font.quicksand_regular)),
-                            modifier = Modifier.clickable { }
+                            modifier = Modifier.clickable { navController.navigate(Routes.AllCategory.route) }
                         )
                     }
                     Spacer(modifier = Modifier.height(16.dp))
@@ -221,7 +239,7 @@ fun HomeScreen(navController: NavHostController) {
 
                 // AI Premium Card
                 item {
-                    AIPromoCard(modifier = Modifier.padding(horizontal = 20.dp))
+                    AIPromoCard(modifier = Modifier.padding(horizontal = 20.dp), onClickPremium = { navController.navigate(Routes.SubscriptionScreen.route) })
                     Spacer(modifier = Modifier.height(150.dp))
                 }
             }
@@ -464,7 +482,8 @@ fun ProductCard(modifier: Modifier, product: ProductData,onClick: () -> Unit) {
 
 @Composable
 fun AIPromoCard(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onClickPremium: () -> Unit
 ) {
     val balooSemiBold = remember {
         FontFamily(Font(R.font.baloo2_semibold))
@@ -529,7 +548,7 @@ fun AIPromoCard(
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                onClick = { },
+                onClick = { onClickPremium()},
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

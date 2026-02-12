@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.OutfitTryCard
+import com.compose.babyai.ui.component.uiInput.OutfitTryCard
 import com.compose.babyai.ui.screens.aiTry.OutfitData
 
 @Composable

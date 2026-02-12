@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -60,8 +59,8 @@ import com.compose.babyai.data.model.FilterChipItem
 import com.compose.babyai.data.model.SearchFilterType
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.dialog.FilterDialog
-import com.compose.babyai.ui.component.OutfitTryCard
-import com.compose.babyai.ui.component.SearchBar
+import com.compose.babyai.ui.component.uiInput.OutfitTryCard
+import com.compose.babyai.ui.component.uiInput.SearchBar
 import com.compose.babyai.ui.screens.aiTry.OutfitData
 import com.compose.babyai.ui.theme.PrimaryColor
 

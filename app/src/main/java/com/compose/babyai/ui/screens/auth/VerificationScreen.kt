@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.AppButton
-import com.compose.babyai.ui.component.BabyAiTopBar
+import com.compose.babyai.ui.component.uiInput.AppButton
+import com.compose.babyai.ui.component.uiInput.BabyAiTopBar
 import com.compose.babyai.ui.component.dialog.SuccessDialog
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
@@ -72,11 +72,10 @@ fun VerificationScreen(navController: NavHostController) {
 
         // Bottom Image
         Image(
-            painter = painterResource(id = R.drawable.lower_bg),
+            painter = painterResource(id = R.drawable.main_bg),
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
                 .align(Alignment.BottomCenter),
             contentScale = ContentScale.FillWidth
         )
@@ -186,11 +185,7 @@ fun VerificationScreen(navController: NavHostController) {
     if (successDialogVisible){
         SuccessDialog {
             successDialogVisible = false
-            navController.navigate(Routes.Main.route) {
-                popUpTo(Routes.Login.route) {
-                    inclusive = true
-                }
-            }
+            navController.navigate(Routes.ProfileSetup.route)
         }
     }
 }

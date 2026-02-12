@@ -1,20 +1,25 @@
-package com.compose.babyai.ui.component
+package com.compose.babyai.ui.component.uiInput
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,21 +27,29 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import com.compose.babyai.R
+import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.ui.theme.PrimaryColor
+import kotlinx.coroutines.delay
+import kotlin.math.absoluteValue
 
 @Composable
 fun InputTextField(
@@ -269,10 +282,141 @@ fun InputTextFieldWithoutIcon(
     )
 }
 
-/*
-InputTextField(
-value = name,
-onValueChange = { name = it },
-placeholderText = "Parent/Guardian Full Name",
-leadingIcon = painterResource(id = R.drawable.person)
-)*/
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun BannerCarousel(
+    banners: List<BannerItem>,
+    modifier: Modifier = Modifier,
+    onBannerClick: (BannerItem) -> Unit
+) {
+    val pagerState = rememberPagerState(
+        initialPage = 0,
+        pageCount = { banners.size }
+    )
+
+    // Auto-scroll
+    LaunchedEffect(pagerState.currentPage) {
+        delay(3000)
+        val nextPage = (pagerState.currentPage + 1) % banners.size
+        pagerState.animateScrollToPage(nextPage)
+    }
+
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        HorizontalPager(
+            state = pagerState,
+            contentPadding = PaddingValues(horizontal = 40.dp),
+            pageSpacing = (-20).dp,
+            modifier = Modifier.height(200.dp)
+        ) { page ->
+
+            val pageOffset =
+                ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
+
+            val scale = lerp(0.92f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
+            val alpha = lerp(0.6f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
+
+            Box(
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        this.alpha = alpha
+                    }
+                    .zIndex(1f - pageOffset)
+                    .clip(RoundedCornerShape(24.dp))
+                    .clickable { onBannerClick(banners[page]) }
+            ) {
+                BannerCard(banners[page])
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        PagerIndicator(
+            size = banners.size,
+            currentPage = pagerState.currentPage
+        )
+    }
+}
+
+
+@Composable
+fun BannerCard(banner: BannerItem) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .clip(RoundedCornerShape(20.dp))
+    ) {
+
+        Image(
+            painter = painterResource(banner.image),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
+
+        // Gradient Overlay
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.horizontalGradient(
+                        listOf(
+                            Color.Black.copy(alpha = 0.6f),
+                            Color.Transparent
+                        )
+                    )
+                )
+        )
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .padding(16.dp)
+        ) {
+            Text(
+                text = banner.title,
+                color = Color.White,
+                fontSize = 28.sp,
+                fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = banner.subtitle,
+                color = Color.White.copy(alpha = 0.9f),
+                fontFamily = FontFamily(Font(R.font.nunito_regular)),
+                fontSize = 16.sp
+            )
+        }
+    }
+}
+
+
+@Composable
+fun PagerIndicator(size: Int, currentPage: Int) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        repeat(size) { index ->
+            Box(
+                modifier = Modifier
+                    .size(if (index == currentPage) 8.dp else 6.dp)
+                    .clip(CircleShape)
+                    .background(
+                        if (index == currentPage)
+                            Color.White
+                        else
+                            Color.White.copy(alpha = 0.4f)
+                    )
+            )
+        }
+    }
+}

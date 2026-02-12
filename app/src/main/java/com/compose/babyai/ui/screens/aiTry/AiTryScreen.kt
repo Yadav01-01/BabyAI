@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -51,7 +50,7 @@ import com.compose.babyai.R
 import com.compose.babyai.data.model.AiTryResultItem
 import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.AiTryHeader
+import com.compose.babyai.ui.component.uiInput.AiTryHeader
 import com.compose.babyai.ui.theme.BabyAITheme
 
 @Composable
@@ -81,7 +80,7 @@ fun AiTryScreen(navController: NavHostController) {
                 babyProfiles = babies,
                 selectedProfile = selectedBaby,
                 onProfileSelected = { selectedBaby = it },
-                onClickScan = { /* scan */ }
+                onClickScan = { navController.navigate(Routes.AiScan.route) }
             )
 
 

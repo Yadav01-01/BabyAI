@@ -1,6 +1,4 @@
-package com.compose.babyai.ui.screens.settings
-
-//TermsAndConditionsScreen
+package com.compose.babyai.ui.screens.profile.settings
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -8,9 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
@@ -26,10 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.ui.component.CommonTopBar
-//PrivacyPolicyScreen
+import com.compose.babyai.ui.component.uiInput.CommonTopBar
+
+//AboutBabyfyScreen
+
 @Composable
-fun TermsAndConditionsScreen(
+fun PrivacyPolicyScreen(
     navController: NavHostController
 ) {
 
@@ -50,7 +48,7 @@ fun TermsAndConditionsScreen(
         ) {
 
             CommonTopBar(
-                title = "Terms & Conditions",
+                title = "Privacy Policy",
                 onBackClick = {
                     navController.navigateUp()
                 }
@@ -66,11 +64,11 @@ fun TermsAndConditionsScreen(
             ) {
                 // First Paragraph
                 Text(
-                    text = "Your privacy is our highest priority. Babyfy collects only the information needed to deliver a personalized, seamless, and enjoyable experience as you manage your baby’s wardrobe and explore new outfit recommendations. This may include basic profile details, your baby’s information (such as name or nickname), uploaded wardrobe photos, purchase history, preferences, and app interactions.\n" +
+                    text = "By using Babyfy, you agree to follow our app guidelines and help us create a safe, secure, and enjoyable experience for all parents. Babyfy provides AI-assisted wardrobe organization, outfit suggestions, and shopping recommendations for your baby. These features are for convenience and guidance only and should not replace personal judgment when selecting products for your child.\n" +
                             "\n" +
-                            "We do not share or sell your personal data to third parties without your consent. All information is stored securely and handled in accordance with applicable privacy regulations to ensure your safety and trust.\n" +
+                            "You agree to use the app responsibly, upload accurate information about your baby’s wardrobe, and respect the privacy of any shared content. Babyfy may update features, design, or policies to improve your experience. Any changes will be reflected in our latest Terms & Conditions.\n" +
                             "\n" +
-                            "You maintain full control over your data. At any time, you can update, export, or delete your information through your profile settings. Babyfy is committed to protecting your family’s privacy while providing a warm, smart, and parent-friendly experience.",
+                            "By continuing to use the app, you acknowledge and accept the most recent version of our Privacy Policy and Terms.",
                     fontSize = 15.sp,
                     color = Color.Black,
                     fontFamily = FontFamily(Font(R.font.quicksand_semibold)),

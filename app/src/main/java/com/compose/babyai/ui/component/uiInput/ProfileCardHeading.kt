@@ -1,4 +1,4 @@
-package com.compose.babyai.ui.component
+package com.compose.babyai.ui.component.uiInput
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
