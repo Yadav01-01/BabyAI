@@ -1,10 +1,13 @@
-package com.compose.babyai.viewmodel.auth
+package com.compose.babyai.viewModel.auth
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavHostController
 import com.compose.babyai.data.uistate.ContactType
 import com.compose.babyai.data.uistate.LoginUiState
+import com.compose.babyai.navigation.Routes
+import com.compose.babyai.util.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,10 +16,10 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/*
-
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val sessionManager: SessionManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
@@ -35,7 +38,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
 
     fun onPhoneChange(phone: String) {
         _uiState.update {
-            it.copy(phoneNumber = phone, contactError = null)
+            it.copy(phoneNumber = phone.take(10), contactError = null)
         }
     }
 
@@ -49,7 +52,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     }
 
 
-    fun sendCode() {
+    fun sendCode(navController: NavHostController) {
         val state = _uiState.value
 
         val nameError = validateName(state.name)
@@ -73,6 +76,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             _uiState.update { it.copy(isLoading = true) }
 
             // TODO: repository.sendOtp(...)
+            // Simulating success for now:
+            navController.navigate(Routes.OtpVerify.route)
 
             _uiState.update { it.copy(isLoading = false) }
         }
@@ -103,4 +108,3 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             else -> null
         }
 }
-*/

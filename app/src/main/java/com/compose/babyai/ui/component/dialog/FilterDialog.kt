@@ -50,7 +50,7 @@ fun FilterDialog(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 24.dp),
+                .padding(vertical = 1.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Header
@@ -71,10 +71,10 @@ fun FilterDialog(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(1.dp))
 
             // Dashed Divider
-            Canvas(modifier = Modifier.fillMaxWidth().height(1.dp)) {
+            Canvas(modifier = Modifier.fillMaxWidth().height(2.dp)) {
                 drawLine(
                     color = PrimaryColor,
                     start = Offset(0f, 0f),
@@ -83,13 +83,13 @@ fun FilterDialog(
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // Filter Options
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
                 userScrollEnabled = false
             ) {
@@ -147,7 +147,7 @@ fun FilterDialog(
 
             // Buttons
             Row(
-                modifier = Modifier.fillMaxWidth().padding(24.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedButton(
@@ -182,8 +182,6 @@ fun FilterDialog(
                     )
                 }
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }

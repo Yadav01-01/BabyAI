@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.profile.babyProfile
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,6 +45,10 @@ fun BabyProfileScreen(navController: NavHostController) {
     val state by viewModel.uiState.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
 
+    BackHandler {
+        navController.popBackStack()
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
 
         Image(
@@ -81,7 +86,7 @@ fun BabyProfileScreen(navController: NavHostController) {
                     navController.navigate(Routes.EditBabyProfile.route)
                 },
                 onAddBabyClick = {
-
+                    navController.navigate(Routes.AddBabyProfile.route)
                 }
             )
 

@@ -10,19 +10,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
+import com.compose.babyai.viewModel.auth.SplashEvent
+import com.compose.babyai.viewModel.auth.SplashViewModel
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: SplashViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        delay(2000) // 2 seconds
-        navController.navigate(Routes.OnBoarding.route) {
-            popUpTo(Routes.Splash.route) { inclusive = true }
+        viewModel.event.collect { event ->
+            when (event) {
+                SplashEvent.NavigateToOnboarding -> {
+                    navController.navigate(Routes.OnBoarding.route) {
+                        popUpTo(Routes.Splash.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+
+                SplashEvent.NavigateToMain -> {
+                    navController.navigate(Routes.Main.route){
+                        popUpTo(Routes.Splash.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+
+            }
         }
     }
 

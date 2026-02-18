@@ -3,6 +3,7 @@ package com.compose.babyai.viewModel
 import androidx.lifecycle.ViewModel
 import com.compose.babyai.data.model.BabyUiModel
 import com.compose.babyai.data.model.ProfileUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

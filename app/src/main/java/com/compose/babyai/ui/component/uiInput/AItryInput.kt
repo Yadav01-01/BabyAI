@@ -54,13 +54,13 @@ import com.compose.babyai.ui.screens.aiTry.OutfitData
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
-fun OutfitTryCard(outfit: OutfitData,modifier: Modifier = Modifier) {
+fun OutfitTryCard(modifier: Modifier = Modifier,outfit: OutfitData,onItemClick : () -> Unit = {}) {
     var isFav by remember { mutableStateOf(outfit.isFavorite) }
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickable( onClick = { onItemClick() }),
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column(
             modifier = Modifier.padding(8.dp),
@@ -116,7 +116,7 @@ fun OutfitTryCard(outfit: OutfitData,modifier: Modifier = Modifier) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(15.dp))
 
             Text(
                 text = outfit.title,

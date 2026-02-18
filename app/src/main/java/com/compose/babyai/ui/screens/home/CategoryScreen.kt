@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.SearchBar
 import com.compose.babyai.ui.theme.BabyAITheme
 
@@ -98,14 +100,14 @@ fun CategoryScreen(navController: NavController) {
             }
 
             LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
+                columns = GridCells.Fixed(3),
                 contentPadding = PaddingValues(bottom = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(25.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
                 items(categories) { category ->
-                    CategoryGridItem(category = category, onClick = {})
+                    CategoryGridItem(category = category, onClick = { navController.navigate(Routes.Search.route) })
                 }
             }
         }
@@ -148,51 +150,44 @@ fun CategoryGridItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    // Single container for the card
     Column(
-        modifier = modifier.clickable(onClick = onClick),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = modifier
+            .fillMaxWidth()
+            .height(155.dp)
+            .clip(RoundedCornerShape(20.dp)) // Clip first so ripple follows corners
+            .background(Color.White)
+            .clickable(onClick = onClick)    // Clickable after clip for nice ripple
+            .padding(8.dp),                  // Internal padding for content
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Box(
+        Image(
+            painter = painterResource(id = category.imageRes),
+            contentDescription = category.name,
             modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .clip(RoundedCornerShape(20.dp))
-                .background(Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
+                .fillMaxWidth(0.9f) // Use 90% of card width for better spacing
+                .height(105.dp)
+                .clip(RoundedCornerShape(10.dp)),
+            contentScale = ContentScale.Crop
+        )
 
-                Image(
-                    painter = painterResource(id = category.imageRes),
-                    contentDescription = category.name,
-                    modifier = Modifier
-                        .size(60.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
-                )
+        Spacer(modifier = Modifier.height(8.dp))
 
-                Spacer(modifier = Modifier.height(6.dp))
-
-                Text(
-                    text = category.name,
-                    fontSize = 14.sp,
-                    fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF272727),
-                    textAlign = TextAlign.Center,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(horizontal = 5.dp)
-                )
-            }
-        }
-
-
+        Text(
+            text = category.name,
+            fontSize = 14.sp,
+            fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF272727),
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 4.dp)
+        )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

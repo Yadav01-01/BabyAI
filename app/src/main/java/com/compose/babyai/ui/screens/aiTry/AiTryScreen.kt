@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.aiTry
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -61,86 +62,94 @@ fun AiTryScreen(navController: NavHostController) {
         BabyProfile(3, R.drawable.onb3)
     )
     var selectedBaby by remember { mutableStateOf(babies.first()) }
-
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.main_bg),
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
+    val aiTryResultList = listOf(
+        AiTryResultItem(
+            title = "Baby Sky Blue Stripes",
+            price = "24.99",
+            originalPrice = "54.99",
+            imageRes = R.drawable.try_dummy
+        ),
+        AiTryResultItem(
+            title = "Pink Polka Dot Dress",
+            price = "19.99",
+            originalPrice = "49.99",
+            imageRes = R.drawable.try_dummy
+        ),
+        AiTryResultItem(
+            title = "Yellow Floral Dress",
+            price = "29.99",
+            originalPrice = "59.99",
+            imageRes = R.drawable.try_dummy
         )
+    )
+//    val aiTryResultList = emptyList<AiTryResultItem>()
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-        ) {
+    BackHandler {
+        navController.popBackStack()
+    }
 
-            AiTryHeader(
-                babyProfiles = babies,
-                selectedProfile = selectedBaby,
-                onProfileSelected = { selectedBaby = it },
-                onClickScan = { navController.navigate(Routes.AiScan.route) }
+    if (aiTryResultList.isEmpty()){
+        EmptyFittingRoom()
+    }else{
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = R.drawable.main_bg),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
             )
 
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Text(
-                text = stringResource(R.string.Selected_Outfits),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                fontFamily = FontFamily(Font(R.font.nunito_semibold)),
-                color = Color.Black
-            )
-            Text(
-                text = stringResource(R.string.Select_Outfits_Desc),
-                fontSize = 16.sp,
-                fontFamily = FontFamily(Font(R.font.nunito_regular)),
-                fontWeight = FontWeight.Normal,
-                color = Color(0xFFB0B0B0)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            val aiTryResultList = listOf(
-                AiTryResultItem(
-                    title = "Baby Sky Blue Stripes",
-                    price = "24.99",
-                    originalPrice = "54.99",
-                    imageRes = R.drawable.try_dummy
-                ),
-                AiTryResultItem(
-                    title = "Pink Polka Dot Dress",
-                    price = "19.99",
-                    originalPrice = "49.99",
-                    imageRes = R.drawable.try_dummy
-                ),
-                AiTryResultItem(
-                    title = "Yellow Floral Dress",
-                    price = "29.99",
-                    originalPrice = "59.99",
-                    imageRes = R.drawable.try_dummy
-                )
-            )
-
-            LazyColumn(
-                contentPadding = PaddingValues(bottom = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 20.dp)
             ) {
-                items(aiTryResultList) { item ->
-                    AiTryResultCard(
-                        title = item.title,
-                        price = item.price,
-                        originalPrice = item.originalPrice,
-                        imageRes = item.imageRes,
-                        onClickImage = { navController.navigate(Routes.AiFullScreenTry.route) }
-                    )
-                }
 
-                item {
-                    Spacer(modifier = Modifier.height(100.dp))
+                AiTryHeader(
+                    babyProfiles = babies,
+                    selectedProfile = selectedBaby,
+                    onProfileSelected = { selectedBaby = it },
+                    onClickScan = { navController.navigate(Routes.AiScan.route) }
+                )
+
+
+                Spacer(modifier = Modifier.height(5.dp))
+
+                Text(
+                    text = stringResource(R.string.Selected_Outfits),
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    fontFamily = FontFamily(Font(R.font.nunito_semibold)),
+                    color = Color.Black
+                )
+                Text(
+                    text = stringResource(R.string.Select_Outfits_Desc),
+                    fontSize = 16.sp,
+                    fontFamily = FontFamily(Font(R.font.nunito_regular)),
+                    fontWeight = FontWeight.Normal,
+                    color = Color(0xFFB0B0B0)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                LazyColumn(
+                    contentPadding = PaddingValues(bottom = 20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(aiTryResultList) { item ->
+                        AiTryResultCard(
+                            title = item.title,
+                            price = item.price,
+                            originalPrice = item.originalPrice,
+                            imageRes = item.imageRes,
+                            onClickImage = { navController.navigate(Routes.AiFullScreenTry.route) }
+                        )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(100.dp))
+                    }
                 }
             }
         }

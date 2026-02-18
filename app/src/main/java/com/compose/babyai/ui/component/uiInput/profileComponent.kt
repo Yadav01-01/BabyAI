@@ -82,10 +82,15 @@ fun ProfileHeaderCard(state : ProfileUiState, babies: List<BabyUiModel>, onBabyC
             .fillMaxWidth()
             .clip(RoundedCornerShape(26.dp))
             .background(Color(0xFF1ECBCC))
-            .padding(15.dp)
+            .padding(16.dp)
     ) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        // ---------- Profile Row ----------
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+
             Box(
                 modifier = Modifier
                     .size(50.dp)
@@ -93,89 +98,89 @@ fun ProfileHeaderCard(state : ProfileUiState, babies: List<BabyUiModel>, onBabyC
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
-
                 Text(
-                    getInitials(state.userName)/*"S J"*/,
+                    text = getInitials(state.userName),
                     fontSize = 16.sp,
                     color = Color(0xFF0B4747),
                     fontFamily = FontFamily(Font(R.font.nunito_semibold)),
                     fontWeight = FontWeight.SemiBold
                 )
-
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(12.dp))
 
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
                 Text(
-                    text = state.userName/*"Sarah Johnson"*/,
+                    text = state.userName,
                     fontSize = 16.sp,
                     fontFamily = FontFamily(Font(R.font.nunito_semibold)),
                     color = Color.White,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1
                 )
+
                 Text(
-                    text = state.phone/*"(406) 555-0120"*/,
+                    text = state.phone,
                     fontSize = 14.sp,
                     fontFamily = FontFamily(Font(R.font.nunito_medium)),
                     color = Color(0xFFE6E6E6),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1
                 )
             }
 
-            Image(
-                painter = painterResource(id = R.drawable.ic_edit_icon),
-                contentDescription = null,
-                modifier = Modifier.wrapContentSize() .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    onEditClick()
-                }
-            )
+            // Better touch area for edit
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null
+                    ) { onEditClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_edit_icon),
+                    contentDescription = "Edit"
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            modifier = Modifier.fillMaxWidth()
+        // ---------- Babies Horizontal List ----------
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(130.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            // 👶 Dynamic Babies
-            items(
-                items = babies,
-                key = { it.id }   // ⭐ important for recomposition
-            ) { baby ->
+            babies.take(3).forEach { baby ->
                 BabyItemCard(
                     type = BabyCardType.BABY,
                     name = baby.name,
                     age = baby.age,
-                    modifier = Modifier,
+                    modifier = Modifier
+                        .weight(1f),
                     onClick = { onBabyClick(baby) }
                 )
             }
 
-            // ➕ Always last
-            item {
+            if (babies.size < 3) {
                 BabyItemCard(
                     type = BabyCardType.ADD,
-                    modifier = Modifier,
+                    modifier = Modifier.weight(1f),
                     onClick = onAddBabyClick
                 )
             }
         }
 
-        /*    Row(modifier = Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                BabyCard("Emma", "8 months", onBabyClick = {
-                    onBabyClick()
-                }, modifier = Modifier.weight(1f).height(130.dp))
-                BabyCard("Oliver", "2 years",onBabyClick = {
-                    onBabyClick()
-                },modifier = Modifier.weight(1f).height(130.dp))
-                AddBabyCard( modifier = Modifier.weight(1f).height(130.dp),onAddBabyClick={onAddBabyClick()})
-            }*/
     }
+
 }
 
 

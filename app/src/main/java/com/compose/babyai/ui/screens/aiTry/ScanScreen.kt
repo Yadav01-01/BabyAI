@@ -25,6 +25,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -57,6 +59,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
+import com.compose.babyai.ui.component.uiInput.AppButton
 import com.compose.babyai.ui.theme.BabyAITheme
 import com.compose.babyai.ui.theme.PrimaryColor
 import java.io.File
@@ -65,10 +68,11 @@ import java.util.Date
 import java.util.Locale
 
 @Composable
-fun ScanScreen(navController: NavHostController) {
+fun ScanScreen(navController: NavHostController, navFrom: String) {
     val context = LocalContext.current
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var useAsAvatar by remember { mutableStateOf(false) }
 
     // Helper function to create a temporary image file
     fun createImageFile(): File {
@@ -293,6 +297,41 @@ fun ScanScreen(navController: NavHostController) {
                                 )
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(24.dp))
+
+                        // Use as Avatar Checkbox
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Use this image as Avatar Profile Picture",
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily(Font(R.font.nunito_regular)),
+                                color = Color(0xFF333333)
+                            )
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(Color.Transparent)
+                            ) {
+                                Checkbox(
+                                    checked = useAsAvatar,
+                                    onCheckedChange = { useAsAvatar = it },
+                                    colors = CheckboxDefaults.colors(
+                                        checkedColor = PrimaryColor,
+                                        uncheckedColor = Color.LightGray,
+                                        checkmarkColor = Color.White
+                                    )
+                                )
+                            }
+
+                        }
+
                     } else {
                         // Initial Action Cards
                         Row(
@@ -442,6 +481,40 @@ fun ScanScreen(navController: NavHostController) {
 
             Spacer(modifier = Modifier.height(40.dp))
 
+            // Action Buttons (Save and Add Details)
+            if (capturedImageUri != null){
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Save Button
+                    AppButton(
+                        text = "Save",
+                        onClick = {
+                            if (navFrom == "profileSetup") {
+                                navController.previousBackStackEntry?.savedStateHandle?.set("profile_image", capturedImageUri.toString())
+                            }
+                            navController.popBackStack()
+                        },
+                        modifier = Modifier.weight(1f).height(56.dp).border(1.dp, Color.Black, RoundedCornerShape(40.dp)),
+                        buttonColors = Color.White,
+                        textColor = Color.Black
+                    )
+
+                    // Add Details Button
+                    if (navFrom != "profileSetup"){
+                        AppButton(
+                            text = "Add Details",
+                            onClick = { navController.navigate(Routes.AddBabyProfile.route) },
+                            modifier = Modifier.weight(1f).height(56.dp),
+                            buttonColors = PrimaryColor
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             // Tip Section
             Text(
                 text = "Tip: For best results, lay the outfit flat on a plain background and ensure good lighting.",
@@ -461,6 +534,6 @@ fun ScanScreen(navController: NavHostController) {
 @Composable
 fun ScanScreenPreview() {
     BabyAITheme {
-        ScanScreen(navController = rememberNavController())
+        ScanScreen(navController = rememberNavController(), navFrom = "navFrom")
     }
 }

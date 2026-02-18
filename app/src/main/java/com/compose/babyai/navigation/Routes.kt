@@ -43,10 +43,13 @@ sealed class Routes(val route: String) {
         fun createRoute(orderId: String, status: String) = "orderSummaryScreen/$orderId/$status"
     }
     object AiFullScreenTry : Routes("aiFullScreenTry")
-    object AiScan : Routes("aiScan")
+    object AiScan : Routes("aiScan/{navFrom}"){
+        fun createRoute(navFrom: String) = "aiScan/$navFrom"
+    }
     object CamPreview : Routes("camPreview/{imageUri}") {
         fun createRoute(imageUri: String) = "camPreview/$imageUri"
     }
+    object AddBabyProfile : Routes("addBaby")
 
 
 }

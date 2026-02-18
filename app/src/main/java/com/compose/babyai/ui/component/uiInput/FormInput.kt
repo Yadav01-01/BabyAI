@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -41,10 +42,10 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
-import androidx.compose.ui.zIndex
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.ui.theme.PrimaryColor
@@ -99,7 +100,8 @@ fun AppButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    buttonColors: Color = PrimaryColor
+    buttonColors: Color = PrimaryColor,
+    textColor: Color = Color.White
 ){
     Button(
         onClick = { onClick() },
@@ -114,7 +116,7 @@ fun AppButton(
             fontWeight = FontWeight.Medium,
             fontFamily = FontFamily(Font(R.font.baloo2_medium)),
             fontSize = 18.sp,
-            color = Color.White
+            color = textColor
         )
     }
 }
@@ -193,7 +195,8 @@ fun SearchBar(
     icon: Painter? = null,
     enabled: Boolean = true,
     readOnly: Boolean = false,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    containerColor : Color = Color.White
 ) {
     OutlinedTextField(
         value = searchQuery,
@@ -223,8 +226,8 @@ fun SearchBar(
         enabled = enabled,
         readOnly = readOnly,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
+            focusedContainerColor = containerColor,
+            unfocusedContainerColor = containerColor,
             disabledContainerColor = Color.White,
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
@@ -289,69 +292,76 @@ fun BannerCarousel(
     modifier: Modifier = Modifier,
     onBannerClick: (BannerItem) -> Unit
 ) {
+    if (banners.isEmpty()) return
+
     val pagerState = rememberPagerState(
         initialPage = 0,
         pageCount = { banners.size }
     )
 
     // Auto-scroll
-    LaunchedEffect(pagerState.currentPage) {
-        delay(3000)
-        val nextPage = (pagerState.currentPage + 1) % banners.size
-        pagerState.animateScrollToPage(nextPage)
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000)
+            if (!pagerState.isScrollInProgress) {
+                val nextPage = (pagerState.currentPage + 1) % banners.size
+                pagerState.animateScrollToPage(nextPage)
+            }
+        }
     }
 
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally
+    Box(
+        modifier = modifier.fillMaxWidth(),
+        contentAlignment = Alignment.BottomCenter
     ) {
-
         HorizontalPager(
             state = pagerState,
-            contentPadding = PaddingValues(horizontal = 40.dp),
-            pageSpacing = (-20).dp,
-            modifier = Modifier.height(200.dp)
+            contentPadding = PaddingValues(horizontal = 20.dp),
+            pageSpacing = 16.dp,
+            modifier = Modifier.height(180.dp)
         ) { page ->
+            val pageOffset = (
+                    (pagerState.currentPage - page) +
+                            pagerState.currentPageOffsetFraction
+                    ).absoluteValue
 
-            val pageOffset =
-                ((pagerState.currentPage - page) + pagerState.currentPageOffsetFraction).absoluteValue
-
-            val scale = lerp(0.92f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
-            val alpha = lerp(0.6f, 1f, 1f - pageOffset.coerceIn(0f, 1f))
+            val scale = lerp(
+                start = 0.9f,
+                stop = 1f,
+                fraction = 1f - pageOffset.coerceIn(0f, 1f)
+            )
 
             Box(
                 modifier = Modifier
                     .graphicsLayer {
                         scaleX = scale
                         scaleY = scale
-                        this.alpha = alpha
                     }
-                    .zIndex(1f - pageOffset)
-                    .clip(RoundedCornerShape(24.dp))
+                    .clip(RoundedCornerShape(32.dp))
                     .clickable { onBannerClick(banners[page]) }
             ) {
                 BannerCard(banners[page])
             }
         }
 
-        Spacer(modifier = Modifier.height(12.dp))
-
+        // Pager indicator inside the Box, aligned to BottomEnd of the carousel content area
         PagerIndicator(
             size = banners.size,
-            currentPage = pagerState.currentPage
+            currentPage = pagerState.currentPage,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 25.dp, end = 45.dp)
         )
     }
 }
-
 
 @Composable
 fun BannerCard(banner: BannerItem) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .clip(RoundedCornerShape(20.dp))
+            .clip(RoundedCornerShape(32.dp))
     ) {
-
         Image(
             painter = painterResource(banner.image),
             contentDescription = null,
@@ -359,40 +369,42 @@ fun BannerCard(banner: BannerItem) {
             contentScale = ContentScale.Crop
         )
 
-        // Gradient Overlay
+        // Dark Gradient Overlay for text readability (Right side focused)
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(
                     Brush.horizontalGradient(
-                        listOf(
-                            Color.Black.copy(alpha = 0.6f),
-                            Color.Transparent
-                        )
+                        colors = listOf(
+                            Color.Transparent,
+                            Color.Black.copy(alpha = 0.7f)
+                        ),
+                        startX = 200f
                     )
                 )
         )
 
         Column(
             modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(16.dp)
+                .align(Alignment.CenterEnd)
+                .padding(end = 24.dp, top = 16.dp),
+            horizontalAlignment = Alignment.End
         ) {
             Text(
                 text = banner.title,
                 color = Color.White,
-                fontSize = 28.sp,
-                fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                fontWeight = FontWeight.SemiBold
+                fontSize = 24.sp,
+                fontFamily = FontFamily(Font(R.font.baloo2_bold)),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.End
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = banner.subtitle,
-                color = Color.White.copy(alpha = 0.9f),
+                color = Color.White,
                 fontFamily = FontFamily(Font(R.font.nunito_regular)),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                textAlign = TextAlign.End
             )
         }
     }
@@ -400,22 +412,20 @@ fun BannerCard(banner: BannerItem) {
 
 
 @Composable
-fun PagerIndicator(size: Int, currentPage: Int) {
+fun PagerIndicator(size: Int, currentPage: Int, modifier: Modifier = Modifier) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(6.dp),
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         repeat(size) { index ->
+            val isSelected = index == currentPage
             Box(
                 modifier = Modifier
-                    .size(if (index == currentPage) 8.dp else 6.dp)
+                    .height(6.dp)
+                    .width(if (isSelected) 24.dp else 6.dp)
                     .clip(CircleShape)
-                    .background(
-                        if (index == currentPage)
-                            Color.White
-                        else
-                            Color.White.copy(alpha = 0.4f)
-                    )
+                    .background(Color.White)
             )
         }
     }

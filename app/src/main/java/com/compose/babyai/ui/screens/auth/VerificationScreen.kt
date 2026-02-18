@@ -29,6 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
@@ -37,25 +39,26 @@ import com.compose.babyai.ui.component.uiInput.BabyAiTopBar
 import com.compose.babyai.ui.component.dialog.SuccessDialog
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
+import com.compose.babyai.viewModel.auth.VerificationViewModel
 import kotlinx.coroutines.delay
 
 @SuppressLint("DefaultLocale")
 @Composable
-fun VerificationScreen(navController: NavHostController) {
-    val otpValues = remember { mutableStateListOf("", "", "", "", "") }
+fun VerificationScreen(navController: NavHostController,
+                       viewModel: VerificationViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
     val focusRequesters = remember { List(5) { FocusRequester() } }
-    var timeLeft by remember { mutableStateOf(30) }
-    var successDialogVisible by remember { mutableStateOf(false) }
 
 
-    LaunchedEffect(key1 = timeLeft) {
+  /*  LaunchedEffect(key1 = timeLeft) {
         if (timeLeft > 0) {
             delay(1000L)
             timeLeft--
         }
     }
 
-    val isOtpFilled = otpValues.all { it.isNotEmpty() }
+    val isOtpFilled = otpValues.all { it.isNotEmpty() }*/
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -120,17 +123,14 @@ fun VerificationScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                otpValues.forEachIndexed { index, value ->
+                state.otpValues.forEachIndexed { index, value ->
                     OtpTextField(
                         value = value,
                         onValueChange = { newValue ->
-                            if (newValue.length <= 1) {
-                                if (newValue.all { it.isDigit() }) {
-                                    otpValues[index] = newValue
-                                    if (newValue.isNotEmpty() && index < 4) {
-                                        focusRequesters[index + 1].requestFocus()
-                                    }
-                                }
+                            viewModel.onOtpChange(index, newValue)
+
+                            if (newValue.isNotEmpty() && index < 4) {
+                                focusRequesters[index + 1].requestFocus()
                             }
                         },
                         modifier = Modifier
@@ -141,16 +141,17 @@ fun VerificationScreen(navController: NavHostController) {
                 }
             }
 
+
             Spacer(modifier = Modifier.height(32.dp))
 
             // Verify & Continue Button
             AppButton(
                 text = "Verify & Continue",
-                onClick = { successDialogVisible = true },
+                onClick = { viewModel.verifyOtp() },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                buttonColors = if (isOtpFilled) PrimaryColor else Color(0xFFBDBEC8)
+                buttonColors = if (state.isOtpFilled) PrimaryColor else Color(0xFFBDBEC8)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -159,12 +160,12 @@ fun VerificationScreen(navController: NavHostController) {
             Text(
                 text = buildAnnotatedString {
                     append("Didn't get it? ")
-                    if (timeLeft > 0) {
+                    if (state.timeLeft > 0) {
                         withStyle(style = SpanStyle(color = Color(0xFF6A7193))) {
                             append("Resend in ")
                         }
                         withStyle(style = SpanStyle(color = PrimaryColor)) {
-                            append(String.format("00:%02d", timeLeft))
+                            append(String.format("00:%02d", state.timeLeft))
                         }
                     } else {
                         withStyle(style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Bold)) {
@@ -174,20 +175,21 @@ fun VerificationScreen(navController: NavHostController) {
                 },
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.nunito_regular)),
-                modifier = Modifier.clickable(enabled = timeLeft == 0) {
-                    timeLeft = 30
+                modifier = Modifier.clickable(enabled = state.timeLeft == 0) {
+                    viewModel.resendOtp()
                 }
             )
 
             Spacer(modifier = Modifier.weight(1f))
         }
     }
-    if (successDialogVisible){
+    if (state.showSuccessDialog) {
         SuccessDialog {
-            successDialogVisible = false
+            viewModel.dismissDialog()
             navController.navigate(Routes.ProfileSetup.route)
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

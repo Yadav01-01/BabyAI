@@ -1,6 +1,7 @@
 package com.compose.babyai.ui.screens.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -69,7 +71,7 @@ import com.compose.babyai.ui.theme.PrimaryColor
 fun SearchScreen(navController: NavHostController) {
     var searchQuery by remember { mutableStateOf("") }
     var filterSheet by remember { mutableStateOf(false) }
-    var selectedFilter by remember { mutableStateOf<    SearchFilterType?>(null) }
+    var selectedFilter by remember { mutableStateOf<SearchFilterType?>(null) }
     val focusRequester = remember { FocusRequester() }
     val keyboardController = LocalSoftwareKeyboardController.current
 
@@ -83,6 +85,14 @@ fun SearchScreen(navController: NavHostController) {
             OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false)
         )
     }
+    val categories = listOf(
+        Pair("Top Shorts", R.drawable.dummy_img),
+        Pair("Muslins", R.drawable.dummy_img),
+        Pair("Onesies", R.drawable.dummy_img),
+        Pair("Booties", R.drawable.dummy_img),
+        Pair("Booties", R.drawable.dummy_img),
+        Pair("Toys", R.drawable.dummy_img)
+    )
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -133,7 +143,9 @@ fun SearchScreen(navController: NavHostController) {
                     icon = painterResource(R.drawable.search_ic),
                     readOnly = false,
                     enabled = true,
-                    modifier = Modifier.weight(1f).focusRequester(focusRequester)
+                    modifier = Modifier
+                        .weight(1f)
+                        .focusRequester(focusRequester)
                 )
 
                 IconButton(
@@ -165,7 +177,11 @@ fun SearchScreen(navController: NavHostController) {
                             modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
                         )
 
-                        CategoryList(modifier = Modifier.padding(horizontal = 5.dp))
+                        RecentSearchList(
+                            modifier = Modifier.padding(start = 20.dp),
+                            categories = categories,
+                            onClickTryOnsItem = { navController.navigate(Routes.AiTry.route) }
+                        )
                     }else{
                         val filters = remember {
                             mutableStateListOf(
@@ -215,12 +231,14 @@ fun SearchScreen(navController: NavHostController) {
                     ) {
                         OutfitTryCard(
                             modifier = Modifier.weight(1f),
+                            onItemClick = { navController.navigate(Routes.ProductDetail.route) },
                             outfit = pair[0]
                         )
 
                         if (pair.size > 1) {
                             OutfitTryCard(
                                 modifier = Modifier.weight(1f),
+                                onItemClick = { navController.navigate(Routes.ProductDetail.route) },
                                 outfit = pair[1]
                             )
                         } else {
@@ -236,7 +254,9 @@ fun SearchScreen(navController: NavHostController) {
     }
     if (filterSheet) {
         FilterDialog(
-            modifier = Modifier.padding(15.dp).padding(bottom = 10.dp),
+            modifier = Modifier
+                .padding(15.dp)
+                .padding(bottom = 10.dp),
             onDismiss = { filterSheet = false },
             onApply = {},
             options = when (selectedFilter) {
@@ -392,6 +412,67 @@ fun SearchFilterRow(
                 text = filter.title,
                 isSelected = filter.isSelected,
                 onClick = { onFilterClick(filter) }
+            )
+        }
+    }
+}
+
+@Composable
+fun RecentSearchList(modifier: Modifier, categories: List<Pair<String, Int>>, onClickTryOnsItem: () -> Unit) {
+    LazyRow(
+        modifier = modifier,
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(end = 20.dp)
+    ) {
+        items(categories) { category ->
+            RecentSearchItem(
+                title = category.first,
+                imageRes = category.second,
+                onClick = onClickTryOnsItem
+            )
+        }
+    }
+}
+
+@Composable
+fun RecentSearchItem(
+    title: String,
+    imageRes: Int,
+    onClick: () -> Unit
+) {
+    Card(
+        modifier = Modifier
+            .wrapContentWidth()
+            .wrapContentHeight()
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(30.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(id = imageRes),
+                contentDescription = title,
+                modifier = Modifier
+                    .width(75.dp)
+                    .height(79.dp)
+                    .clip(RoundedCornerShape(20.dp)),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Text(
+                text = title,
+                fontSize = 12.sp,
+                fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+                fontWeight = FontWeight.SemiBold,
+                color = Color(0xFF272727),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.padding(bottom = 8.dp)
             )
         }
     }

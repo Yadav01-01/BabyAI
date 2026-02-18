@@ -90,7 +90,9 @@ fun BottomNavigationBar(
 
             items.forEach { item ->
 
-                val isSelected = currentRoute?.startsWith(item.route) == true
+//                val isSelected = currentRoute?.startsWith(item.route) == true
+                val isSelected = currentRoute == item.route
+
                 val iconRes =
                     if (isSelected) item.selectedIcon else item.unSelectedIcon
 

@@ -5,8 +5,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-  /*  alias(libs.plugins.kapt)
-    alias(libs.plugins.hilt)*/
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 
@@ -39,9 +39,15 @@ configure<ApplicationExtension> {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+
     buildFeatures {
         compose = true
     }
+
+    hilt {
+        enableAggregatingTask = true
+    }
+
 }
 
 kotlin {
@@ -85,7 +91,9 @@ dependencies {
     implementation(libs.androidx.compose.material.icons.extended)
 
     // Hilt
-  /*  implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.navigation.compose)*/
+    implementation(libs.hilt.android.v2591)
+    ksp(libs.hilt.compiler.v2591)
+
+    // Hilt + Compose navigation
+    implementation(libs.androidx.hilt.navigation.compose)
 }

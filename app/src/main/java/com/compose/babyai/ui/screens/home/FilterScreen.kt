@@ -133,6 +133,8 @@ fun FilterScreen(navController: NavHostController) {
                     }
                 }
 
+                Spacer(Modifier.width(16.dp))
+
                 // Right Column: Options
                 Box(
                     modifier = Modifier
@@ -144,7 +146,7 @@ fun FilterScreen(navController: NavHostController) {
 
                     val currentOptions = optionsMap[selectedCategory] ?: emptyList()
 
-                    // 🔹 Scrollable list
+                    // Scrollable list
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
@@ -174,7 +176,7 @@ fun FilterScreen(navController: NavHostController) {
                         }
                     }
 
-                    // 🔹 Sticky footer
+                    // Sticky footer
                     FilterFooter(
                         resultCount = 1477,
                         onApply = { navController.popBackStack() },
@@ -309,7 +311,7 @@ fun FilterFooter(modifier: Modifier = Modifier, resultCount: Int, onApply: () ->
         ) {
             Text(
                 text = "$resultCount Result",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
                 color = Color(0xFFB0B0B0)
             )
@@ -325,7 +327,7 @@ fun FilterFooter(modifier: Modifier = Modifier, resultCount: Int, onApply: () ->
         ) {
             Text(
                 text = "Apply",
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
                 fontWeight = FontWeight.SemiBold,
                 color = Color.White

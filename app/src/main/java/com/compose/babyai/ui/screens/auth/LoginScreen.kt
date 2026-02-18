@@ -56,17 +56,17 @@ import com.compose.babyai.ui.component.uiInput.AppButton
 import com.compose.babyai.ui.component.uiInput.InputTextField
 import com.compose.babyai.ui.theme.BgColor
 import com.compose.babyai.ui.theme.PrimaryColor
-import com.compose.babyai.viewmodel.auth.LoginViewModel
+import com.compose.babyai.viewModel.auth.LoginViewModel
 
 
 @Composable
 fun LoginScreen(
     navController: NavHostController,
-  /*  viewModel: LoginViewModel = hiltViewModel()*/
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
 
-   /* val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val isPhoneSelected = state.selectedContactType == ContactType.PHONE*/
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val isPhoneSelected = state.selectedContactType == ContactType.PHONE
 
 
     Box(
@@ -129,12 +129,10 @@ fun LoginScreen(
                 lineHeight = 22.sp
             )
 
-
-
             Spacer(modifier = Modifier.height(32.dp))
 
             // Email / Phone Toggle
-            /*Box(
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
@@ -247,13 +245,12 @@ fun LoginScreen(
                     leadingIcon = painterResource(id = R.drawable.ic_email_icon)
                 )
             }
-*/
             Spacer(modifier = Modifier.height(24.dp))
 
             // Send Code Button
             AppButton(
                 text = "Send Code",
-                onClick = { navController.navigate(Routes.OtpVerify.route) }
+                onClick = { viewModel.sendCode(navController) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -320,4 +317,3 @@ fun LoginScreenPreview() {
     val navController = rememberNavController()
     LoginScreen(navController = navController)
 }
-

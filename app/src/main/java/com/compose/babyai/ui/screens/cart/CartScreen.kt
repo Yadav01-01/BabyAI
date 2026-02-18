@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.cart
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -31,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -58,6 +61,11 @@ fun CartScreen(navController: NavHostController) {
     val quicksandSemiBold = remember {
         FontFamily(Font(R.font.quicksand_semibold))
     }
+
+    BackHandler {
+        navController.popBackStack()
+    }
+
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -222,7 +230,7 @@ fun CartItemCard(item: CartItem) {
                 painter = painterResource(id = item.imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .height(125.dp).width(135.dp)
+                    .size(125.dp)
                     .clip(RoundedCornerShape(20.dp)),
                 contentScale = ContentScale.Crop
             )
@@ -279,15 +287,23 @@ fun CartItemCard(item: CartItem) {
 
                     Spacer(Modifier.width(6.dp))
                     // 🔹 Quantity Stepper (Right)
+                    var quantity by remember { mutableIntStateOf(item.quantity) }
+
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+
+                        //  Decrease
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
                                 .clip(CircleShape)
                                 .background(Color(0xFFE0F7F7))
-                                .clickable { /* decrease */ },
+                                .clickable {
+                                    if (quantity > 1) {
+                                        quantity--
+                                    }
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -300,21 +316,26 @@ fun CartItemCard(item: CartItem) {
                         Spacer(modifier = Modifier.width(6.dp))
 
                         Text(
-                            text = "${item.quantity}",
+                            text = quantity.toString(),
+                            modifier = Modifier.width(20.dp),
                             fontWeight = FontWeight.Bold,
                             fontSize = 16.sp,
                             fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
-                            color = Color.Black
+                            color = Color.Black,
+                            textAlign = TextAlign.Center
                         )
 
                         Spacer(modifier = Modifier.width(6.dp))
 
+                        //  Increase
                         Box(
                             modifier = Modifier
                                 .size(32.dp)
                                 .clip(CircleShape)
                                 .background(PrimaryColor)
-                                .clickable { /* increase */ },
+                                .clickable {
+                                    quantity++
+                                },
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -324,6 +345,7 @@ fun CartItemCard(item: CartItem) {
                             )
                         }
                     }
+
                 }
 
             }

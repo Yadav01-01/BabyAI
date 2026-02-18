@@ -49,7 +49,8 @@ fun MainScreen(rootNavController: NavHostController) {
             bottomBar = {
                 if (
                     currentRoute != null &&
-                    bottomBarRoutes.any { currentRoute.startsWith(it) }
+//                    bottomBarRoutes.any { currentRoute.startsWith(it) }
+                    bottomBarRoutes.contains(currentRoute)
                 ) {
                     Box(
                         modifier = Modifier
@@ -67,13 +68,14 @@ fun MainScreen(rootNavController: NavHostController) {
             }
         ) { innerPadding ->
 
-            // 🔹 Completely transparent content
+            // Completely transparent content
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    /*.padding(innerPadding)*/
+                  /*  .padding(innerPadding)*/
                     .background(Color.Transparent)
-            ) {
+            )
+            {
                 NavGraph(
                     navController = navController,
                     startDestination = Routes.Home.route

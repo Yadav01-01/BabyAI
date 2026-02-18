@@ -27,6 +27,7 @@ import com.compose.babyai.ui.screens.profile.payment.PaymentMethodsScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.PaymentScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.SavedAddressScreen
 import com.compose.babyai.ui.screens.cart.paymentAndShipping.ShippingAddressScreen
+import com.compose.babyai.ui.screens.profile.babyProfile.AddBabyProfile
 import com.compose.babyai.ui.screens.profile.myOrder.OrderSummaryScreen
 import com.compose.babyai.ui.screens.profile.payment.AddNewCardScreen
 import com.compose.babyai.ui.screens.profile.babyProfile.BabyProfileScreen
@@ -210,8 +211,12 @@ fun NavGraph(
             FullScreenAITryScreen(navController)
         }
 
-        composable(Routes.AiScan.route) {
-            ScanScreen(navController)
+        composable(
+            route = Routes.AiScan.route,
+            arguments = listOf(navArgument("navFrom") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val navFrom = backStackEntry.arguments?.getString("navFrom") ?: ""
+            ScanScreen(navController,navFrom)
         }
 
         composable(
@@ -220,6 +225,10 @@ fun NavGraph(
         ) { backStackEntry ->
             val imageUri = backStackEntry.arguments?.getString("imageUri") ?: ""
             CamPreviewScreen(navController, Uri.parse(Uri.decode(imageUri)))
+        }
+
+        composable(Routes.AddBabyProfile.route) {
+            AddBabyProfile(navController)
         }
 
 

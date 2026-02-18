@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -57,8 +58,10 @@ import com.compose.babyai.R
 import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.navigation.Routes
+import com.compose.babyai.ui.component.uiInput.AppButton
 import com.compose.babyai.ui.component.uiInput.BannerCarousel
 import com.compose.babyai.ui.component.uiInput.SearchBar
+import com.compose.babyai.ui.theme.PrimaryColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +69,12 @@ import com.compose.babyai.ui.component.uiInput.SearchBar
 fun HomeScreen(navController: NavHostController) {
     val context = LocalContext.current
     var searchQuery by remember { mutableStateOf("") }
+    val babies = listOf(
+        BabyProfile(1, R.drawable.onb1),
+        BabyProfile(2, R.drawable.onb2),
+        BabyProfile(3, R.drawable.onb3)
+    )
+    var selectedBaby by remember { mutableStateOf(babies.first()) }
     val bannerList = listOf(
         BannerItem(
             image = R.drawable.banner_dummy,
@@ -83,6 +92,16 @@ fun HomeScreen(navController: NavHostController) {
             subtitle = "Comfort & Care"
         )
     )
+/*    val categories = listOf(
+        Pair("Muslins", R.drawable.dummy_img),
+        Pair("Onesies", R.drawable.dummy_img),
+        Pair("Booties", R.drawable.dummy_img),
+        Pair("Booties", R.drawable.dummy_img),
+        Pair("Booties", R.drawable.dummy_img),
+        Pair("Toys", R.drawable.dummy_img)
+    )*/
+    val categories = emptyList<Pair<String, Int>>()
+
 
 
     BackHandler() {
@@ -102,14 +121,6 @@ fun HomeScreen(navController: NavHostController) {
 
         Column(modifier = Modifier.fillMaxSize()) {
             // Header
-            val babies = listOf(
-                BabyProfile(1, R.drawable.onb1),
-                BabyProfile(2, R.drawable.onb2),
-                BabyProfile(3, R.drawable.onb3)
-            )
-
-            var selectedBaby by remember { mutableStateOf(babies.first()) }
-
             HomeHeader(
                 onFavIconClick = { navController.navigate(Routes.Wishlist.route)},
                 onClickScan = { navController.navigate(Routes.AiScan.route) },
@@ -149,31 +160,61 @@ fun HomeScreen(navController: NavHostController) {
 
                 // Categories
                 item {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "Try-ons",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily(Font(R.font.quicksand_bold)),
-                            color = Color(0XFF272727)
-                        )
-                        Text(
-                            text = "See All",
-                            fontSize = 14.sp,
-                            color = Color(0XFF272727),
-                            fontWeight = FontWeight.Normal,
-                            fontFamily = FontFamily(Font(R.font.quicksand_regular)),
-                            modifier = Modifier.clickable { /*navController.navigate(Routes.AllCategory.route)*/ }
-                        )
+
+                    Column(modifier = Modifier.fillMaxWidth()) {
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Text(
+                                text = "Try-ons",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily(Font(R.font.quicksand_bold)),
+                                color = Color(0xFF272727)
+                            )
+
+                            if (categories.isNotEmpty()) {
+                                Text(
+                                    text = "See All",
+                                    fontSize = 14.sp,
+                                    color = Color(0xFF272727),
+                                    fontWeight = FontWeight.Normal,
+                                    fontFamily = FontFamily(Font(R.font.quicksand_regular)),
+                                    modifier = Modifier.clickable {
+                                        navController.navigate(Routes.AiTry.route)
+                                    }
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        if (categories.isEmpty()) {
+                            EmptyTryOnsDesc(
+                                onAddDetailsClick = {
+                                    navController.navigate(Routes.AiScan.route)
+                                }
+                            )
+                        } else {
+                            CategoryList(
+                                modifier = Modifier.padding(horizontal = 5.dp),
+                                categories = categories,
+                                onClickTryOnsItem = {
+                                    navController.navigate(Routes.AiFullScreenTry.route)
+                                }
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(24.dp))
                     }
-                    Spacer(modifier = Modifier.height(12.dp))
-                    CategoryList(modifier = Modifier.padding(horizontal = 5.dp))
-                    Spacer(modifier = Modifier.height(24.dp))
                 }
+
 
                 // Banner
                 item {
@@ -227,9 +268,9 @@ fun HomeScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        ProductCard(modifier = Modifier.weight(1f), product = pair[0], onClick = { navController.navigate(Routes.ProductDetail.route) })
+                        ProductCard(modifier = Modifier.weight(1f), product = pair[0], onClick = { /*navController.navigate(Routes.ProductDetail.route)*/ })
                         if (pair.size > 1) {
-                            ProductCard(modifier = Modifier.weight(1f), product = pair[1], onClick = { navController.navigate(Routes.ProductDetail.route)  })
+                            ProductCard(modifier = Modifier.weight(1f), product = pair[1], onClick = { /*navController.navigate(Routes.ProductDetail.route)*/  })
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }
@@ -248,6 +289,46 @@ fun HomeScreen(navController: NavHostController) {
 }
 
 data class ProductData(val title: String, val imageRes: Int)
+
+@Composable
+fun EmptyTryOnsDesc(
+    onAddDetailsClick: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(20.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+
+            Text(
+                text = "Add your baby details to try the interesting outfits virtually on your baby!",
+                fontSize = 16.sp,
+                fontFamily = FontFamily(Font(R.font.nunito_regular)),
+                color = Color.Black,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(Modifier.height(15.dp))
+
+            AppButton(
+                text = "Add Baby",
+                onClick = onAddDetailsClick,
+                buttonColors = PrimaryColor,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+    }
+}
 
 
 @Composable
@@ -377,15 +458,7 @@ fun HomeHeader(
 
 
 @Composable
-fun CategoryList(modifier: Modifier) {
-    val categories = listOf(
-        Pair("Muslins", R.drawable.dummy_img),
-        Pair("Onesies", R.drawable.dummy_img),
-        Pair("Booties", R.drawable.dummy_img),
-        Pair("Booties", R.drawable.dummy_img),
-        Pair("Booties", R.drawable.dummy_img),
-        Pair("Toys", R.drawable.dummy_img)
-    )
+fun CategoryList(modifier: Modifier, categories: List<Pair<String, Int>>,onClickTryOnsItem : () -> Unit) {
     LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
         items(categories) { category ->
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -395,7 +468,8 @@ fun CategoryList(modifier: Modifier) {
                             color = Color.White,
                             shape = RoundedCornerShape(26.dp)
                         )
-                        .padding(10.dp),
+                        .padding(10.dp)
+                        .clickable{ onClickTryOnsItem() },
                     contentAlignment = Alignment.Center
                 ) {
                     Image(

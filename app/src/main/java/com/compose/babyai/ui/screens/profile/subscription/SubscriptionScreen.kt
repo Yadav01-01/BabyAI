@@ -383,12 +383,12 @@ fun SwipeableSubscriptionCards(
                     },
                     onDragEnd = {
                         if (offsetX < -swipeThreshold) {
-                            // 🔁 LEFT SWIPE → rotate left
+                            //  LEFT SWIPE → rotate left
                             val newOrder =
                                 plans.drop(1) + plans.first()
                             onSwipe(newOrder)
                         } else if (offsetX > swipeThreshold) {
-                            // 🔁 RIGHT SWIPE → rotate right
+                            //  RIGHT SWIPE → rotate right
                          /*   val newOrder =
                                 listOf(plans.last()) + plans.dropLast(1)
                             onSwipe(newOrder)*/
@@ -401,7 +401,7 @@ fun SwipeableSubscriptionCards(
                 )
             }
     ) {
-        // 🔥 BACK → FRONT
+        //  BACK → FRONT
         for (i in 2 downTo 0) {
             SubscriptionCard(
                 plan = plans[i],

@@ -1,5 +1,6 @@
-package com.compose.babyai.ui.screens.authProfile
+package com.compose.babyai.ui.screens.aiTry
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,19 +23,17 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.compose.babyai.R
-import com.compose.babyai.navigation.Routes
-import com.compose.babyai.ui.component.uiInput.AppButton
+import com.compose.babyai.ui.component.uiInput.CommonPrimaryButton
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
-fun ProfileReadyScreen(navController: NavHostController) {
-
+fun EmptyFittingRoom(){
     Box(modifier = Modifier.fillMaxSize()) {
 
         // Background
@@ -50,25 +51,34 @@ fun ProfileReadyScreen(navController: NavHostController) {
             contentPadding = PaddingValues(bottom = 30.dp)
         ) {
 
-            item { Spacer(modifier = Modifier.height(40.dp)) }
+            item { Spacer(modifier = Modifier.height(5.dp)) }
 
             item {
-                Image(
-                    painter = painterResource(id = R.drawable.baby_ai),
-                    contentDescription = null,
-                    modifier = Modifier.height(40.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                ) {
+                    Text(
+                        text = "Fitting Room",
+                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
+                        fontSize = 22.sp,
+                        color = Color.Black,
+                        modifier = Modifier.align(Alignment.CenterStart)
+                    )
+                }
             }
+
 
             item { Spacer(modifier = Modifier.height(10.dp)) }
 
             item {
                 Image(
-                    painter = painterResource(R.drawable.ready_ic),
+                    painter = painterResource(R.drawable.empty_ic),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(480.dp),
+                        .height(434.dp),
                     contentScale = ContentScale.FillWidth
                 )
             }
@@ -85,28 +95,16 @@ fun ProfileReadyScreen(navController: NavHostController) {
                                 fontSize = 24.sp
                             )
                         ) {
-                            append("All Done!\n")
-                        }
-
-                        withStyle(
-                            SpanStyle(
-                                color = Color.Black,
-                                fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                                fontSize = 24.sp
-                            )
-                        ) {
-                            append("Your Baby’s Style Is Ready!")
+                            append("Try Cute Outfits Instantly\n")
                         }
                     },
                     textAlign = TextAlign.Center
                 )
             }
 
-            item { Spacer(modifier = Modifier.height(10.dp)) }
-
             item {
                 Text(
-                    text = "Babify is now ready with smart AI recommendations tailored to your little one.",
+                    text = "Add outfits in fitting room to try them on your baby virtually",
                     fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.nunito_regular)),
                     color = Color(0XFFB0B0B0),
@@ -119,19 +117,13 @@ fun ProfileReadyScreen(navController: NavHostController) {
             item { Spacer(modifier = Modifier.height(20.dp)) }
 
             item {
-                AppButton(
-                    text = "Start Exploring",
-                    onClick = {
-                        navController.navigate(Routes.Main.route) {
-                            popUpTo(Routes.Login.route) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
-                    },
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                )
+                CommonPrimaryButton(
+                    text = "Add Outfit",
+                    onClick = { /* Handle save */ },
+                    modifier = Modifier.padding(horizontal = 20.dp))
             }
+
+            item { Spacer(modifier = Modifier.height(20.dp)) }
         }
     }
 }

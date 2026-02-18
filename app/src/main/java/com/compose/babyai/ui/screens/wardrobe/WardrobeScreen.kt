@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.wardrobe
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -30,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BuyAgainItem
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.closest.PreviousBoughtCard
 import com.compose.babyai.ui.component.closest.SuggestedOutfit
 import com.compose.babyai.ui.screens.aiTry.OutfitData
@@ -52,6 +54,10 @@ fun WardrobeScreen(navController: NavHostController) {
             OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false),
             OutfitData("BabySky Blue Stripes", "$249.99", R.drawable.dummy_img, false)
         )
+    }
+
+    BackHandler {
+        navController.popBackStack()
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -119,7 +125,7 @@ fun WardrobeScreen(navController: NavHostController) {
                             modifier = Modifier.weight(1f),
                             outfit = pair[0],
                             onBuyAgainClick = {
-                                // handle buy again
+                                navController.navigate(Routes.Cart.route)
                             },
                             onFavClick = {
                                 // handle fav click
@@ -132,7 +138,7 @@ fun WardrobeScreen(navController: NavHostController) {
                                 modifier = Modifier.weight(1f),
                                 outfit = pair[1],
                                 onBuyAgainClick = {
-                                    // handle buy again
+                                    navController.navigate(Routes.Cart.route)
                                 },
                                 onFavClick = {
                                     // handle fav click
