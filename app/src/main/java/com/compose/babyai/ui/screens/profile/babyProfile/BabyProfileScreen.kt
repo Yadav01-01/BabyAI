@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -36,6 +37,7 @@ import com.compose.babyai.ui.component.uiInput.QuickActionItem
 import com.compose.babyai.ui.component.uiInput.SectionTitle
 import com.compose.babyai.ui.component.uiInput.SettingItem
 import com.compose.babyai.ui.dialog.LogOutDialog
+import com.compose.babyai.util.SessionManager
 import com.compose.babyai.viewModel.BabyProfileViewModel
 
 @Composable
@@ -43,6 +45,8 @@ fun BabyProfileScreen(navController: NavHostController) {
 
     val viewModel: BabyProfileViewModel = viewModel()
     val state by viewModel.uiState.collectAsState()
+    val sessionManager =  SessionManager(LocalContext.current)
+
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     BackHandler {
@@ -98,19 +102,14 @@ fun BabyProfileScreen(navController: NavHostController) {
                 icon = R.drawable.ic_blue_heart_icon,
                 title = "My Wishlist",
                 subtitle = "${state.wishlistCount} Outfits Saved",
-                onNextScreenClick = {
-//Wishlist
-                    navController.navigate(Routes.Wishlist.route)
-                }
+                onNextScreenClick = { navController.navigate(Routes.Wishlist.route) }
             )
 
             QuickActionItem(
                 icon = R.drawable.ic_blue_box_icon,
                 title = "My Orders",
                 subtitle = "View order history",
-                onNextScreenClick = {
-                    navController.navigate(Routes.MyOrdersScreen.route)
-                }
+                onNextScreenClick = { navController.navigate(Routes.MyOrdersScreen.route) }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -149,6 +148,7 @@ fun BabyProfileScreen(navController: NavHostController) {
         LogOutDialog(onDismiss = {showLogoutDialog = false},
             onLogout = {showLogoutDialog = false
                 navController.navigate(Routes.Login.route)
+                sessionManager.logout()
             }
         )
     }

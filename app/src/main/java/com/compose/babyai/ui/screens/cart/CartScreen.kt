@@ -108,7 +108,7 @@ fun CartScreen(navController: NavHostController) {
                 }
 
                 items(getDummyCartItems()) { item ->
-                    CartItemCard(item)
+                    CartItemCard(item, onItemClick = { navController.navigate(Routes.ProductDetail.route) })
                 }
 
                 item {
@@ -134,7 +134,8 @@ fun CartScreen(navController: NavHostController) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
                         items(getDummyRelatedItems()) { item ->
-                            RelatedOutfitItem(item, onClickFav = {})
+                            RelatedOutfitItem(item, onClickFav = {}, onItemClick = { navController.navigate(
+                                Routes.ProductDetail.route)})
                         }
                     }
                 }
@@ -216,9 +217,9 @@ fun ShippingAddressSection( onEditClick: () -> Unit ) {
 }
 
 @Composable
-fun CartItemCard(item: CartItem) {
+fun CartItemCard(item: CartItem,onItemClick:() -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable{ onItemClick() },
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -230,7 +231,7 @@ fun CartItemCard(item: CartItem) {
                 painter = painterResource(id = item.imageRes),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(125.dp)
+                    .size(120.dp)
                     .clip(RoundedCornerShape(20.dp)),
                 contentScale = ContentScale.Crop
             )
@@ -354,10 +355,10 @@ fun CartItemCard(item: CartItem) {
 }
 
 @Composable
-fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit) {
+fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit,onItemClick:() -> Unit) {
     var isFav by remember { mutableStateOf(false) }
     Card(
-        modifier = Modifier.width(170.dp),
+        modifier = Modifier.width(170.dp).clickable{ onItemClick() },
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -452,19 +453,12 @@ fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit) {
                     }
                 }
 
-                IconButton(
-                    onClick = { /* add to cart */ },
-                    modifier = Modifier.size(35.dp),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = Color.Transparent
-                    )
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.card_cart),
-                        contentDescription = "Add to cart",
-                        tint = Color.Unspecified
-                    )
-                }
+                Icon(
+                    painter = painterResource(id = R.drawable.card_cart),
+                    contentDescription = "Add to cart",
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(35.dp)
+                )
 
             }
         }

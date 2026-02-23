@@ -185,7 +185,7 @@ fun SearchScreen(navController: NavHostController) {
                     }else{
                         val filters = remember {
                             mutableStateListOf(
-                                FilterChipItem("Latest Trends", SearchFilterType.LATEST),
+                                FilterChipItem("Latest Trends", ),
                                 FilterChipItem("Brand", SearchFilterType.BRAND),
                                 FilterChipItem("Size", SearchFilterType.SIZE),
                                 FilterChipItem("Gender", SearchFilterType.GENDER),

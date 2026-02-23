@@ -44,9 +44,9 @@ import com.compose.babyai.ui.screens.cart.CartItem
 import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
-fun SuggestedOutfit(item: CartItem) {
+fun SuggestedOutfit(item: CartItem,onClickItem: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable{ onClickItem() },
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -111,9 +111,9 @@ fun SuggestedOutfit(item: CartItem) {
 }
 
 @Composable
-fun PreviousBoughtCard(outfit: OutfitData,modifier: Modifier = Modifier,onBuyAgainClick: () -> Unit,onFavClick: () -> Unit) {
+fun PreviousBoughtCard(outfit: OutfitData,modifier: Modifier = Modifier,onItemClick: () -> Unit,onBuyAgainClick: () -> Unit,onFavClick: () -> Unit) {
     Card(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().clickable{ onItemClick() },
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
@@ -134,11 +134,11 @@ fun PreviousBoughtCard(outfit: OutfitData,modifier: Modifier = Modifier,onBuyAga
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(215.dp)
-                        .clip(RoundedCornerShape(25.dp)),
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp)),
                     contentScale = ContentScale.Crop
                 )
 
-                // AI Try-on button
+                // Buy Again button
                 Card(
                     onClick = {
                         onBuyAgainClick()

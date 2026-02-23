@@ -143,7 +143,8 @@ fun AiTryScreen(navController: NavHostController) {
                             price = item.price,
                             originalPrice = item.originalPrice,
                             imageRes = item.imageRes,
-                            onClickImage = { navController.navigate(Routes.AiFullScreenTry.route) }
+                            onClickImage = { navController.navigate(Routes.AiFullScreenTry.route) },
+                            onClickBottom = { navController.navigate(Routes.ProductDetail.route) }
                         )
                     }
 
@@ -163,7 +164,8 @@ fun AiTryResultCard(
     originalPrice: String,
     imageRes: Int,
     modifier: Modifier = Modifier,
-    onClickImage:() -> Unit
+    onClickImage:() -> Unit,
+    onClickBottom:() -> Unit
 ) {
     Card(
         modifier = modifier
@@ -224,7 +226,7 @@ fun AiTryResultCard(
                     // Right Icons
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         IconButton(
-                            onClick = { },
+                            onClick = { onClickImage() },
                             modifier = Modifier
                                 .size(48.dp)
                         ) {
@@ -275,10 +277,12 @@ fun AiTryResultCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
+                    .padding(16.dp)
+                    .clickable{ onClickBottom() },
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                var isFav by remember { mutableStateOf(false)}
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = title,
@@ -308,12 +312,12 @@ fun AiTryResultCard(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     IconButton(
-                        onClick = { },
+                        onClick = { isFav = !isFav },
                         modifier = Modifier
                             .size(48.dp)
                     ) {
                         Icon(
-                            painter = painterResource(id = R.drawable.yellow_ic),
+                            painter = painterResource(id = if (isFav) R.drawable.fav_btm_ic  else R.drawable.yellow_ic),
                             contentDescription = "Favorite",
                             tint = Color.Unspecified,
                         )

@@ -78,7 +78,7 @@ fun OutfitTryCard(modifier: Modifier = Modifier,outfit: OutfitData,onItemClick :
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(215.dp)
-                        .clip(RoundedCornerShape(25.dp)),
+                        .clip(RoundedCornerShape(topStart = 25.dp, topEnd = 25.dp)),
                     contentScale = ContentScale.Crop
                 )
 

@@ -245,7 +245,7 @@ fun CategoryItem(title: String, isSelected: Boolean, onClick: () -> Unit) {
     ) {
         Text(
             text = title,
-            fontSize = 15.sp,
+            fontSize = 14.sp,
             fontFamily = FontFamily(Font(R.font.baloo2_regular )),
             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal,
             color = if (isSelected) Color.White else Color(0xFF848484)
@@ -285,7 +285,7 @@ fun FilterOptionItem(title: String, isChecked: Boolean, onCheckedChange: (Boolea
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = title,
-            fontSize = 16.sp,
+            fontSize = 15.sp,
             fontFamily = FontFamily(Font(R.font.nunito_regular)),
             color = Color.Black
         )

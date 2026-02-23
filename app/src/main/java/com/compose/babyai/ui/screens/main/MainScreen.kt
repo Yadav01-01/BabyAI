@@ -22,6 +22,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.compose.babyai.navigation.NavGraph
 import com.compose.babyai.navigation.Routes
+import com.compose.babyai.ui.screens.aiTry.AiTryScreen
+import com.compose.babyai.ui.screens.cart.CartScreen
+import com.compose.babyai.ui.screens.home.HomeScreen
+import com.compose.babyai.ui.screens.profile.babyProfile.BabyProfileScreen
+import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
 
 @Composable
 fun MainScreen(rootNavController: NavHostController) {
@@ -72,7 +77,7 @@ fun MainScreen(rootNavController: NavHostController) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                  /*  .padding(innerPadding)*/
+                    /*.padding(innerPadding)*/
                     .background(Color.Transparent)
             )
             {
@@ -85,3 +90,41 @@ fun MainScreen(rootNavController: NavHostController) {
     }
 
 }
+
+/*
+@Composable
+fun MainScreen(navController: NavHostController) {
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val bottomBarRoutes = setOf(
+        Routes.Home.route,
+        Routes.Wardrobe.route,
+        Routes.AiTry.route,
+        Routes.Cart.route,
+        Routes.BabyProfile.route
+    )
+
+    Scaffold(
+        bottomBar = {
+            if (bottomBarRoutes.contains(currentRoute)) {
+                BottomNavigationBar(modifier = Modifier,navController)
+            }
+        }
+    ) { innerPadding ->
+
+        Box(modifier = Modifier.padding(innerPadding)) {
+
+            when (currentRoute) {
+
+                Routes.Home.route -> HomeScreen(navController)
+                Routes.Wardrobe.route -> WardrobeScreen(navController)
+                Routes.AiTry.route -> AiTryScreen(navController)
+                Routes.Cart.route -> CartScreen(navController)
+                Routes.BabyProfile.route -> BabyProfileScreen(navController)
+
+            }
+        }
+    }
+}*/

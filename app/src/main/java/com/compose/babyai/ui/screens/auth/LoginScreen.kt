@@ -183,7 +183,8 @@ fun LoginScreen(
                 value = state.name,
                 onValueChange = { value -> viewModel.onNameChange(value) },
                 placeholderText = "Parent/Guardian Full Name",
-                leadingIcon = painterResource(id = R.drawable.person)
+                leadingIcon = painterResource(id = R.drawable.person),
+                error = state.nameError
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -233,7 +234,7 @@ fun LoginScreen(
                         value = state.phoneNumber,
                         onValueChange = { value -> viewModel.onPhoneChange(value) },
                         placeholderText = "Phone Number",
-                        leadingIcon = painterResource(id = R.drawable.phone_ic)
+                        leadingIcon = painterResource(id = R.drawable.phone_ic),
                     )
                 }
 
@@ -242,7 +243,10 @@ fun LoginScreen(
                     value = state.email,
                     onValueChange = { value -> viewModel.onEmailChange(value) },
                     placeholderText = "Email Address",
-                    leadingIcon = painterResource(id = R.drawable.ic_email_icon)
+                    leadingIcon = painterResource(id = R.drawable.ic_email_icon),
+                    error = if (state.selectedContactType == ContactType.EMAIL)
+                        state.contactError
+                    else null
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))

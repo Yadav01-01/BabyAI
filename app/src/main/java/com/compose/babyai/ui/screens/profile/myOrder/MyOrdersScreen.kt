@@ -2,14 +2,15 @@ package com.compose.babyai.ui.screens.profile.myOrder
 
 //MyOrdersScreen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
+import com.compose.babyai.ui.component.calender.CalenderModal
 import com.compose.babyai.ui.component.uiInput.TopBar
 
 // Data class for Order
@@ -41,8 +43,11 @@ enum class OrderStatus1(val displayName: String, val color: Color) {
     PROCESSING("Processing", Color(0xFFFBD606))
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyOrdersScreen(navController: NavHostController) {
+    var showCalendarModal by remember { mutableStateOf(false) }
+
     // Sample orders data
     val orders = listOf(
         Order("ORD-2025-001", "November 28, 2025", OrderStatus1.DELIVERED),
@@ -68,10 +73,9 @@ fun MyOrdersScreen(navController: NavHostController) {
             TopBar(onBackClick = {
                 navController.navigateUp()
             }, onSearchClick = {
-//TrackReturnScreen
                 navController.navigate(Routes.TrackReturnScreen.route)
-            }, onWishListClick = {
-
+            }, onCalendarClick = {
+                showCalendarModal = true
             })
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -83,7 +87,7 @@ fun MyOrdersScreen(navController: NavHostController) {
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 orders.forEach { order ->
-                    OrderCard(order = order, orderClick = {orderId, status ->
+                    OrderCard(order = order, orderClick = { orderId, status ->
                         //OrderSummaryScreen
                         navController.navigate(Routes.OrderSummaryScreen.createRoute(orderId, status))
                     })
@@ -91,13 +95,20 @@ fun MyOrdersScreen(navController: NavHostController) {
             }
         }
 
+        if (showCalendarModal) {
+            CalenderModal(
+                onDismiss = { showCalendarModal = false },
+                onDatesSelected = { start, end ->
+                    showCalendarModal = false
+                    // Handle selected date range if needed
+                }
+            )
+        }
     }
 }
 
-
-
 @Composable
-fun OrderCard(order: Order,orderClick:(String, String)->Unit) {
+fun OrderCard(order: Order, orderClick: (String, String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -155,7 +166,7 @@ fun OrderCard(order: Order,orderClick:(String, String)->Unit) {
                     modifier = Modifier
                         .clip(RoundedCornerShape(40.dp))
                         .background(order.status.color).width(95.dp)
-                        .padding( vertical = 10.dp),
+                        .padding(vertical = 10.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -178,5 +189,3 @@ fun OrderCard(order: Order,orderClick:(String, String)->Unit) {
         }
     }
 }
-
-

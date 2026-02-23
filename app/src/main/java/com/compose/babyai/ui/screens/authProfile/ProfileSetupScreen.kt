@@ -30,6 +30,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -54,47 +55,41 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.AppButton
 import com.compose.babyai.ui.component.uiInput.CardTextField
+import com.compose.babyai.ui.component.uiInput.PreferencesSearchBar
 import com.compose.babyai.ui.component.uiInput.ProfileCardHeading
 import com.compose.babyai.ui.component.uiInput.SearchBar
 import com.compose.babyai.ui.theme.PrimaryColor
 import com.compose.babyai.util.dashedBorder
+import com.compose.babyai.viewModel.profileSetup.ProfileSetupViewModel
 
 
 @Composable
-fun ProfileSetupScreen(navController: NavHostController) {
-    var currentStep by rememberSaveable  { mutableStateOf(1) }
-
-    // State for Step 1
-    var nickname by remember { mutableStateOf("") }
-    var selectedAgeRange by remember { mutableStateOf("") }
-
-    // State for Step 2
-    var selectedGender by remember { mutableStateOf("") }
-    var profileImageUri by remember { mutableStateOf<String?>(null) }
+fun ProfileSetupScreen(
+    navController: NavHostController,
+    viewModel: ProfileSetupViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Capture image from ScanScreen
     val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
-    val result = savedStateHandle?.getLiveData<String>("profile_image")
-    
-    LaunchedEffect(result?.value) {
-        result?.value?.let { uri ->
-            profileImageUri = uri
-            // Clear the result after processing
+    val imageUri = savedStateHandle
+        ?.getStateFlow<String?>("profile_image", null)
+        ?.collectAsState()
+
+    LaunchedEffect(imageUri?.value) {
+        imageUri?.value?.let { uri ->
+            viewModel.updateProfileImage(uri)
             savedStateHandle.remove<String>("profile_image")
         }
     }
-
-    // State for Step 3
-    val selectedFabrics = remember { mutableStateListOf<String>() }
-
-    // State for Step 4
-    val selectedColors = remember { mutableStateListOf<String>() }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -123,7 +118,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
             ) {
                 IconButton(
                     onClick = {
-                        if (currentStep > 1) currentStep-- else navController.popBackStack()
+                        if (uiState.currentStep > 1) viewModel.previousStep() else navController.popBackStack()
                     },
                     modifier = Modifier.wrapContentSize()
                 ) {
@@ -146,7 +141,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
                     fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.nunito_semibold)),
                     color = Color.Black,
-                    modifier = Modifier.clickable { navController.navigate(Routes.Home.route) }
+                    modifier = Modifier.clickable { navController.navigate(Routes.Main.route) }
                 )
             }
 
@@ -163,7 +158,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
                             .weight(1f)
                             .height(8.dp)
                             .clip(RoundedCornerShape(4.dp))
-                            .background(if (i <= currentStep) PrimaryColor else Color.White)
+                            .background(if (i <= uiState.currentStep) PrimaryColor else Color.White)
                     )
                 }
             }
@@ -172,7 +167,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
 
             // Step Info
             Text(
-                text = "Step $currentStep",
+                text = "Step ${uiState.currentStep}",
                 fontSize = 24.sp,
                 fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
                 fontWeight = FontWeight.SemiBold,
@@ -193,7 +188,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
             )
 
             Text(
-                text = stepTitles[currentStep - 1],
+                text = stepTitles[uiState.currentStep - 1],
                 fontSize = 18.sp,
                 fontFamily = FontFamily(Font(R.font.nunito_semibold)),
                 fontWeight = FontWeight.SemiBold,
@@ -201,7 +196,7 @@ fun ProfileSetupScreen(navController: NavHostController) {
             )
 
             Text(
-                text = stepSubtitles[currentStep - 1],
+                text = stepSubtitles[uiState.currentStep - 1],
                 fontSize = 16.sp,
                 fontFamily = FontFamily(Font(R.font.nunito_regular)),
                 fontWeight = FontWeight.Normal,
@@ -219,30 +214,38 @@ fun ProfileSetupScreen(navController: NavHostController) {
                 color = Color.White,
                 shadowElevation = 2.dp
             ) {
-                when (currentStep) {
+                when (uiState.currentStep) {
                     1 -> StepOneContent(
-                        nickname,
-                        { nickname = it },
-                        selectedAgeRange,
-                        { selectedAgeRange = it },
-                        { if (currentStep < 4) currentStep++ }
+                        nickname = uiState.nickname,
+                        onNicknameChange = viewModel::updateNickname,
+                        selectedAge = uiState.selectedAgeRange,
+                        onAgeSelect = viewModel::updateAgeRange,
+                        onNextClick = { viewModel.nextStep() },
+                        isNextEnabled = viewModel.isNextEnabled()
                     )
 
                     2 -> StepTwoContent(
-                        selectedGender,
-                        profileImageUri = profileImageUri,
-                        onNextClick = { if (currentStep < 4) currentStep++ },
-                        onGenderSelect = { selectedGender = it },
-                        onClickCamera = { navController.navigate(Routes.AiScan.createRoute("profileSetup")) }
-                        )
+                        uiState.selectedGender,
+                        profileImageUri = uiState.profileImageUri,
+                        onNextClick = { viewModel.nextStep() },
+                        onGenderSelect =  viewModel::updateGender ,
+                        onClickCamera = { navController.navigate(Routes.AiScan.createRoute("profileSetup")) },
+                        isNextEnabled = viewModel.isNextEnabled()
+                    )
 
                     3 -> StepThreeContent(
-                        selectedFabrics,
-                        onNextClick = { if (currentStep < 4) currentStep++ })
+                        uiState.selectedFabrics,
+                        onFabricToggle = viewModel::toggleFabric,
+                        onNextClick = { viewModel.nextStep() },
+                        isNextEnabled = viewModel.isNextEnabled()
+                    )
 
                     4 -> StepFourContent(
-                        selectedColors,
-                        onNextClick = { navController.navigate(Routes.ProfileReady.route) })
+                        uiState.selectedColors,
+                        onColorToggle = viewModel::toggleColor,
+                        onNextClick = { navController.navigate(Routes.ProfileReady.route) },
+                        isNextEnabled = viewModel.isNextEnabled()
+                    )
                 }
             }
             Spacer(Modifier.height(25.dp))
@@ -256,7 +259,8 @@ fun StepOneContent(
     onNicknameChange: (String) -> Unit,
     selectedAge: String,
     onAgeSelect: (String) -> Unit,
-    onNextClick: () -> Unit
+    onNextClick: () -> Unit,
+    isNextEnabled: Boolean
 ) {
 
     val ageRanges = listOf(
@@ -297,7 +301,7 @@ fun StepOneContent(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                userScrollEnabled = false, // 🔥 CRITICAL
+                userScrollEnabled = false, //  CRITICAL
                 modifier = Modifier
                     .padding(horizontal = 20.dp)
                     .fillMaxWidth()
@@ -354,6 +358,7 @@ fun StepOneContent(
             AppButton(
                 text = "Next",
                 onClick = { onNextClick() },
+                isNextEnabled = isNextEnabled,
                 modifier = Modifier.padding(horizontal = 20.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -368,7 +373,8 @@ fun StepTwoContent(
     profileImageUri: String? = null,
     onGenderSelect: (String) -> Unit,
     onNextClick: () -> Unit,
-    onClickCamera: () -> Unit
+    onClickCamera: () -> Unit,
+    isNextEnabled: Boolean
 ) {
 
     LazyColumn(
@@ -462,6 +468,7 @@ fun StepTwoContent(
             ) {
                 AppButton(
                     text = "Save & Next",
+                    isNextEnabled = isNextEnabled,
                     onClick = {
                         if (selectedGender.isNotEmpty()) {
                             onNextClick()
@@ -516,46 +523,44 @@ fun GenderCard(
 }
 
 @Composable
-fun StepThreeContent(selectedFabrics: MutableList<String>,onNextClick: () -> Unit) {
-    val fabrics = listOf("Organic Cotton", "Bamboo", "Muslin", "Fleece", "Lyocell", "Modal", "Linen-Cotton Blend", "Soft Bleeds", "Jersey Knit", "Cotton-Spandex Blend")
+fun StepThreeContent(
+    selectedFabrics: List<String>,
+    onFabricToggle: (String) -> Unit,
+    onNextClick: () -> Unit,
+    isNextEnabled: Boolean
+) {
+    val fabrics = listOf(
+        "Organic Cotton", "Bamboo", "Muslin", "Fleece",
+        "Lyocell", "Modal", "Linen-Cotton Blend",
+        "Soft Bleeds", "Jersey Knit", "Cotton-Spandex Blend"
+    )
+
     var searchQuery by remember { mutableStateOf("") }
 
-    Box(
-        modifier = Modifier.fillMaxSize().background(Color.White)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().background(Color.White)) {
 
-        // Scrollable Content
         LazyColumn(
-            modifier = Modifier.fillMaxSize().background(Color.White),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            contentPadding = PaddingValues(
-                top = 20.dp,
-                bottom = 100.dp // important so content doesn't hide behind button
-            )
+            contentPadding = PaddingValues(top = 20.dp, bottom = 100.dp)
         ) {
 
             item {
                 ProfileCardHeading("Fabric Preferences")
                 Spacer(modifier = Modifier.height(16.dp))
-                DashedDivider(
-                    color = PrimaryColor,
-                    modifier = Modifier.padding(horizontal = 20.dp)
-                )
+                DashedDivider(color = PrimaryColor, modifier = Modifier.padding(horizontal = 20.dp))
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
             item {
-                SearchBar(
+                PreferencesSearchBar(
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
-                    placeholderText = "Search fabric preferences",
+                    placeholderText = "Search Fabric",
                     icon = painterResource(R.drawable.search_ic),
-                    readOnly = false,
-                    enabled = true,
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    containerColor = Color(0XFFE9FAFA)
+                    modifier = Modifier.padding(horizontal = 15.dp)
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(15.dp))
             }
 
             item {
@@ -566,26 +571,26 @@ fun StepThreeContent(selectedFabrics: MutableList<String>,onNextClick: () -> Uni
                     horizontalArrangement = Arrangement.spacedBy(5.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+
                     fabrics.forEach { fabric ->
+
                         val isSelected = selectedFabrics.contains(fabric)
 
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50.dp))
                                 .background(
-                                    if (isSelected) Color(0xFFE9FAFA) else Color.White
+                                    if (isSelected) Color(0xFFE9FAFA)
+                                    else Color.White
                                 )
                                 .border(
                                     1.dp,
-                                    if (isSelected) PrimaryColor else Color(0xFFE0E0E0),
+                                    if (isSelected) PrimaryColor
+                                    else Color(0xFFE0E0E0),
                                     RoundedCornerShape(50.dp)
                                 )
                                 .clickable {
-                                    if (isSelected) {
-                                        selectedFabrics.remove(fabric)
-                                    } else {
-                                        selectedFabrics.add(fabric)
-                                    }
+                                    onFabricToggle(fabric)
                                 }
                                 .padding(horizontal = 18.dp, vertical = 10.dp)
                         ) {
@@ -601,7 +606,6 @@ fun StepThreeContent(selectedFabrics: MutableList<String>,onNextClick: () -> Uni
             }
         }
 
-        // Fixed Bottom Button
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -611,30 +615,35 @@ fun StepThreeContent(selectedFabrics: MutableList<String>,onNextClick: () -> Uni
         ) {
             AppButton(
                 text = "Save & Next",
-                onClick = { onNextClick() }
+                onClick = onNextClick,
+                isNextEnabled = isNextEnabled
             )
         }
     }
-
-
 }
 
 @Composable
-fun StepFourContent(selectedColors: MutableList<String>,onNextClick: () -> Unit) {
-    val colors = listOf("Pastel", "Bright", "Neutral", "Natural Tones", "Cool Colors", "Warm Colors")
-    var searchQuery by remember { mutableStateOf("") }
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
+fun StepFourContent(
+    selectedColors: List<String>,
+    onColorToggle: (String) -> Unit,
+    onNextClick: () -> Unit,
+    isNextEnabled: Boolean
+) {
+    val colors = listOf(
+        "Pastel", "Bright", "Neutral",
+        "Natural Tones", "Cool Colors", "Warm Colors"
+    )
 
-        // Scrollable Content
+    var searchQuery by remember { mutableStateOf("") }
+
+    Box(modifier = Modifier.fillMaxSize()) {
+
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             contentPadding = PaddingValues(
                 top = 20.dp,
-                bottom = 100.dp // IMPORTANT: space for button
+                bottom = 100.dp
             )
         ) {
 
@@ -649,17 +658,14 @@ fun StepFourContent(selectedColors: MutableList<String>,onNextClick: () -> Unit)
             }
 
             item {
-                SearchBar(
+                PreferencesSearchBar(
                     searchQuery = searchQuery,
                     onSearchQueryChange = { searchQuery = it },
-                    placeholderText = "Search fabric preferences",
+                    placeholderText = "Search preferred colors",
                     icon = painterResource(R.drawable.search_ic),
-                    readOnly = false,
-                    enabled = true,
-                    modifier = Modifier.padding(horizontal = 20.dp),
-                    containerColor = Color(0XFFE9FAFA)
+                    modifier = Modifier.padding(horizontal = 15.dp)
                 )
-                Spacer(Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(15.dp))
             }
 
             item {
@@ -670,26 +676,30 @@ fun StepFourContent(selectedColors: MutableList<String>,onNextClick: () -> Unit)
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
+
                     colors.forEach { color ->
+
                         val isSelected = selectedColors.contains(color)
 
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(50.dp))
                                 .background(
-                                    if (isSelected) Color(0xFFE9FAFA) else Color.White
+                                    if (isSelected)
+                                        Color(0xFFE9FAFA)
+                                    else
+                                        Color.White
                                 )
                                 .border(
                                     1.dp,
-                                    if (isSelected) PrimaryColor else Color(0xFFE0E0E0),
+                                    if (isSelected)
+                                        PrimaryColor
+                                    else
+                                        Color(0xFFE0E0E0),
                                     RoundedCornerShape(50.dp)
                                 )
                                 .clickable {
-                                    if (isSelected) {
-                                        selectedColors.remove(color)
-                                    } else {
-                                        selectedColors.add(color)
-                                    }
+                                    onColorToggle(color)
                                 }
                                 .padding(horizontal = 18.dp, vertical = 10.dp)
                         ) {
@@ -705,7 +715,6 @@ fun StepFourContent(selectedColors: MutableList<String>,onNextClick: () -> Unit)
             }
         }
 
-        // Fixed Bottom Button
         Box(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
@@ -715,11 +724,11 @@ fun StepFourContent(selectedColors: MutableList<String>,onNextClick: () -> Unit)
         ) {
             AppButton(
                 text = "Save & Next",
-                onClick = { onNextClick() }
+                onClick = onNextClick,
+                isNextEnabled = isNextEnabled
             )
         }
     }
-
 }
 
 // Minimal FlowRow implementation since I don't know if they have the dependency

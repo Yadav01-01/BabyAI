@@ -37,21 +37,35 @@ class VerificationViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 otpValues = updatedList,
-                isOtpFilled = updatedList.all { digit -> digit.isNotEmpty() }
+                isOtpFilled = updatedList.all { digit -> digit.isNotEmpty() },
+                otpError = null //  Clear error on typing
             )
         }
     }
 
+
     fun verifyOtp() {
-        if (!_uiState.value.isOtpFilled) return
+        val state = _uiState.value
+
+        if (!state.isOtpFilled) {
+            _uiState.update {
+                it.copy(otpError = "Please enter complete OTP")
+            }
+            return
+        }
+
+        // Clear previous error
+        _uiState.update { it.copy(otpError = null) }
 
         // TODO: call API here
+
         sessionManager.setLogin(true)
 
         _uiState.update {
             it.copy(showSuccessDialog = true)
         }
     }
+
 
     fun dismissDialog() {
         _uiState.update {
@@ -85,5 +99,6 @@ data class VerificationUiState(
     val otpValues: List<String> = List(5) { "" },
     val timeLeft: Int = 30,
     val isOtpFilled: Boolean = false,
-    val showSuccessDialog: Boolean = false
+    val showSuccessDialog: Boolean = false,
+    val otpError: String? = null
 )

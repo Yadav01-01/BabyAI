@@ -42,6 +42,7 @@ import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.BabyPhotoPickerRow
 import com.compose.babyai.ui.component.uiInput.CommonOutlinedButton
 import com.compose.babyai.ui.component.uiInput.CommonPrimaryButton
@@ -273,11 +274,12 @@ fun EditBabyProfile(navController: NavHostController) {
 
                     BabyPhotoPickerRow(
                         imageRes = profileImageUri,
-                        onSelect = {
-                            launchCameraWithPermissionCheck()
+                        onCamClick = {
+                            navController.navigate(Routes.AiScan.createRoute("profileSetup"))
                         },
                         onSelect1 = {
-                            launchCameraWithPermissionCheck()
+                            /*launchCameraWithPermissionCheck()*/
+                            navController.navigate(Routes.AiScan.createRoute("profileSetup"))
                         }
                     )
 
@@ -635,8 +637,8 @@ fun AgeButton(
 ) {
     Box(
         modifier = modifier
-            .height(120.dp)
-            .width(120.dp)
+            .height(100.dp)
+            .width(110.dp)
             .background(
                 color = if (isSelected) Color(0xFFE9FAFA) else Color.Unspecified,
                 shape = RoundedCornerShape(40.dp)

@@ -50,7 +50,7 @@ fun ProfileReadyScreen(navController: NavHostController) {
             contentPadding = PaddingValues(bottom = 30.dp)
         ) {
 
-            item { Spacer(modifier = Modifier.height(40.dp)) }
+            item { Spacer(modifier = Modifier.height(5.dp)) }
 
             item {
                 Image(
@@ -68,12 +68,12 @@ fun ProfileReadyScreen(navController: NavHostController) {
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(480.dp),
+                        .height(450.dp),
                     contentScale = ContentScale.FillWidth
                 )
             }
 
-            item { Spacer(modifier = Modifier.height(10.dp)) }
+            item { Spacer(modifier = Modifier.height(5.dp)) }
 
             item {
                 Text(
@@ -102,7 +102,7 @@ fun ProfileReadyScreen(navController: NavHostController) {
                 )
             }
 
-            item { Spacer(modifier = Modifier.height(10.dp)) }
+            item { Spacer(modifier = Modifier.height(2.dp)) }
 
             item {
                 Text(

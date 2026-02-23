@@ -140,6 +140,16 @@ fun VerificationScreen(navController: NavHostController,
                     )
                 }
             }
+            if (state.otpError != null) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = state.otpError!!,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily(Font(R.font.nunito_regular))
+                )
+            }
+
 
 
             Spacer(modifier = Modifier.height(32.dp))

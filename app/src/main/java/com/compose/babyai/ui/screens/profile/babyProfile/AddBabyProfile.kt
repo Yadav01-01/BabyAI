@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.BabyPhotoPickerRow
 import com.compose.babyai.ui.component.uiInput.CommonOutlinedButton
 import com.compose.babyai.ui.component.uiInput.CommonPrimaryButton
@@ -219,15 +220,14 @@ fun AddBabyProfile(navController: NavHostController) {
                         .verticalScroll(rememberScrollState()),
                 ) {
 
-
                     SectionTitle("Baby's Profile Picture")
 
                     Spacer(modifier = Modifier.height(12.dp))
 
                     BabyPhotoPickerRow(
                         imageRes = profileImageUri,
-                        onSelect = {
-                            launchCameraWithPermissionCheck()
+                        onCamClick = {
+                            navController.navigate(Routes.AiScan.createRoute("profileSetup"))
                         },
                         onSelect1 = {
                             launchCameraWithPermissionCheck()

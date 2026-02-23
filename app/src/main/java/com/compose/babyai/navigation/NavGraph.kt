@@ -1,6 +1,8 @@
 package com.compose.babyai.navigation
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -41,7 +43,9 @@ import com.compose.babyai.ui.screens.profile.settings.TermsAndConditionsScreen
 import com.compose.babyai.ui.screens.profile.subscription.SubscriptionScreen
 import com.compose.babyai.ui.screens.profile.myOrder.trackReturn.TrackReturnScreen
 import com.compose.babyai.ui.screens.wardrobe.WardrobeScreen
+import androidx.core.net.toUri
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navController: NavHostController,
@@ -224,7 +228,7 @@ fun NavGraph(
             arguments = listOf(navArgument("imageUri") { type = NavType.StringType })
         ) { backStackEntry ->
             val imageUri = backStackEntry.arguments?.getString("imageUri") ?: ""
-            CamPreviewScreen(navController, Uri.parse(Uri.decode(imageUri)))
+            CamPreviewScreen(navController, Uri.decode(imageUri).toUri())
         }
 
         composable(Routes.AddBabyProfile.route) {

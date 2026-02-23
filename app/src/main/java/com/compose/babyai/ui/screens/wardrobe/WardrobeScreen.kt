@@ -124,12 +124,9 @@ fun WardrobeScreen(navController: NavHostController) {
                         PreviousBoughtCard(
                             modifier = Modifier.weight(1f),
                             outfit = pair[0],
-                            onBuyAgainClick = {
-                                navController.navigate(Routes.Cart.route)
-                            },
-                            onFavClick = {
-                                // handle fav click
-                            }
+                            onItemClick = { navController.navigate(Routes.ProductDetail.route) },
+                            onBuyAgainClick = { navController.navigate(Routes.Payment.route) },
+                            onFavClick = {  /*handle fav click*/ }
                         )
 
                         // Right card (if exists)
@@ -137,9 +134,8 @@ fun WardrobeScreen(navController: NavHostController) {
                             PreviousBoughtCard(
                                 modifier = Modifier.weight(1f),
                                 outfit = pair[1],
-                                onBuyAgainClick = {
-                                    navController.navigate(Routes.Cart.route)
-                                },
+                                onItemClick = { navController.navigate(Routes.ProductDetail.route) },
+                                onBuyAgainClick = { navController.navigate(Routes.Cart.route) },
                                 onFavClick = {
                                     // handle fav click
                                 }
@@ -163,7 +159,7 @@ fun WardrobeScreen(navController: NavHostController) {
                 }
 
                 items(getDummyCartItems()) { item ->
-                    SuggestedOutfit(item)
+                    SuggestedOutfit(item, onClickItem = { navController.navigate(Routes.ProductDetail.route) })
                 }
 
                 item {

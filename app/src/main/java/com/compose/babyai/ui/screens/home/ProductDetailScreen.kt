@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BabyProfile
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.dialog.AgeBottomSheet
 import com.compose.babyai.ui.component.uiInput.DetailHeading
 import com.compose.babyai.ui.component.dialog.ShareBottomSheet
@@ -66,7 +67,9 @@ fun ProductDetailScreen(navController: NavHostController) {
     )
 
     var selectedBaby by remember { mutableStateOf(babies.first()) }
-    var expanded by remember { mutableStateOf(false) }  // ← Add this
+    var expanded by remember { mutableStateOf(false) }
+    var isTried by remember { mutableStateOf(false) }
+
 
     Box(
         modifier = Modifier
@@ -225,26 +228,26 @@ fun ProductDetailScreen(navController: NavHostController) {
 
                     // Button positioned at bottom center, overlapping the curved edge
                     Button(
-                        onClick = { },
+                        onClick = { navController.navigate(Routes.AiTry.route)},
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
-                            .offset(y = 10.dp)  // ← Adjusted
+                            .offset(y = 10.dp)
                             .height(56.dp)
                             .width(260.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                        colors = ButtonDefaults.buttonColors(containerColor = if (isTried) PrimaryColor else Color.Black),
                         shape = RoundedCornerShape(28.dp),
                         elevation = ButtonDefaults.buttonElevation(defaultElevation = 8.dp)
                     ) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                painterResource(R.drawable.green_star),
+                                painterResource(if (isTried) R.drawable.humbleicons_ai else R.drawable.green_star),
                                 null,
-                                tint = PrimaryColor,
+                                tint = Color.Unspecified,
                                 modifier = Modifier.size(24.dp)
                             )
                             Spacer(Modifier.width(8.dp))
                             Text(
-                                "Try Now (AI Try-On)",
+                                text = if (isTried) "View in Fitting Room" else "Try Now (AI Try-On)",
                                 color = Color.White,
                                 fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
                                 fontWeight = FontWeight.SemiBold,
@@ -404,20 +407,70 @@ fun ProductDetailScreen(navController: NavHostController) {
 
                     // Switch Baby Profiles
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(22.dp))
+                            .background(Color.White.copy(alpha = 0.9f))
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        DetailHeading("Switch Baby Profiles")
-                        AvatarPreviewRow(
-                            images = listOf(
-                                R.drawable.onb1,
-                                R.drawable.onb2,
-                                R.drawable.onb3,
-                                R.drawable.onb1
-                            )
+                        // Arrow
+                        Icon(
+                            painter = painterResource(id = R.drawable.left_arrow),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(16.dp)
+                                .clickable { expanded = !expanded },
+                            tint = Color.Unspecified
                         )
 
+                        Spacer(modifier = Modifier.width(6.dp))
+
+                        // Selected Profile
+                        Image(
+                            painter = painterResource(id = selectedBaby.imageRes),  // ← Changed
+                            contentDescription = "Profile",
+                            modifier = Modifier
+                                .size(36.dp)
+                                .clip(CircleShape)
+                                .clickable { expanded = !expanded },
+                            contentScale = ContentScale.Crop
+                        )
+
+                        // INLINE EXPANDING LIST
+                        AnimatedVisibility(
+                            visible = expanded,
+                            enter = expandHorizontally() + fadeIn(),
+                            exit = shrinkHorizontally() + fadeOut()
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.padding(start = 6.dp)
+                            ) {
+                                babies  // ← Changed
+                                    .filter { it.id != selectedBaby.id }  // ← Changed
+                                    .take(3)
+                                    .forEach { baby ->
+                                        Image(
+                                            painter = painterResource(id = baby.imageRes),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .padding(start = 6.dp)
+                                                .size(32.dp)
+                                                .clip(CircleShape)
+                                                .border(
+                                                    1.dp,
+                                                    Color.LightGray,
+                                                    CircleShape
+                                                )
+                                                .clickable {
+                                                    selectedBaby = baby  // ← Changed
+                                                    expanded = false
+                                                },
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    }
+                            }
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(16.dp))

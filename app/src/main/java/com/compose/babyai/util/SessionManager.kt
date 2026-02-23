@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
+import androidx.core.content.edit
 
 @Singleton
 class SessionManager @Inject constructor(
@@ -22,7 +23,7 @@ class SessionManager @Inject constructor(
      * Save login status
      */
     fun setLogin(isLoggedIn: Boolean) {
-        prefs.edit().putBoolean(IS_LOGIN, isLoggedIn).apply()
+        prefs.edit { putBoolean(IS_LOGIN, isLoggedIn) }
     }
 
     /**
@@ -36,6 +37,6 @@ class SessionManager @Inject constructor(
      * Clear all session data
      */
     fun logout() {
-        prefs.edit().clear().apply()
+        prefs.edit { clear() }
     }
 }

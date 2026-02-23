@@ -2,13 +2,13 @@ package com.compose.babyai.data.model
 
 data class FilterChipItem(
     val title: String,
-    val type: SearchFilterType,
+    val type: SearchFilterType ?= null,
     val isSelected: Boolean = false
 )
 
 
 enum class SearchFilterType {
-    LATEST,
+   /* LATEST,*/
     BRAND,
     SIZE,
     GENDER,

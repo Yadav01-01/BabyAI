@@ -32,6 +32,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -78,6 +80,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.compose.babyai.R
+import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.IconCircleButton
 import com.compose.babyai.ui.theme.BabyAITheme
 import com.compose.babyai.ui.theme.PrimaryColor
@@ -155,8 +158,7 @@ fun FullScreenAITryScreen(navController: NavHostController) {
                 navController.popBackStack()
             },
             onBuyNow = { outfitId ->
-                // TODO: Navigate to checkout
-                // navController.navigate(Routes.Checkout.createRoute(outfitId))
+                 navController.navigate(Routes.Payment.route)
             },
             onColorSelected = { outfitId, color ->
                 // TODO: Update selected color
@@ -181,7 +183,10 @@ fun FullScreenAITryScreen(navController: NavHostController) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 200.dp)
         ) {
-            SuccessToast(message = "Added to Cart!")
+            SuccessToast(
+                message = "Added to the cart",
+                modifier = Modifier.align(Alignment.Center)
+            )
         }
     }
 }
@@ -384,9 +389,10 @@ private fun FullScreenReelCard(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    IconCircleButton(R.drawable.white_frame) {
+                    IconCircleButton(if (isFavorite) R.drawable.white_frame else R.drawable.new_fav) {
                         isMenuExpanded = false
                         // Frame action
+                        isFavorite = !isFavorite
                     }
                     IconCircleButton(R.drawable.share_ic) {
                         isMenuExpanded = false
@@ -462,7 +468,7 @@ private fun FullScreenReelCard(
         }
 
         // Added to cart confirmation
-        AnimatedVisibility(
+       /* AnimatedVisibility(
             visible = isAdded,
             modifier = Modifier.align(Alignment.Center),
             enter = fadeIn() + scaleIn(),
@@ -495,7 +501,7 @@ private fun FullScreenReelCard(
                     )
                 }
             }
-        }
+        }*/
 
         // Bottom Content
         Column(
@@ -704,19 +710,37 @@ private fun PageIndicator(
 }
 
 @Composable
-private fun SuccessToast(message: String) {
+fun SuccessToast(
+    message: String,
+    modifier: Modifier = Modifier
+) {
     Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(Color.Black.copy(alpha = 0.8f))
-            .padding(horizontal = 24.dp, vertical = 12.dp)
+        modifier = modifier
+            .background(
+                color = Color(0XFF8F8F8F),
+                shape = RoundedCornerShape(20.dp)
+            )
+            .padding(horizontal = 16.dp, vertical = 12.dp)
     ) {
-        Text(
-            text = message,
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ad_cart_tick),
+                contentDescription = null,
+                tint = Color.Unspecified, // better green
+                modifier = Modifier.wrapContentSize()
+            )
+
+            Text(
+                text = message,
+                color = Color.Black,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = FontFamily(Font(R.font.baloo2_medium))
+            )
+        }
     }
 }
 
@@ -731,334 +755,6 @@ data class OutfitItem(
     val isFavorite: Boolean = false,
     val discountPercentage: Int = 0
 )
-/*@Composable
-fun FullScreenAITryScreen(navController: NavHostController) {
-
-    var selectedColor by remember { mutableStateOf(Color(0xFF4FC3F7)) }
-    var isMenuExpanded by remember { mutableStateOf(false) }
-
-    var swipeOffset by remember { mutableStateOf(0f) }
-    val swipeThreshold = 120f
-    var isAdded by remember { mutableStateOf(false) }
-
-    val haptic = LocalHapticFeedback.current
-
-// Arrow animation
-    val infiniteTransition = rememberInfiniteTransition(label = "arrowAnim")
-    val arrowAlpha by infiniteTransition.animateFloat(
-        initialValue = 0.3f,
-        targetValue = 1f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(900),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "arrowAlpha"
-    )
-    LaunchedEffect(isAdded) {
-        if (isAdded) {
-            delay(2000)   // 2 seconds
-            isAdded = false
-        }
-    }
-
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
-        // Main Image
-        Image(
-            painter = painterResource(id = R.drawable.try_dummy), // Replace with actual image
-            contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
-
-        // Top Gradient Overlay
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(150.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Black.copy(alpha = 0.6f), Color.Transparent)
-                    )
-                )
-        )
-
-        // Bottom Gradient Overlay
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .height(250.dp)
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f))
-                    )
-                )
-        )
-
-        // Header Buttons
-        Box {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 12.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                IconButton(
-                    onClick = { navController.popBackStack() },
-                    modifier = Modifier.size(56.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.draw_back_ic),
-                        contentDescription = "Back",
-                        tint = Color.White
-                    )
-                }
-
-                IconButton(
-                    onClick = { isMenuExpanded = !isMenuExpanded },
-                    modifier = Modifier
-                        .size(48.dp)
-                        .background(Color.White, CircleShape)
-                ) {
-                    Icon(
-                        painter = painterResource(if (isMenuExpanded) R.drawable.menu_cross else R.drawable.dot_ic),
-                        contentDescription = "Menu",
-                        tint = Color.Unspecified
-                    )
-                }
-            }
-
-            //  AnimatedVisibility OUTSIDE Row
-            AnimatedVisibility(
-                visible = isMenuExpanded,
-                enter = fadeIn() + slideInVertically { -it / 2 },
-                exit = fadeOut() + slideOutVertically { -it / 2 },
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 72.dp, end = 20.dp)
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    IconCircleButton(R.drawable.white_frame) { isMenuExpanded = false }
-                    IconCircleButton(R.drawable.share_ic) { isMenuExpanded = false }
-                    IconCircleButton(R.drawable.download_ic) { isMenuExpanded = false }
-                }
-            }
-        }
-
-
-        // Swipe to cart overlay
-        AnimatedVisibility(
-            visible = !isAdded,
-            modifier = Modifier.align(Alignment.CenterEnd),
-            enter = fadeIn(),
-            exit = fadeOut()
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(end = 20.dp)
-                    .pointerInput(Unit) {
-                        detectHorizontalDragGestures(
-                            onHorizontalDrag = { _, dragAmount ->
-                                swipeOffset += dragAmount
-                            },
-                            onDragEnd = {
-                                if (swipeOffset > swipeThreshold) {
-                                    // Add to cart success
-                                    isAdded = true
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                }
-                                swipeOffset = 0f
-                            }
-                        )
-                    },
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        painter = painterResource(R.drawable.arow_swipe),
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = arrowAlpha),
-                        modifier = Modifier.size(60.dp)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.arow_swipe),
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = arrowAlpha * 0.7f),
-                        modifier = Modifier.size(45.dp)
-                    )
-                    Icon(
-                        painter = painterResource(R.drawable.arow_swipe),
-                        contentDescription = null,
-                        tint = Color.White.copy(alpha = arrowAlpha * 0.4f),
-                        modifier = Modifier.size(30.dp)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = "Swipe Right to\nAdd to Cart",
-                    color = Color.White.copy(alpha = 0.9f),
-                    fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-
-        AnimatedVisibility(
-            visible = isAdded,
-            modifier = Modifier.align(Alignment.Center),
-            enter = fadeIn()
-        ) {
-            Text(
-                text = "Added to Cart 🛒",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-
-
-        // Bottom Content
-        Column(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 40.dp)
-        ) {
-            // Action Buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Remove Button
-                Row(
-                    modifier = Modifier
-                        .width(112.dp)
-                        .height(40.dp)
-                        .clip(RoundedCornerShape(40.dp))
-                        .border(
-                            width = 1.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(40.dp)
-                        )
-                        .clickable { *//* Remove Action *//* }
-                        .padding(horizontal = 16.dp), // remove vertical padding
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        painter = painterResource(R.drawable.round_cross),
-                        contentDescription = "Remove",
-                        tint = Color.White,
-                        modifier = Modifier.size(18.dp)
-                    )
-
-                    Spacer(modifier = Modifier.width(6.dp))
-
-                    Text(
-                        text = "Remove",
-                        color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                        fontSize = 14.sp, // better fit for 40dp height
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
-
-
-                // Buy Now Button
-                Button(
-                    onClick = { *//* Buy Now Action *//* },
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(130.dp),
-                    border = BorderStroke(1.dp, Color.White),
-                    shape = RoundedCornerShape(40.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = PrimaryColor
-                    ),
-                    contentPadding = PaddingValues(horizontal = 16.dp)
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.buy_ic),
-                            contentDescription = null,
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "Buy Now",
-                            color = Color.White,
-                            fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Info and Color Selection
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Column {
-                    Text(
-                        text = "BabySky Blue Stripes",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White,
-                        fontFamily = FontFamily(Font(R.font.baloo2_semibold))
-                    )
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "$24.99",
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White,
-                            fontFamily = FontFamily(Font(R.font.baloo2_semibold))
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "$54.99",
-                            fontSize = 16.sp,
-                            color = Color.White.copy(alpha = 0.6f),
-                            textDecoration = TextDecoration.LineThrough,
-                            fontFamily = FontFamily(Font(R.font.nunito_regular))
-                        )
-                    }
-                }
-
-                // Color Selection Box
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(30.dp))
-                        .background(Color.White)
-                        .padding(horizontal = 8.dp, vertical = 6.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ColorOptionCircle(color = Color(0xFFBDBDBD), isSelected = selectedColor == Color(0xFFBDBDBD)) { selectedColor = it }
-                    ColorOptionCircle(color = Color(0xFF4FC3F7), isSelected = selectedColor == Color(0xFF4FC3F7)) { selectedColor = it }
-                    ColorOptionCircle(color = Color(0xFFFFD54F), isSelected = selectedColor == Color(0xFFFFD54F)) { selectedColor = it }
-                }
-            }
-        }
-    }
-}*/
 
 @Composable
 fun ColorOptionCircle(

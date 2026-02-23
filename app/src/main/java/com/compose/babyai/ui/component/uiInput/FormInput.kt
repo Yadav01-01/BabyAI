@@ -1,5 +1,11 @@
 package com.compose.babyai.ui.component.uiInput
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +16,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,11 +36,14 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -46,10 +56,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.ui.theme.PrimaryColor
 import kotlinx.coroutines.delay
+import java.util.prefs.Preferences
 import kotlin.math.absoluteValue
 
 @Composable
@@ -58,7 +70,8 @@ fun InputTextField(
     onValueChange: (String) -> Unit,
     placeholderText: String,
     modifier: Modifier = Modifier,
-    leadingIcon: Painter? = null
+    leadingIcon: Painter? = null,
+    error: String? = null
 ) {
     OutlinedTextField(
         value = value,
@@ -92,6 +105,15 @@ fun InputTextField(
         ),
         singleLine = true
     )
+    if (error != null) {
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = error,
+            color = Color.Red,
+            fontSize = 12.sp,
+            fontFamily = FontFamily(Font(R.font.nunito_regular))
+        )
+    }
 }
 
 
@@ -101,10 +123,12 @@ fun AppButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     buttonColors: Color = PrimaryColor,
-    textColor: Color = Color.White
+    textColor: Color = Color.White,
+    isNextEnabled : Boolean = true
 ){
     Button(
         onClick = { onClick() },
+        enabled = isNextEnabled ,
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp),
@@ -285,6 +309,7 @@ fun InputTextFieldWithoutIcon(
     )
 }
 
+@SuppressLint("FrequentlyChangingValue")
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BannerCarousel(
@@ -310,33 +335,85 @@ fun BannerCarousel(
         }
     }
 
+    val swipeProgress = pagerState.currentPageOffsetFraction.absoluteValue
+
+    // Smooth animated values for the behind card
+    val behindScale by animateFloatAsState(
+        targetValue = lerp(0.88f, 1f, swipeProgress),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = Spring.StiffnessLow
+        ),
+        label = "behindScale"
+    )
+
+    val behindTranslationX by animateFloatAsState(
+        targetValue = lerp(40f, 0f, swipeProgress),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
+        label = "behindTranslationX"
+    )
+
+    val behindTranslationY by animateFloatAsState(
+        targetValue = lerp(16f, 0f, swipeProgress),
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioNoBouncy,
+            stiffness = Spring.StiffnessMediumLow
+        ),
+        label = "behindTranslationY"
+    )
+
+    val behindAlpha by animateFloatAsState(
+        targetValue = lerp(0.65f, 1f, swipeProgress),
+        animationSpec = tween(durationMillis = 300, easing = FastOutSlowInEasing),
+        label = "behindAlpha"
+    )
+
+    val nextPage = (pagerState.currentPage + 1) % banners.size
+
     Box(
-        modifier = modifier.fillMaxWidth(),
-        contentAlignment = Alignment.BottomCenter
+        modifier = modifier
+            .fillMaxWidth()
+            .height(220.dp)
+            .padding(horizontal = 16.dp)
     ) {
+
+        // ── BEHIND CARD ──
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .graphicsLayer {
+                    scaleX = behindScale
+                    scaleY = behindScale
+                    translationX = behindTranslationX
+                    translationY = behindTranslationY
+                    alpha = behindAlpha
+                    transformOrigin = TransformOrigin(1f, 0.5f)
+                }
+                .clip(RoundedCornerShape(32.dp))
+        ) {
+            BannerCard(banners[nextPage])
+        }
+
+        // ── ACTIVE CARD (via HorizontalPager) ──
         HorizontalPager(
             state = pagerState,
-            contentPadding = PaddingValues(horizontal = 20.dp),
-            pageSpacing = 16.dp,
-            modifier = Modifier.height(180.dp)
+            pageSpacing = 0.dp,
+            contentPadding = PaddingValues(0.dp),
+            modifier = Modifier.fillMaxSize(),
+            /*beyondBoundsPageCount = 1*/
         ) { page ->
-            val pageOffset = (
-                    (pagerState.currentPage - page) +
-                            pagerState.currentPageOffsetFraction
-                    ).absoluteValue
-
-            val scale = lerp(
-                start = 0.9f,
-                stop = 1f,
-                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-            )
-
             Box(
                 modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                    }
+                    .fillMaxSize()
+                    .zIndex(2f)
+                    .shadow(
+                        elevation = 12.dp,
+                        shape = RoundedCornerShape(32.dp),
+                        clip = false
+                    )
                     .clip(RoundedCornerShape(32.dp))
                     .clickable { onBannerClick(banners[page]) }
             ) {
@@ -344,13 +421,13 @@ fun BannerCarousel(
             }
         }
 
-        // Pager indicator inside the Box, aligned to BottomEnd of the carousel content area
+        // ── INDICATOR ──
         PagerIndicator(
             size = banners.size,
             currentPage = pagerState.currentPage,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .padding(bottom = 25.dp, end = 45.dp)
+                .padding(bottom = 22.dp, end = 14.dp)
         )
     }
 }
@@ -386,7 +463,7 @@ fun BannerCard(banner: BannerItem) {
 
         Column(
             modifier = Modifier
-                .align(Alignment.CenterEnd)
+                .align(Alignment.TopEnd)
                 .padding(end = 24.dp, top = 16.dp),
             horizontalAlignment = Alignment.End
         ) {
@@ -429,4 +506,49 @@ fun PagerIndicator(size: Int, currentPage: Int, modifier: Modifier = Modifier) {
             )
         }
     }
+}
+
+@Composable
+fun PreferencesSearchBar(
+    searchQuery: String,
+    onSearchQueryChange: (String) -> Unit,
+    placeholderText: String,
+    icon: Painter? = null,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = searchQuery,
+        onValueChange = onSearchQueryChange, // cleaner
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp),
+        placeholder = {
+            Text(
+                text = placeholderText,
+                color = Color(0xFFB0B0B0),
+                fontSize = 14.sp,
+                fontFamily = FontFamily(Font(R.font.quicksand_regular))
+            )
+        },
+        leadingIcon = icon?.let {
+            {
+                Icon(
+                    painter = it,
+                    contentDescription = null,
+                    tint = Color(0xFFB0B0B0)
+                )
+            }
+        },
+        shape = RoundedCornerShape(28.dp),
+        singleLine = true,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedContainerColor = Color(0XFFE9FAFA),
+            unfocusedContainerColor = Color(0XFFE9FAFA),
+            disabledContainerColor = Color.White,
+            focusedBorderColor = Color.Transparent,
+            unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent,
+            cursorColor = Color.Black
+        )
+    )
 }

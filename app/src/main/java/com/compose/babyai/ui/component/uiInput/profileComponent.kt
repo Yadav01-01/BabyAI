@@ -304,7 +304,7 @@ fun SettingBaseItem(
             ) { onNextScreenClick()}
             .clip(RoundedCornerShape(55.dp))
             .background(Color(0xFFEFF9F8))
-            .padding(16.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
@@ -317,8 +317,7 @@ fun SettingBaseItem(
             Image(
                 painterResource(icon),
                 contentDescription = null,
-                // tint = Color(0xFF179899),
-                modifier = Modifier.size(21.dp)
+                modifier = Modifier.size(22.dp)
             )
         }
 
@@ -518,7 +517,7 @@ fun NotificationItemFromVM(
         }
 
         Spacer(modifier = Modifier.width(12.dp))
-        // ⭐ Text section (weight = 1f)
+        //  Text section (weight = 1f)
         Column(
             modifier = Modifier.weight(1f)
         ) {
@@ -555,7 +554,7 @@ fun NotificationItemFromVM(
 @Composable
 fun BabyPhotoPickerRow(
     imageRes : Any? =R.drawable.dummy_img,
-    onSelect: (Int) -> Unit = {},
+    onCamClick: () -> Unit = {},
     onSelect1: (Int) -> Unit = {},
 ) {
     Row(
@@ -590,11 +589,11 @@ fun BabyPhotoPickerRow(
                 )
             }
 
-//            // ✅ Selected check badge
+//            // Selected check badge
 //            if (isSelected) {
 
             Image(
-                painter = painterResource(R.drawable.ic_image_edit_icon),
+                painter = painterResource(R.drawable.profile_cross),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp).zIndex(1f).align(Alignment.TopEnd)
                     .offset(x = 1.dp, y = (-1).dp).clickable(
@@ -605,7 +604,7 @@ fun BabyPhotoPickerRow(
             //}
         }
 
-        Box(
+        /*Box(
             modifier = Modifier.size(75.dp)
                 .clip(RoundedCornerShape(16.dp)).zIndex(0f)
             //  .background(backgroundColor)
@@ -616,13 +615,11 @@ fun BabyPhotoPickerRow(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxSize()
-
             )
-        }
+        }*/
 
-        // 3️⃣ Camera (Dashed Border)
         CameraItem(
-            onClick = { onSelect(2) }
+            onClick = { onCamClick() }
         )
     }
 }
@@ -685,33 +682,40 @@ fun PhotoItem(
 }
 @Composable
 fun CameraItem(onClick: () -> Unit) {
+
+    val shape = RoundedCornerShape(20.dp)
+
     Box(
         modifier = Modifier
-            .height(75.dp).fillMaxWidth()
-            .clip(RoundedCornerShape(16.dp))
-            .background(Color(0xFFEFFFFF), shape = RoundedCornerShape(16.dp))
+            .size(width = 120.dp, height = 75.dp)
+            .clip(shape)
+            .background(Color(0xFFEFFFFF))
             .drawBehind {
+                val strokeWidth = 1.dp.toPx()
                 drawRoundRect(
                     color = tealColor,
+                    size = size,
+                    cornerRadius = CornerRadius(20.dp.toPx(), 20.dp.toPx()),
                     style = Stroke(
-                        width = 2.dp.toPx(),
+                        width = strokeWidth,
                         pathEffect = PathEffect.dashPathEffect(
                             floatArrayOf(12f, 8f)
                         )
-                    ),
-                    cornerRadius = CornerRadius(50f, 50f)
+                    )
                 )
             }
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) { onClick() },
+            ) {
+                onClick()
+            },
         contentAlignment = Alignment.Center
     ) {
         Icon(
             painter = painterResource(id = R.drawable.ic_solar_camera),
             contentDescription = "Camera",
-            tint = tealColor,
+            tint = Color.Unspecified,
             modifier = Modifier.size(32.dp)
         )
     }
@@ -790,7 +794,7 @@ fun CommonOutlinedButton(
 
 
 @Composable
-fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onWishListClick:()->Unit) {
+fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onCalendarClick:()->Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -848,7 +852,7 @@ fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onWishListClick:()->Unit)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
-                    ) {onWishListClick()
+                    ) {onCalendarClick()
                     }
             )
         }

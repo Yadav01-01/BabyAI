@@ -101,8 +101,15 @@ fun BottomNavigationBar(
                         .size(if (item.isCenter) 76.dp else 56.dp)
                         .clip(CircleShape)
                         .clickable {
-                            navController.navigate(item.route) {
+                            /*navController.navigate(item.route) {
                                 popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }*/
+                            navController.navigate(item.route) {
+                                popUpTo(Routes.Main.route) {
                                     saveState = true
                                 }
                                 launchSingleTop = true

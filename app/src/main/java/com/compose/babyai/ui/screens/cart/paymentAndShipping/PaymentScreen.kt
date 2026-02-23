@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.cart.paymentAndShipping
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,6 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -61,6 +66,7 @@ import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
 fun PaymentScreen(navController: NavHostController) {
+    var selectedPayment by remember { mutableStateOf("Credit") }
     Box(modifier = Modifier.fillMaxSize()) {
         // Background
         Image(
@@ -87,7 +93,7 @@ fun PaymentScreen(navController: NavHostController) {
 
                 // Item Card
                 items(getDummyCartItems()) { item ->
-                    CartItemCard(item)
+                    CartItemCard(item, onItemClick = { navController.navigate(Routes.ProductDetail.route)})
                 }
 
                 // Order Summary
@@ -109,7 +115,9 @@ fun PaymentScreen(navController: NavHostController) {
                         icon = R.drawable.card_ic,
                         title = "Credit",
                         subtitle = "Add and secure cards as per Bank Guidelines",
-                        showArrow = true
+                        isSelected = selectedPayment == "Credit",
+                        onPaymentMethodClick = { selectedPayment = "Credit"
+                            navController.popBackStack() },
                     )
                 }
 
@@ -118,7 +126,11 @@ fun PaymentScreen(navController: NavHostController) {
                     PaymentMethodItem(
                         icon = R.drawable.pod_ic,
                         title = "Pay on Delivery",
-                        showArrow = false
+                        isSelected = selectedPayment == "Pay on Delivery",
+                        onPaymentMethodClick = {
+                            selectedPayment = "Pay on Delivery"
+                            navController.popBackStack()
+                        }
                     )
                 }
 
@@ -304,13 +316,17 @@ fun PaymentMethodItem(
     icon: Int,
     title: String,
     subtitle: String? = null,
-    showArrow: Boolean = false
+    onPaymentMethodClick: () -> Unit,
+    isSelected: Boolean = false,
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onPaymentMethodClick() },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
-    ) {
+        colors = CardDefaults.cardColors(containerColor = Color.White),
+        border = BorderStroke(1.dp, if (isSelected) PrimaryColor else Color.Transparent)
+    ){
         Row(
             modifier = Modifier
                 .padding(16.dp)
@@ -340,14 +356,6 @@ fun PaymentMethodItem(
                         fontFamily = FontFamily(Font(R.font.quicksand_regular))
                     )
                 }
-            }
-            if (showArrow) {
-                Icon(
-                   painter = painterResource(R.drawable.down_arrow),
-                    contentDescription = null,
-                    tint = Color.Black,
-                    modifier = Modifier.width(12.dp).height(6.dp)
-                )
             }
         }
     }

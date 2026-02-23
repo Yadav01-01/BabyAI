@@ -1,6 +1,7 @@
 package com.compose.babyai.ui.screens.cart.paymentAndShipping
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -24,8 +26,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -45,6 +52,7 @@ import com.compose.babyai.ui.theme.PrimaryColor
 
 @Composable
 fun SavedAddressScreen(navController: NavHostController) {
+    var selectedAddress by remember { mutableStateOf<String?>("1") }
     Box(modifier = Modifier.fillMaxSize()) {
         // Background
         Image(
@@ -97,11 +105,13 @@ fun SavedAddressScreen(navController: NavHostController) {
 
                             val addresses = listOf(
                                 AddressItemData(
+                                    "1",
                                     "Home",
                                     "123, Street, Anywhere, 11001",
                                     R.drawable.exp_home
                                 ),
                                 AddressItemData(
+                                    "2",
                                     "Office",
                                     "123, Street, Anywhere, 11001",
                                     R.drawable.office
@@ -112,6 +122,8 @@ fun SavedAddressScreen(navController: NavHostController) {
                             addresses.forEach { address ->
                                 SavedAddressCard(
                                     address = address,
+                                    isSelected = selectedAddress == address.id,
+                                    onCardClick = { selectedAddress = address.id },
                                     onDeleteClick = {},
                                     onEditClick = { navController.navigate(Routes.AddNewAddress.createRoute("Edit"))}
                                 )
@@ -155,11 +167,14 @@ fun SavedAddressHeader(onBackClick: () -> Unit) {
     }
 }
 
-data class AddressItemData(val title: String, val detail: String, val iconRes: Int)
+data class AddressItemData(val id : String ,val title: String, val detail: String, val iconRes: Int)
+
 
 @Composable
 fun SavedAddressCard(
     address: AddressItemData,
+    isSelected: Boolean,
+    onCardClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onEditClick: () -> Unit
 ) {
@@ -169,7 +184,9 @@ fun SavedAddressCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFFCCCCCC))
     ) {
-        Column {
+        Column (
+            modifier = Modifier.clickable {  onCardClick() },
+        ){
             Row(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -183,13 +200,35 @@ fun SavedAddressCard(
 
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
-                    Text(
-                        text = address.title,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
-                        color = Color.Black
-                    )
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = address.title,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            fontFamily = FontFamily(Font(R.font.quicksand_semibold)),
+                            color = if (isSelected) PrimaryColor else Color.Black
+                        )
+
+                        if (address.title == "Home"){
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(28.dp))
+                                    .background(Color(0xFFFBD606))
+                            ) {
+                                Text(
+                                    text = "Default",
+                                    modifier = Modifier.padding(horizontal = 5.dp, vertical = 0.dp),
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    fontFamily = FontFamily(Font(R.font.baloo2_medium)),
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                    }
                     Text(
                         text = address.detail,
                         fontSize = 14.sp,

@@ -78,7 +78,7 @@ fun HomeScreen(navController: NavHostController) {
     val bannerList = listOf(
         BannerItem(
             image = R.drawable.banner_dummy,
-            title = "Winter Collection",
+            title = "Winter \nCollection",
             subtitle = "Special Christmas Deals"
         ),
         BannerItem(
@@ -220,7 +220,7 @@ fun HomeScreen(navController: NavHostController) {
                 item {
                     BannerCarousel(
                         banners = bannerList,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
                     ) { banner ->
                         // Navigate to category search
                     }
@@ -268,9 +268,9 @@ fun HomeScreen(navController: NavHostController) {
                         modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        ProductCard(modifier = Modifier.weight(1f), product = pair[0], onClick = { /*navController.navigate(Routes.ProductDetail.route)*/ })
+                        ProductCard(modifier = Modifier.weight(1f), product = pair[0], onClick = { navController.navigate(Routes.Search.route) })
                         if (pair.size > 1) {
-                            ProductCard(modifier = Modifier.weight(1f), product = pair[1], onClick = { /*navController.navigate(Routes.ProductDetail.route)*/  })
+                            ProductCard(modifier = Modifier.weight(1f), product = pair[1], onClick = { navController.navigate(Routes.Search.route)  })
                         } else {
                             Spacer(modifier = Modifier.weight(1f))
                         }

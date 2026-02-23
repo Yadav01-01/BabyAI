@@ -25,12 +25,25 @@ configure<ApplicationExtension> {
     }
 
     buildTypes {
-        release {
+        /*release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }*/
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            // Add this inside release
+            // Correct way to enable native debug symbols in Kotlin DSL (AGP 7.x+)
+            ndk {
+                debugSymbolLevel = "FULL"
+            }
         }
     }
 
