@@ -45,20 +45,11 @@ import kotlinx.coroutines.delay
 @SuppressLint("DefaultLocale")
 @Composable
 fun VerificationScreen(navController: NavHostController,
+                       type: String,
                        viewModel: VerificationViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val focusRequesters = remember { List(5) { FocusRequester() } }
-
-
-  /*  LaunchedEffect(key1 = timeLeft) {
-        if (timeLeft > 0) {
-            delay(1000L)
-            timeLeft--
-        }
-    }
-
-    val isOtpFilled = otpValues.all { it.isNotEmpty() }*/
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -157,7 +148,11 @@ fun VerificationScreen(navController: NavHostController,
             // Verify & Continue Button
             AppButton(
                 text = "Verify & Continue",
-                onClick = { viewModel.verifyOtp() },
+                onClick = { if (type == "login"){
+                    viewModel.verifyOtp()
+                }else{
+                    navController.popBackStack()
+                } },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

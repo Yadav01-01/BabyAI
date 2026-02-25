@@ -494,7 +494,7 @@ fun NotificationItemFromVM(
             .fillMaxWidth()
             .clip(RoundedCornerShape(55.dp))
             .background(Color(0xFFEFF9F8))
-            .padding(16.dp).clickable(interactionSource = remember { MutableInteractionSource() },
+            .padding(12.dp).clickable(interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ){
                 onToggle
@@ -831,7 +831,7 @@ fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onCalendarClick:()->Unit)
         ) {
             // Search Icon
 
-            Image(
+           /* Image(
                 painter = painterResource(id = R.drawable.ic_top_search_icon),
                 contentDescription = "Back",
                 modifier = Modifier
@@ -841,7 +841,7 @@ fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onCalendarClick:()->Unit)
                         interactionSource = remember { MutableInteractionSource() }
                     ) {onSearchClick()
                     }
-            )
+            )*/
 
 
             Image(
@@ -858,6 +858,8 @@ fun TopBar(onBackClick:()->Unit,onSearchClick:()->Unit,onCalendarClick:()->Unit)
         }
     }
 }
+
+
 
 @Composable
 fun CommonTopBar(

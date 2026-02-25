@@ -1,6 +1,7 @@
 package com.compose.babyai.ui.screens.aiTry
 
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
@@ -66,6 +67,7 @@ import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -90,6 +92,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun FullScreenAITryScreen(navController: NavHostController) {
+    val context = LocalContext.current
     // Sample data
     val outfits = remember {
         listOf(
@@ -164,7 +167,14 @@ fun FullScreenAITryScreen(navController: NavHostController) {
                 // TODO: Update selected color
             },
             onShare = { outfitId ->
-                // TODO: Share functionality
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, "Hey! Check this out 🚀")
+                }
+
+                context.startActivity(
+                    Intent.createChooser(intent, "Share via")
+                )
             },
             onDownload = { outfitId ->
                 // TODO: Download image

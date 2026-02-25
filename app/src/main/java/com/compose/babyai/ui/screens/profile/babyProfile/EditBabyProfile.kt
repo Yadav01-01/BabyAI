@@ -8,26 +8,43 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -35,25 +52,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.navigation.NavHostController
+import com.arpitkatiyarprojects.countrypicker.CountryPicker
+import com.arpitkatiyarprojects.countrypicker.models.SelectedCountryDisplayProperties
+import com.arpitkatiyarprojects.countrypicker.models.SelectedCountryProperties
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.BabyPhotoPickerRow
 import com.compose.babyai.ui.component.uiInput.CommonOutlinedButton
 import com.compose.babyai.ui.component.uiInput.CommonPrimaryButton
 import com.compose.babyai.ui.component.uiInput.CommonTopBar
+import com.compose.babyai.ui.component.uiInput.InputTextField
 import com.compose.babyai.ui.component.uiInput.InputTextFieldWithoutIcon
+import com.compose.babyai.ui.component.uiInput.ProfileTextField
 import com.compose.babyai.ui.component.uiInput.SectionTitle
 import com.compose.babyai.ui.component.uiInput.tealColor
 import com.compose.babyai.ui.dialog.DeleteBabysDetailsDialog
 import com.compose.babyai.ui.dialog.DeleteProfileDialog
 import com.compose.babyai.ui.spinner.CustomSpinner
 import com.compose.babyai.ui.spinner.PreferredColorSpinner
+import com.compose.babyai.ui.theme.PrimaryColor
 import java.io.File
 
 data class BabyProfileData(
@@ -459,10 +485,29 @@ fun EditBabyProfile(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    InputTextFieldWithoutIcon(
+                    ProfileTextField(
                         value = email,
                         onValueChange = { email = it },
-                        placeholderText = "Email"
+                        placeholderText = "Email",
+                        trailingIcon = {
+                            Box(
+                                modifier = Modifier
+                                    .padding(end = 8.dp)
+                                    .wrapContentSize()
+                                    .clip(RoundedCornerShape(25.dp))
+                                    .background(PrimaryColor)
+                                    .clickable { navController.navigate(Routes.OtpVerify.createRoute("")) }
+                                    .padding(horizontal = 16.dp, vertical = 6.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "Verify",
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily(Font(R.font.baloo2_medium)),
+                                    color = Color.White
+                                )
+                            }
+                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -477,11 +522,77 @@ fun EditBabyProfile(navController: NavHostController) {
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    InputTextFieldWithoutIcon(
-                        value = phone,
-                        onValueChange = { phone = it },
-                        placeholderText = "Phone"
-                    )
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(18.dp)) {
+
+                        Box(
+                            modifier = Modifier.height(55.dp)
+                                .border(1.dp, color = Color(0xFFB1B5BE), shape = RoundedCornerShape(40.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            CountryPicker(
+                                defaultCountryCode = "us",
+                                selectedCountryDisplayProperties = SelectedCountryDisplayProperties(
+                                    properties = SelectedCountryProperties(
+                                        showCountryFlag = true,
+                                        showCountryName = false,
+                                        showCountryPhoneCode = false,
+                                        showCountryCode = false,
+                                        showDropDownIcon = true,
+                                        spaceAfterCountryFlag = 6.dp,
+                                        dropDownIconComposable = {
+                                            Image(
+                                                painterResource(R.drawable.ic_dropdown_icon_download),
+                                                contentDescription = "Select Country",
+                                                // tint = Color.Black
+                                                modifier = Modifier.padding(start = 10.dp, end = 5.dp)
+                                                    .size(12.dp)
+                                            )
+                                        }
+                                    )
+                                ),
+                                onCountrySelected = { country ->
+                                    // Handle country selection
+                                },
+                                modifier = Modifier.scale(0.75f).padding(start = 10.dp)
+                            )
+
+                        }
+
+                        InputTextField(
+                            value = phone,
+                            onValueChange = { value -> phone = value },
+                            placeholderText = "Phone Number",
+                            leadingIcon = null,
+                            trailingIcon = {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(end = 8.dp)
+                                        .wrapContentSize()
+                                        .clip(RoundedCornerShape(25.dp))
+                                        .background(PrimaryColor)
+                                        .clickable { navController.navigate(Routes.OtpVerify.createRoute("")) }
+                                        .padding(horizontal = 16.dp, vertical = 6.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        text = "Verify",
+                                        fontSize = 12.sp,
+                                        fontFamily = FontFamily(Font(R.font.baloo2_medium)),
+                                        color = Color.White
+                                    )
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Phone,
+                                imeAction = ImeAction.Done
+                            )
+                        )
+                    }
 
                     Spacer(modifier = Modifier.height(24.dp))
 
@@ -497,7 +608,7 @@ fun EditBabyProfile(navController: NavHostController) {
                     CommonOutlinedButton(
                         text = "Delete Profile",
                         enabled = true,
-                        onClick = { showDialog1 = true}
+                        onClick = { showDialog1 = true }
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -507,14 +618,14 @@ fun EditBabyProfile(navController: NavHostController) {
     }
     if (showDialog1) {
         DeleteProfileDialog(
-            onDismiss = {showDialog1 = false},
-            onDelete = {showDialog1 = false}
+            onDismiss = { showDialog1 = false },
+            onDelete = { showDialog1 = false }
         )
     }
     if (showDialog2) {
         DeleteBabysDetailsDialog(
-            onDismiss = {showDialog2 = false},
-            onDelete = {showDialog2 = false}
+            onDismiss = { showDialog2 = false },
+            onDelete = { showDialog2 = false }
         )
     }
 }
@@ -651,7 +762,7 @@ fun AgeButton(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) {onClick() },
+            ) { onClick() },
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -703,5 +814,3 @@ fun saveBitmapToCache(context: Context, bitmap: Bitmap): Uri {
         file
     )
 }
-
-

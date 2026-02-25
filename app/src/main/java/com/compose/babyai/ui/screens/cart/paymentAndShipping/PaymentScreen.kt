@@ -116,8 +116,7 @@ fun PaymentScreen(navController: NavHostController) {
                         title = "Credit",
                         subtitle = "Add and secure cards as per Bank Guidelines",
                         isSelected = selectedPayment == "Credit",
-                        onPaymentMethodClick = { selectedPayment = "Credit"
-                            navController.popBackStack() },
+                        onPaymentMethodClick = { selectedPayment = "Credit" },
                     )
                 }
 
@@ -127,10 +126,7 @@ fun PaymentScreen(navController: NavHostController) {
                         icon = R.drawable.pod_ic,
                         title = "Pay on Delivery",
                         isSelected = selectedPayment == "Pay on Delivery",
-                        onPaymentMethodClick = {
-                            selectedPayment = "Pay on Delivery"
-                            navController.popBackStack()
-                        }
+                        onPaymentMethodClick = { selectedPayment = "Pay on Delivery" }
                     )
                 }
 
@@ -320,9 +316,8 @@ fun PaymentMethodItem(
     isSelected: Boolean = false,
 ) {
     Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onPaymentMethodClick() },
+        onClick = onPaymentMethodClick,
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         border = BorderStroke(1.dp, if (isSelected) PrimaryColor else Color.Transparent)

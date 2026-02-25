@@ -219,7 +219,8 @@ fun ShippingAddressSection( onEditClick: () -> Unit ) {
 @Composable
 fun CartItemCard(item: CartItem,onItemClick:() -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable{ onItemClick() },
+        onClick = onItemClick,
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -358,7 +359,8 @@ fun CartItemCard(item: CartItem,onItemClick:() -> Unit) {
 fun RelatedOutfitItem(item: RelatedItem, onClickFav: () -> Unit,onItemClick:() -> Unit) {
     var isFav by remember { mutableStateOf(false) }
     Card(
-        modifier = Modifier.width(170.dp).clickable{ onItemClick() },
+        onClick = onItemClick,
+        modifier = Modifier.width(170.dp),
         shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {

@@ -77,7 +77,7 @@ class LoginViewModel @Inject constructor(
 
             // TODO: repository.sendOtp(...)
             // Simulating success for now:
-            navController.navigate(Routes.OtpVerify.route)
+            navController.navigate(Routes.OtpVerify.createRoute("login"))
 
             _uiState.update { it.copy(isLoading = false) }
         }

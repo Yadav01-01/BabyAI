@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.aiTry
 
+import android.content.Intent
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,6 +37,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -56,6 +58,7 @@ import com.compose.babyai.ui.theme.BabyAITheme
 
 @Composable
 fun AiTryScreen(navController: NavHostController) {
+    val context = LocalContext.current
     val babies = listOf(
         BabyProfile(1, R.drawable.onb1),
         BabyProfile(2, R.drawable.onb2),
@@ -144,7 +147,12 @@ fun AiTryScreen(navController: NavHostController) {
                             originalPrice = item.originalPrice,
                             imageRes = item.imageRes,
                             onClickImage = { navController.navigate(Routes.AiFullScreenTry.route) },
-                            onClickBottom = { navController.navigate(Routes.ProductDetail.route) }
+                            onClickBottom = { navController.navigate(Routes.ProductDetail.route) },
+                            onClickShare = { val intent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, "Hey! Check this out 🚀")
+                            }
+                                context.startActivity(Intent.createChooser(intent, "Share via")) }
                         )
                     }
 
@@ -165,7 +173,8 @@ fun AiTryResultCard(
     imageRes: Int,
     modifier: Modifier = Modifier,
     onClickImage:() -> Unit,
-    onClickBottom:() -> Unit
+    onClickBottom:() -> Unit,
+    onClickShare:() -> Unit
 ) {
     Card(
         modifier = modifier
@@ -277,8 +286,8 @@ fun AiTryResultCard(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .clickable{ onClickBottom() },
+                    .clickable{ onClickBottom() }
+                    .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -324,7 +333,7 @@ fun AiTryResultCard(
                     }
 
                     IconButton(
-                        onClick = { },
+                        onClick = { onClickShare() },
                         modifier = Modifier
                             .size(48.dp)
                     ) {

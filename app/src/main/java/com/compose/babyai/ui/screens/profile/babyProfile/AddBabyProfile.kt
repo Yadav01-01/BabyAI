@@ -372,7 +372,7 @@ fun AddBabyProfile(navController: NavHostController) {
 
                     CommonPrimaryButton(
                         text = "Save & Next",
-                        onClick = { /* Handle save */ },
+                        onClick = { navController.popBackStack() },
 
                         )
 

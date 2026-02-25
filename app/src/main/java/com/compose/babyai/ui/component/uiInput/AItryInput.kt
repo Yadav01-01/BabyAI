@@ -57,7 +57,8 @@ import com.compose.babyai.ui.theme.PrimaryColor
 fun OutfitTryCard(modifier: Modifier = Modifier,outfit: OutfitData,onItemClick : () -> Unit = {}) {
     var isFav by remember { mutableStateOf(outfit.isFavorite) }
     Card(
-        modifier = modifier.fillMaxWidth().clickable( onClick = { onItemClick() }),
+        onClick = onItemClick,
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),

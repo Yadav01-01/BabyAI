@@ -48,7 +48,7 @@ fun BottomNavigationBar(
             route = Routes.Wardrobe.route
         ),
         BottomNavItemData(
-            selectedIcon = R.drawable.selected_ai_try,
+            selectedIcon = R.drawable.center_ic,
             unSelectedIcon = R.drawable.ai_try,
             route = Routes.AiTry.route,
             isCenter = true
@@ -98,16 +98,9 @@ fun BottomNavigationBar(
 
                 Box(
                     modifier = Modifier
-                        .size(if (item.isCenter) 76.dp else 56.dp)
+                        .size(if (item.isCenter) 66.dp else 56.dp)
                         .clip(CircleShape)
                         .clickable {
-                            /*navController.navigate(item.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
-                            }*/
                             navController.navigate(item.route) {
                                 popUpTo(Routes.Main.route) {
                                     saveState = true

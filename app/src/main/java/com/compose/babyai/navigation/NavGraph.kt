@@ -68,8 +68,14 @@ fun NavGraph(
             LoginScreen(navController)
         }
 
-        composable(Routes.OtpVerify.route){
-            VerificationScreen(navController)
+        composable(
+            route = Routes.OtpVerify.route,
+            arguments = listOf(navArgument("type") {
+                type = NavType.StringType
+                nullable = true })
+        ){ backStackEntry ->
+            val type = backStackEntry.arguments?.getString("type") ?: ""
+            VerificationScreen(navController,type = type)
         }
 
         composable(Routes.ProfileSetup.route) {

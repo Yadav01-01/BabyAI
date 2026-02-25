@@ -5,7 +5,9 @@ sealed class Routes(val route: String) {
     object Splash : Routes("splash")
     object OnBoarding : Routes("onboarding")
     object Login : Routes("login")
-    object OtpVerify : Routes("otpVerify")
+    object OtpVerify : Routes("otpVerify/{type}"){
+        fun createRoute(type: String) = "otpVerify/$type"
+    }
     object ProfileSetup : Routes("profileSetup")
     object ProfileReady : Routes("profileReady")
     object Home : Routes("home")

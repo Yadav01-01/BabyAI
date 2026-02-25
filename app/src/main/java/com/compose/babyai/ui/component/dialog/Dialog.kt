@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
@@ -499,391 +501,6 @@ fun AgeBottomSheet(
 }
 
 
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ReturnReasonBottomSheet(
-    onDismiss: () -> Unit,
-    selectedReason: ReturnReason?,
-    onReasonSelect: (ReturnReason) -> Unit,
-    comment: String,
-    onCommentChange: (String) -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val reasons = listOf(
-        ReturnReason(1, "Item doesn't fit"),
-        ReturnReason(2, "Unhappy with the quality"),
-        ReturnReason(3, "Wrong item received"),
-        ReturnReason(4, "Item damaged or defective"),
-        ReturnReason(5, "Ordered by mistake"),
-        ReturnReason(6, "Other")
-    )
-
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
-        containerColor = Color.White,
-        dragHandle = null,
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp, vertical = 16.dp)
-        ) {
-
-            // Header
-            Text(
-                text = "Reason for Return",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Dashed Divider
-            Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-            ) {
-                drawLine(
-                    color = Color(0xFF23C6BE),
-                    start = Offset.Zero,
-                    end = Offset(size.width, 0f),
-                    pathEffect = PathEffect.dashPathEffect(floatArrayOf(10f, 10f), 0f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Reason list
-            reasons.forEach { reason ->
-                ReasonItem(
-                    reason = reason,
-                    isSelected = selectedReason?.id == reason.id,
-                    onClick = { onReasonSelect(reason) }
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Additional comments
-            Text(
-                text = "Additional Comments (Optional)",
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            OutlinedTextField(
-                value = comment,
-                onValueChange = onCommentChange,
-                placeholder = {
-                    Text("Tell us more about why you're returning this order...")
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp),
-                shape = RoundedCornerShape(14.dp),
-                maxLines = 5
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                OutlinedButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(30.dp)
-                ) {
-                    Text("Back")
-                }
-
-                Button(
-                    onClick = onConfirm,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF23C6BE)
-                    )
-                ) {
-                    Text("Confirm")
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-
-@Composable
-private fun ReasonItem(
-    reason: ReturnReason,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val borderColor = if (isSelected) Color(0xFF23C6BE) else Color(0xFFE0E0E0)
-    val backgroundColor = if (isSelected) Color(0xFFE9FAFA) else Color.Transparent
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(14.dp))
-            .background(backgroundColor)
-            .border(1.dp, borderColor, RoundedCornerShape(14.dp))
-            .clickable { onClick() }
-            .padding(14.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Text(
-            text = reason.title,
-            modifier = Modifier.weight(1f),
-            fontSize = 15.sp
-        )
-
-        if (isSelected) {
-            Image(
-                painterResource(id = R.drawable.ic_circle_check_icon),
-                contentDescription = null,
-                modifier = Modifier.wrapContentSize()
-                //tint = Color(0xFF23C6BE)
-            )
-        }
-    }
-}
-*/
-
-/*
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ReturnReasonBottomSheet(
-    onDismiss: () -> Unit,
-    selectedReason: ReturnReason?,
-    onReasonSelect: (ReturnReason) -> Unit,
-    comment: String,
-    onCommentChange: (String) -> Unit,
-    onConfirm: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    val reasons = listOf(
-        ReturnReason(1, "Item doesn't fit"),
-        ReturnReason(2, "Unhappy with the quality"),
-        ReturnReason(3, "Wrong item received"),
-        ReturnReason(4, "Item damaged or defective"),
-        ReturnReason(5, "Ordered by mistake"),
-        ReturnReason(6, "Other")
-    )
-    var  query  by remember { mutableStateOf("") }
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        shape = RoundedCornerShape( 28.dp),
-        containerColor = Color.White,
-        dragHandle = null,
-        modifier = modifier
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding( vertical = 16.dp)
-        ) {
-
-            // Title
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "Reason for Return",
-                    fontSize = 17.sp,
-                    fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                    color = Color(0xFF000000),
-                    modifier = Modifier.weight(1f)
-                )
-                */
-/*  Box(
-                      modifier = Modifier
-                          .fillMaxWidth().padding(top = 5.dp),
-                      contentAlignment = Alignment.TopEnd
-                  ) {*//*
-
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_cross_icon),
-                    contentDescription = "Close",
-                    tint = Color.Unspecified,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null
-                        ) { onDismiss() }
-                )
-                //}
-
-
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Dashed divider
-            Canvas(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-            ) {
-                drawLine(
-                    color = Color(0xFF23C6BE),
-                    start = Offset.Zero,
-                    end = Offset(size.width, 0f),
-                    pathEffect = PathEffect.dashPathEffect(
-                        floatArrayOf(15f, 15f),
-                        0f
-                    )
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Reasons
-            reasons.forEach { reason ->
-                ReasonItem(
-                    reason = reason,
-                    isSelected = selectedReason?.id == reason.id,
-                    onClick = { onReasonSelect(reason) }
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Additional comments
-            Text(
-                text = "Additional Comments (Optional)",
-                fontSize = 15.sp,
-                fontFamily = FontFamily(Font(R.font.nunito_regular)),
-                color = Color(0xFF737373),
-                modifier = Modifier.padding(horizontal = 20.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            */
-/*OutlinedTextField(
-                value = comment,
-                onValueChange = onCommentChange,
-                placeholder = {
-                    Text("Tell us more about why you're returning this order...")
-                },
-                modifier = Modifier
-                    .fillMaxWidth().padding(horizontal = 20.dp)
-                    .height(120.dp),
-                shape = RoundedCornerShape(14.dp),
-                maxLines = 5
-            )*//*
-
-            InputField1(
-                input = query,
-                onValueChange = { query =it },
-                placeholder = "Tell us more about why you're returning this order...",
-                modifier = Modifier
-                    .fillMaxWidth().padding(horizontal = 20.dp)
-                    .height(120.dp)
-            )
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Buttons
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-
-
-                Button(
-                    onClick = onConfirm,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(30.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1ECBCC)
-                    )
-                ) {
-                    Text("Confirm", color = Color.White,
-                        fontSize = 17.sp,
-                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),)
-                }
-
-                OutlinedButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f),
-                    border = BorderStroke(1.dp, Color(0xFF000000)),
-                    shape = RoundedCornerShape(40.dp)
-                ) {
-                    Text("Back",
-                        fontSize = 17.sp,
-                        fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                        color = Color(0xFF000000))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-}
-
-
-@Composable
-private fun ReasonItem(
-    reason: ReturnReason,
-    isSelected: Boolean,
-    onClick: () -> Unit
-) {
-    val borderColor = if (isSelected) Color(0xFFB9EFEF) else Color(0xFFB9EFEF)
-    val backgroundColor = if (isSelected) Color(0xFF1ECBCC) else Color(0xFFE9FAFA)
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth().padding(horizontal = 20.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(backgroundColor)
-            .border(1.dp, borderColor, RoundedCornerShape(10.dp))
-            .clickable { onClick() }
-            .padding(10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        Text(
-            text = reason.title,
-            fontSize = 13.sp,
-            fontFamily = FontFamily(Font(R.font.nunito_medium)),
-            color = if (isSelected) Color(0xFFE9FAFA) else Color(0xFF363636),
-            modifier = Modifier.weight(1f)
-        )
-
-        if (isSelected) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_circle_check_icon),
-                contentDescription = null,
-                tint = Color.Unspecified,
-                modifier = Modifier.size(15.dp)
-            )
-        }
-    }
-}
-*/
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectionBottomSheet(
@@ -914,21 +531,26 @@ fun SelectionBottomSheet(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
-        ) {
+                .navigationBarsPadding()
+                .imePadding()
+                .verticalScroll(rememberScrollState())
+        ){
 
             // Header
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Text(
                     text = title,
-                    fontSize = 17.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontFamily(Font(R.font.baloo2_semibold)),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = Color.Black
                 )
 
                 Icon(

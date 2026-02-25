@@ -1,5 +1,6 @@
 package com.compose.babyai.ui.screens.home
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
@@ -49,6 +51,7 @@ import com.compose.babyai.ui.component.uiInput.DetailHeading
 import com.compose.babyai.ui.component.dialog.ShareBottomSheet
 import com.compose.babyai.ui.theme.PrimaryColor
 import com.compose.babyai.util.BottomCurveShape
+import com.compose.babyai.util.ShareButton
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
@@ -69,6 +72,7 @@ fun ProductDetailScreen(navController: NavHostController) {
     var selectedBaby by remember { mutableStateOf(babies.first()) }
     var expanded by remember { mutableStateOf(false) }
     var isTried by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
 
     Box(
@@ -285,10 +289,21 @@ fun ProductDetailScreen(navController: NavHostController) {
                                 color = Color(0XFFB0B0B0)
                             )
                         }
-                        IconButton(onClick = { shareDialog = true }) {
+                        IconButton(
+                            onClick = {
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, "Hey! Check this out 🚀")
+                                }
+
+                                context.startActivity(
+                                    Intent.createChooser(intent, "Share via")
+                                )
+                            }
+                        ) {
                             Icon(
                                 painter = painterResource(R.drawable.share_ic),
-                                contentDescription = null,
+                                contentDescription = "Share",
                                 tint = Color.Unspecified,
                                 modifier = Modifier.size(48.dp)
                             )
@@ -407,68 +422,76 @@ fun ProductDetailScreen(navController: NavHostController) {
 
                     // Switch Baby Profiles
                     Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(22.dp))
-                            .background(Color.White.copy(alpha = 0.9f))
-                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // Arrow
-                        Icon(
-                            painter = painterResource(id = R.drawable.left_arrow),
-                            contentDescription = null,
+                        DetailHeading("Switch Baby Profiles")
+
+                        Row(
                             modifier = Modifier
-                                .size(16.dp)
-                                .clickable { expanded = !expanded },
-                            tint = Color.Unspecified
-                        )
-
-                        Spacer(modifier = Modifier.width(6.dp))
-
-                        // Selected Profile
-                        Image(
-                            painter = painterResource(id = selectedBaby.imageRes),  // ← Changed
-                            contentDescription = "Profile",
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(CircleShape)
-                                .clickable { expanded = !expanded },
-                            contentScale = ContentScale.Crop
-                        )
-
-                        // INLINE EXPANDING LIST
-                        AnimatedVisibility(
-                            visible = expanded,
-                            enter = expandHorizontally() + fadeIn(),
-                            exit = shrinkHorizontally() + fadeOut()
+                                .clip(RoundedCornerShape(22.dp))
+                                .background(Color.White.copy(alpha = 0.9f))
+                                .padding(horizontal = 10.dp, vertical = 6.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                modifier = Modifier.padding(start = 6.dp)
+                            // Arrow
+                            Icon(
+                                painter = painterResource(id = R.drawable.left_arrow),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(16.dp)
+                                    .clickable { expanded = !expanded },
+                                tint = Color.Unspecified
+                            )
+
+                            Spacer(modifier = Modifier.width(6.dp))
+
+                            // Selected Profile
+                            Image(
+                                painter = painterResource(id = selectedBaby.imageRes),  // ← Changed
+                                contentDescription = "Profile",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape)
+                                    .clickable { expanded = !expanded },
+                                contentScale = ContentScale.Crop
+                            )
+
+                            // INLINE EXPANDING LIST
+                            AnimatedVisibility(
+                                visible = expanded,
+                                enter = expandHorizontally() + fadeIn(),
+                                exit = shrinkHorizontally() + fadeOut()
                             ) {
-                                babies  // ← Changed
-                                    .filter { it.id != selectedBaby.id }  // ← Changed
-                                    .take(3)
-                                    .forEach { baby ->
-                                        Image(
-                                            painter = painterResource(id = baby.imageRes),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .padding(start = 6.dp)
-                                                .size(32.dp)
-                                                .clip(CircleShape)
-                                                .border(
-                                                    1.dp,
-                                                    Color.LightGray,
-                                                    CircleShape
-                                                )
-                                                .clickable {
-                                                    selectedBaby = baby  // ← Changed
-                                                    expanded = false
-                                                },
-                                            contentScale = ContentScale.Crop
-                                        )
-                                    }
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier.padding(start = 6.dp)
+                                ) {
+                                    babies  // ← Changed
+                                        .filter { it.id != selectedBaby.id }  // ← Changed
+                                        .take(3)
+                                        .forEach { baby ->
+                                            Image(
+                                                painter = painterResource(id = baby.imageRes),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .padding(start = 6.dp)
+                                                    .size(32.dp)
+                                                    .clip(CircleShape)
+                                                    .border(
+                                                        1.dp,
+                                                        Color.LightGray,
+                                                        CircleShape
+                                                    )
+                                                    .clickable {
+                                                        selectedBaby = baby  // ← Changed
+                                                        expanded = false
+                                                    },
+                                                contentScale = ContentScale.Crop
+                                            )
+                                        }
+                                }
                             }
                         }
                     }
@@ -499,7 +522,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.Top
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
 
                         // Left
@@ -533,8 +556,9 @@ fun ProductDetailScreen(navController: NavHostController) {
             .padding(horizontal = 15.dp)) {
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                var isAddedToCart by remember { mutableStateOf(false) }
                 OutlinedButton(
-                    onClick = {},
+                    onClick = { isAddedToCart = ! isAddedToCart},
                     modifier = Modifier
                         .weight(1f)
                         .height(56.dp),
@@ -554,7 +578,7 @@ fun ProductDetailScreen(navController: NavHostController) {
                         Spacer(modifier = Modifier.width(5.dp))
 
                         Text(
-                            text = "Add to Cart",
+                            text = if (isAddedToCart) "Added to Cart" else "Add to Cart",
                             fontFamily = FontFamily(Font(R.font.baloo2_medium)),
                             color = Color.Black,
                             fontWeight = FontWeight.Medium,
@@ -565,7 +589,7 @@ fun ProductDetailScreen(navController: NavHostController) {
 
 
                 Button(
-                    onClick = {},
+                    onClick = { navController.navigate(Routes.Payment.route) },
                     modifier = Modifier.weight(1f).height(56.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFBD606))
                 ) {

@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -220,12 +222,7 @@ fun OrderSummaryScreen(
     navController: NavHostController,
     orderId: String,
     orderStatus: String
-   // orderSummary: OrderSummary,
- /*   onBackClick: () -> Unit = {},
-    onInvoiceClick: () -> Unit = {},
-    onTrackOrderClick: () -> Unit = {},
-    onReorderClick: () -> Unit = {},
-    onCancelOrderClick: () -> Unit = {}*/
+
 ) {
     var showReturnReasonSheet by remember { mutableStateOf(false) }
     var showCancelOrderSheet by remember { mutableStateOf(false) }
@@ -268,8 +265,6 @@ fun OrderSummaryScreen(
                 .fillMaxSize()
         )
         {
-
-
             CommonTopBar(
                 title = "My Order Summary",
                 onBackClick = {
@@ -279,18 +274,15 @@ fun OrderSummaryScreen(
             )
             Column(
                 modifier = Modifier
-                    .fillMaxSize().padding(horizontal = 24.dp)
-
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp)
             )
             {
                 // 🔹 Content
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-
+                    modifier = Modifier.fillMaxSize()
                 )
                 {
-
                     item {Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -393,9 +385,7 @@ fun OrderSummaryScreen(
                         TrackingHistoryCard(trackingHistory = orderSummary.trackingHistory)
 
                             Spacer(Modifier.height(10.dp))
-
                     }
-
                     }
 
 
@@ -491,21 +481,27 @@ fun OrderSummaryScreen(
     if (showReturnReasonSheet) {
         SelectionBottomSheet(
             title = "Reason for Return",
-            options = reasons1,
+            options = reasons,
             selectedOption = selectedReason,
             onOptionSelect = { selectedReason = it },
             comment = comment,
             onCommentChange = { comment = it },
             commentPlaceholder = "Tell us more about why you're returning this order...",
-            onConfirm = { showReturnReasonSheet = false
-                showOrderReturnDialog = true},
-            onDismiss = { showReturnReasonSheet = false }
+            onConfirm = {
+                showReturnReasonSheet = false
+
+                // Delay dialog slightly to avoid sheet/dialog overlap
+                showOrderReturnDialog = true
+            },
+            onDismiss = {
+                showReturnReasonSheet = false
+            },
         )
     }
     if (showCancelOrderSheet) {
         SelectionBottomSheet(
             title = "Reason for Cancellation",
-            options = reasons,
+            options = reasons1,
             selectedOption = selectedReason,
             onOptionSelect = { selectedReason = it },
             comment = comment,
@@ -520,11 +516,8 @@ fun OrderSummaryScreen(
         OrderCancelledDialog(
             title = "Order Cancelled",
             description = "Your order cancellation has been \n confirmed.",
-            onDismiss = {
-                showOrderCancelledDialog = false
-                        },
-            onBackToHome = {
-                showOrderCancelledDialog = false
+            onDismiss = { showOrderCancelledDialog = false },
+            onBackToHome = { showOrderCancelledDialog = false
             navController.navigate(Routes.Home.route)
             }
         )

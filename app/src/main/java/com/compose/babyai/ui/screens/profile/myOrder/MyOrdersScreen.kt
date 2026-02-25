@@ -4,6 +4,11 @@ package com.compose.babyai.ui.screens.profile.myOrder
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -27,6 +32,7 @@ import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.calender.CalenderModal
+import com.compose.babyai.ui.component.uiInput.PreferencesSearchBar
 import com.compose.babyai.ui.component.uiInput.TopBar
 
 // Data class for Order
@@ -43,11 +49,13 @@ enum class OrderStatus1(val displayName: String, val color: Color) {
     PROCESSING("Processing", Color(0xFFFBD606))
 }
 
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyOrdersScreen(navController: NavHostController) {
     var showCalendarModal by remember { mutableStateOf(false) }
-
+    var showSearchBar by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
     // Sample orders data
     val orders = listOf(
         Order("ORD-2025-001", "November 28, 2025", OrderStatus1.DELIVERED),
@@ -73,10 +81,21 @@ fun MyOrdersScreen(navController: NavHostController) {
             TopBar(onBackClick = {
                 navController.navigateUp()
             }, onSearchClick = {
-                navController.navigate(Routes.TrackReturnScreen.route)
+                /*navController.navigate(Routes.TrackReturnScreen.route)*/
+                showSearchBar = !showSearchBar
             }, onCalendarClick = {
                 showCalendarModal = true
             })
+
+            Spacer(Modifier.height(10.dp))
+
+            PreferencesSearchBar(
+                searchQuery = searchQuery,
+                onSearchQueryChange = { searchQuery = it },
+                placeholderText = "Find Your Order....",
+                icon = painterResource(R.drawable.search_ic),
+                modifier = Modifier.padding(horizontal = 15.dp)
+            )
 
             Spacer(modifier = Modifier.height(20.dp))
             // Orders List

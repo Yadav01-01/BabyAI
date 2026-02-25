@@ -3,10 +3,12 @@ package com.compose.babyai.ui.screens.home
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -15,6 +17,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,23 +30,31 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -53,15 +64,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import com.compose.babyai.R
 import com.compose.babyai.data.model.BabyProfile
 import com.compose.babyai.data.model.BannerItem
 import com.compose.babyai.navigation.Routes
 import com.compose.babyai.ui.component.uiInput.AppButton
+import com.compose.babyai.ui.component.uiInput.AutoSlidingCardStackCarousel
 import com.compose.babyai.ui.component.uiInput.BannerCarousel
 import com.compose.babyai.ui.component.uiInput.SearchBar
 import com.compose.babyai.ui.theme.PrimaryColor
+import kotlinx.coroutines.delay
+import kotlin.math.absoluteValue
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,15 +108,15 @@ fun HomeScreen(navController: NavHostController) {
             subtitle = "Comfort & Care"
         )
     )
-/*    val categories = listOf(
+    val categories = listOf(
         Pair("Muslins", R.drawable.dummy_img),
         Pair("Onesies", R.drawable.dummy_img),
         Pair("Booties", R.drawable.dummy_img),
         Pair("Booties", R.drawable.dummy_img),
         Pair("Booties", R.drawable.dummy_img),
         Pair("Toys", R.drawable.dummy_img)
-    )*/
-    val categories = emptyList<Pair<String, Int>>()
+    )
+    /*val categories = emptyList<Pair<String, Int>>()*/
 
 
 
@@ -220,7 +236,7 @@ fun HomeScreen(navController: NavHostController) {
                 item {
                     BannerCarousel(
                         banners = bannerList,
-                        modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp)
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 0.dp)
                     ) { banner ->
                         // Navigate to category search
                     }
@@ -464,12 +480,14 @@ fun CategoryList(modifier: Modifier, categories: List<Pair<String, Int>>,onClick
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(
                     modifier = Modifier
-                        .background(
-                            color = Color.White,
-                            shape = RoundedCornerShape(26.dp)
+                        .shadow(
+                            elevation = 6.dp,
+                            shape = RoundedCornerShape(26.dp),
+                            clip = true
                         )
-                        .padding(10.dp)
-                        .clickable{ onClickTryOnsItem() },
+                        .background(Color.White)
+                        .clickable { onClickTryOnsItem() }
+                        .padding(10.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Image(
@@ -533,8 +551,8 @@ fun ProductCard(modifier: Modifier, product: ProductData,onClick: () -> Unit) {
         modifier = modifier
             .clip(RoundedCornerShape(30.dp))
             .background(Color.White)
-            .padding(10.dp)
-            .clickable{ onClick() },
+            .clickable{ onClick() }
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

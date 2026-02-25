@@ -46,7 +46,8 @@ import com.compose.babyai.ui.theme.PrimaryColor
 @Composable
 fun SuggestedOutfit(item: CartItem,onClickItem: () -> Unit) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable{ onClickItem() },
+        onClick = onClickItem,
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
@@ -113,7 +114,8 @@ fun SuggestedOutfit(item: CartItem,onClickItem: () -> Unit) {
 @Composable
 fun PreviousBoughtCard(outfit: OutfitData,modifier: Modifier = Modifier,onItemClick: () -> Unit,onBuyAgainClick: () -> Unit,onFavClick: () -> Unit) {
     Card(
-        modifier = modifier.fillMaxWidth().clickable{ onItemClick() },
+        onClick = onItemClick,
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(30.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
